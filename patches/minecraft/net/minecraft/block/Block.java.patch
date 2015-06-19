@@ -161,7 +161,7 @@
      }
  
      protected ItemStack func_180643_i(IBlockState p_180643_1_)
-@@ -971,6 +989,1028 @@
+@@ -971,6 +989,1033 @@
          return Block.EnumOffsetType.NONE;
      }
  
@@ -734,6 +734,11 @@
 +     * @param target The full target the player is looking at
 +     * @return A ItemStack to add to the player's inventory, Null if nothing should be added.
 +     */
++    public ItemStack getPickBlock(MovingObjectPosition target, World world, BlockPos pos, EntityPlayer player)
++    {
++        return getPickBlock(target, world, pos);
++    }
++    @Deprecated
 +    public ItemStack getPickBlock(MovingObjectPosition target, World world, BlockPos pos)
 +    {
 +        Item item = func_180665_b(world, pos);
@@ -957,7 +962,7 @@
 +        IBlockState state = world.func_180495_p(pos);
 +        for (IProperty prop : (java.util.Set<IProperty>)state.func_177228_b().keySet())
 +        {
-+            if (prop.func_177701_a().equals("facing"))
++            if (prop.func_177701_a().equals("facing") || prop.func_177701_a().equals("rotation"))
 +            {
 +                world.func_175656_a(pos, state.func_177231_a(prop));
 +                return true;

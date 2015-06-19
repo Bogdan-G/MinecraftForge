@@ -82,11 +82,6 @@ public class B3DLoader implements ICustomModelLoader
     private final Set<String> enabledDomains = new HashSet<String>();
     private final Map<ResourceLocation, B3DModel> cache = new HashMap<ResourceLocation, B3DModel>();
 
-    public B3DLoader()
-    {
-        ModelLoaderRegistry.registerLoader(this);
-    }
-
     public void addDomain(String domain)
     {
         enabledDomains.add(domain.toLowerCase());
@@ -104,7 +99,7 @@ public class B3DLoader implements ICustomModelLoader
     }
 
     @SuppressWarnings("unchecked")
-    public IModel loadModel(ResourceLocation modelLocation)
+    public IModel loadModel(ResourceLocation modelLocation) throws IOException
     {
         ResourceLocation file = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath());
         if(!cache.containsKey(file))
@@ -126,12 +121,13 @@ public class B3DLoader implements ICustomModelLoader
                 }
                 B3DModel.Parser parser = new B3DModel.Parser(resource.getInputStream());
                 B3DModel model = parser.parse();
-                cache.put(modelLocation, model);
+                cache.put(file, model);
             }
             catch(IOException e)
             {
-                FMLLog.log(Level.ERROR, e, "Exception loading model %s with B3D loader, skipping", modelLocation);
-                cache.put(modelLocation, null);
+                //FMLLog.log(Level.ERROR, e, "Exception loading model %s with B3D loader, skipping", modelLocation);
+                cache.put(file, null);
+                throw e;
             }
         }
         B3DModel model = cache.get(file);
