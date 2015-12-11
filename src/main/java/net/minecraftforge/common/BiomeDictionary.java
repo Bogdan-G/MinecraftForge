@@ -303,7 +303,7 @@ public class BiomeDictionary
                 continue;
             }
 
-            if (biome.theBiomeDecorator instanceof DeferredBiomeDecorator)
+            if (biome.theBiomeDecorator.getClass().equals(DeferredBiomeDecorator.class))
             {
                 DeferredBiomeDecorator decorator = (DeferredBiomeDecorator) biome.theBiomeDecorator;
                 decorator.fireCreateEventAndReplace(biome);

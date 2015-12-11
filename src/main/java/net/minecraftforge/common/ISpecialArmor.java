@@ -106,7 +106,7 @@ public interface ISpecialArmor
                     continue;
                 }
                 ArmorProperties prop = null;
-                if (stack.getItem() instanceof ISpecialArmor)
+                if (stack.getItem().getClass().equals(ISpecialArmor.class))
                 {
                     ISpecialArmor armor = (ISpecialArmor)stack.getItem();
                     prop = armor.getProperties(entity, stack, source, damage / 25D, x).copy();
@@ -143,7 +143,7 @@ public interface ISpecialArmor
                     {
                         ItemStack stack = inventory[prop.Slot];
                         int itemDamage = (int)(absorb / 25D < 1 ? 1 : absorb / 25D);
-                        if (stack.getItem() instanceof ISpecialArmor)
+                        if (stack.getItem().getClass().equals(ISpecialArmor.class))
                         {
                             ((ISpecialArmor)stack.getItem()).damageArmor(entity, stack, source, itemDamage, prop.Slot);
                         }

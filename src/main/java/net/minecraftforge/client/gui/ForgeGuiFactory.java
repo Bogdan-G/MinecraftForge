@@ -206,7 +206,7 @@ public class ForgeGuiFactory implements IModGuiFactory
             {
                 for (IConfigEntry entry : this.owningEntryList.listEntries)
                 {
-                    if (entry.getName().equals("enabled") && entry instanceof BooleanEntry)
+                    if (entry.getName().equals("enabled") && entry.getClass().equals(GuiConfigEntries.class))
                     {
                         return Boolean.valueOf(entry.getCurrentValue().toString());
                     }
@@ -221,7 +221,7 @@ public class ForgeGuiFactory implements IModGuiFactory
             @Override
             public boolean isChanged()
             {
-                if (childScreen instanceof GuiConfig)
+                if (childScreen.getClass().equals(GuiConfig.class))
                 {
                     GuiConfig child = (GuiConfig) childScreen;
                     return child.entryList.listEntries.size() != child.initEntries.size() || child.entryList.hasChangedEntry(true);
@@ -236,7 +236,7 @@ public class ForgeGuiFactory implements IModGuiFactory
             @Override
             public void undoChanges()
             {
-                if (childScreen instanceof GuiConfig)
+                if (childScreen.getClass().equals(GuiConfig.class))
                 {
                     GuiConfig child = (GuiConfig) childScreen;
                     for (IConfigEntry ice : child.entryList.listEntries)
@@ -327,7 +327,7 @@ public class ForgeGuiFactory implements IModGuiFactory
                     ForgeChunkManager.addConfigProperty(modObject, "maximumTicketCount", String.valueOf(maxTickets), Property.Type.INTEGER);
                     ForgeChunkManager.addConfigProperty(modObject, "maximumChunksPerTicket", String.valueOf(maxChunks), Property.Type.INTEGER);
                     
-                    if (this.owningScreen.parentScreen instanceof GuiConfig)
+                    if (this.owningScreen.parentScreen.getClass().equals(GuiConfig.class))
                     {
                         GuiConfig superParent = (GuiConfig) this.owningScreen.parentScreen;
                         ConfigCategory modCtgy = ForgeChunkManager.getConfigFor(modObject);

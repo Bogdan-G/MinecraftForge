@@ -83,31 +83,31 @@ public class RotationHelper {
 
     public static ForgeDirection[] getValidVanillaBlockRotations(Block block)
     {
-        return (block instanceof BlockBed || 
-                block instanceof BlockPumpkin ||
-                block instanceof BlockFenceGate || 
-                block instanceof BlockEndPortalFrame || 
-                block instanceof BlockTripWireHook || 
-                block instanceof BlockCocoa || 
-                block instanceof BlockRailPowered || 
-                block instanceof BlockRailDetector || 
-                block instanceof BlockStairs || 
-                block instanceof BlockChest || 
-                block instanceof BlockEnderChest || 
-                block instanceof BlockFurnace || 
-                block instanceof BlockLadder || 
+        return (block.getClass().equals(BlockBed.class) || 
+                block.getClass().equals(BlockPumpkin.class) ||
+                block.getClass().equals(BlockFenceGate.class) || 
+                block.getClass().equals(BlockEndPortalFrame.class) || 
+                block.getClass().equals(BlockTripWireHook.class) || 
+                block.getClass().equals(BlockCocoa.class) || 
+                block.getClass().equals(BlockRailPowered.class) || 
+                block.getClass().equals(BlockRailDetector.class) || 
+                block.getClass().equals(BlockStairs.class) || 
+                block.getClass().equals(BlockChest.class) || 
+                block.getClass().equals(BlockEnderChest.class) || 
+                block.getClass().equals(BlockFurnace.class) || 
+                block.getClass().equals(BlockLadder.class) || 
                 block == Blocks.wall_sign || 
                 block == Blocks.standing_sign || 
-                block instanceof BlockDoor || 
-                block instanceof BlockRail ||
-                block instanceof BlockButton || 
-                block instanceof BlockRedstoneRepeater || 
-                block instanceof BlockRedstoneComparator || 
-                block instanceof BlockTrapDoor || 
-                block instanceof BlockHugeMushroom || 
-                block instanceof BlockVine || 
-                block instanceof BlockSkull || 
-                block instanceof BlockAnvil) ? UP_DOWN_AXES : VALID_DIRECTIONS;
+                block.getClass().equals(BlockDoor.class) || 
+                block.getClass().equals(BlockRail.class) ||
+                block.getClass().equals(BlockButton.class) || 
+                block.getClass().equals(BlockRedstoneRepeater.class) || 
+                block.getClass().equals(BlockRedstoneComparator.class) || 
+                block.getClass().equals(BlockTrapDoor.class) || 
+                block.getClass().equals(BlockHugeMushroom.class) || 
+                block.getClass().equals(BlockVine.class) || 
+                block.getClass().equals(BlockSkull.class) || 
+                block.getClass().equals(BlockAnvil.class)) ? UP_DOWN_AXES : VALID_DIRECTIONS;
     }
 
     public static boolean rotateVanillaBlock(Block block, World worldObj, int x, int y, int z, ForgeDirection axis)
@@ -119,23 +119,23 @@ public class RotationHelper {
 
         if (axis == UP || axis == DOWN)
         {
-            if (block instanceof BlockBed || block instanceof BlockPumpkin || block instanceof BlockFenceGate || block instanceof BlockEndPortalFrame || block instanceof BlockTripWireHook || block instanceof BlockCocoa)
+            if (block.getClass().equals(BlockBed.class) || block.getClass().equals(BlockPumpkin.class) || block.getClass().equals(BlockFenceGate.class) || block.getClass().equals(BlockEndPortalFrame.class) || block.getClass().equals(BlockTripWireHook.class) || block.getClass().equals(BlockCocoa.class))
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0x3, BlockType.BED);
             }
-            if (block instanceof BlockRail)
+            if (block.getClass().equals(BlockRail.class))
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0xF, BlockType.RAIL);
             }
-            if (block instanceof BlockRailPowered || block instanceof BlockRailDetector)
+            if (block.getClass().equals(BlockRailPowered.class) || block.getClass().equals(BlockRailDetector.class))
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0x7, BlockType.RAIL_POWERED);
             }
-            if (block instanceof BlockStairs)
+            if (block.getClass().equals(BlockStairs.class))
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0x3, BlockType.STAIR);
             }
-            if (block instanceof BlockChest || block instanceof BlockEnderChest || block instanceof BlockFurnace || block instanceof BlockLadder || block == Blocks.wall_sign)
+            if (block.getClass().equals(BlockChest.class) || block.getClass().equals(BlockEnderChest.class) || block.getClass().equals(BlockFurnace.class) || block.getClass().equals(BlockLadder.class) || block == Blocks.wall_sign)
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0x7, BlockType.CHEST);
             }
@@ -143,53 +143,53 @@ public class RotationHelper {
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0xF, BlockType.SIGNPOST);
             }
-            if (block instanceof BlockDoor)
+            if (block.getClass().equals(BlockDoor.class))
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0x3, BlockType.DOOR);
             }
-            if (block instanceof BlockButton)
+            if (block.getClass().equals(BlockButton.class))
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0x7, BlockType.BUTTON);
             }
-            if (block instanceof BlockRedstoneRepeater || block instanceof BlockRedstoneComparator)
+            if (block.getClass().equals(BlockRedstoneRepeater.class) || block.getClass().equals(BlockRedstoneComparator.class))
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0x3, BlockType.REDSTONE_REPEATER);
             }
-            if (block instanceof BlockTrapDoor)
+            if (block.getClass().equals(BlockTrapDoor.class))
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0x3, BlockType.TRAPDOOR);
             }
-            if (block instanceof BlockHugeMushroom)
+            if (block.getClass().equals(BlockHugeMushroom.class))
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0xF, BlockType.MUSHROOM_CAP);
             }
-            if (block instanceof BlockVine)
+            if (block.getClass().equals(BlockVine.class))
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0xF, BlockType.VINE);
             }
-            if (block instanceof BlockSkull)
+            if (block.getClass().equals(BlockSkull.class))
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0x7, BlockType.SKULL);
             }
-            if (block instanceof BlockAnvil)
+            if (block.getClass().equals(BlockAnvil.class))
             {
                 return rotateBlock(worldObj, x, y, z, axis, 0x1, BlockType.ANVIL);
             }
         }
 
-        if (block instanceof BlockLog)
+        if (block.getClass().equals(BlockLog.class))
         {
             return rotateBlock(worldObj, x, y, z, axis, 0xC, BlockType.LOG);
         }
-        if (block instanceof BlockDispenser || block instanceof BlockPistonBase || block instanceof BlockPistonExtension || block instanceof BlockHopper)
+        if (block.getClass().equals(BlockDispenser.class) || block.getClass().equals(BlockPistonBase.class) || block.getClass().equals(BlockPistonExtension.class) || block.getClass().equals(BlockHopper.class))
         {
             return rotateBlock(worldObj, x, y, z, axis, 0x7, BlockType.DISPENSER);
         }
-        if (block instanceof BlockTorch)
+        if (block.getClass().equals(BlockTorch.class))
         {
             return rotateBlock(worldObj, x, y, z, axis, 0xF, BlockType.TORCH);
         }
-        if (block instanceof BlockLever)
+        if (block.getClass().equals(BlockLever.class))
         {
             return rotateBlock(worldObj, x, y, z, axis, 0x7, BlockType.LEVER);
         }

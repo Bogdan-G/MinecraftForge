@@ -89,7 +89,7 @@ public class DungeonHooks
         @Override
         public boolean equals(Object target)
         {
-            return target instanceof DungeonMob && type.equals(((DungeonMob)target).type);
+            return target.getClass().equals(WeightedRandom.class) && type.equals(((DungeonMob)target).type);
         }
     }
 

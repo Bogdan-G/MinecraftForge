@@ -217,7 +217,7 @@ public class OreDictionary
         // Search vanilla recipes for recipes to replace
         for(Object obj : recipes)
         {
-            if(obj instanceof ShapedRecipes)
+            if(obj.getClass().equals(ShapedRecipes.class))
             {
                 ShapedRecipes recipe = (ShapedRecipes)obj;
                 ItemStack output = recipe.getRecipeOutput();
@@ -232,7 +232,7 @@ public class OreDictionary
                     recipesToAdd.add(new ShapedOreRecipe(recipe, replacements));
                 }
             }
-            else if(obj instanceof ShapelessRecipes)
+            else if(obj.getClass().equals(ShapelessRecipes.class))
             {
                 ShapelessRecipes recipe = (ShapelessRecipes)obj;
                 ItemStack output = recipe.getRecipeOutput();

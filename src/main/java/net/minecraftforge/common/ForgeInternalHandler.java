@@ -74,7 +74,7 @@ public class ForgeInternalHandler
     public void onDimensionUnload(WorldEvent.Unload event)
     {
         ForgeChunkManager.unloadWorld(event.world);
-        if (event.world instanceof WorldServer)
+        if (event.world.getClass().equals(WorldServer.class))
             FakePlayerFactory.unloadWorld((WorldServer)event.world);
     }
 }

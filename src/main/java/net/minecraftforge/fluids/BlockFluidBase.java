@@ -353,7 +353,7 @@ public abstract class BlockFluidBase extends Block implements IFluidBlock
     public static final int getDensity(IBlockAccess world, int x, int y, int z)
     {
         Block block = world.getBlock(x, y, z);
-        if (!(block instanceof BlockFluidBase))
+        if (!(block.getClass().equals(BlockFluidBase.class)))
         {
             return Integer.MAX_VALUE;
         }
@@ -363,7 +363,7 @@ public abstract class BlockFluidBase extends Block implements IFluidBlock
     public static final int getTemperature(IBlockAccess world, int x, int y, int z)
     {
         Block block = world.getBlock(x, y, z);
-        if (!(block instanceof BlockFluidBase))
+        if (!(block.getClass().equals(BlockFluidBase.class)))
         {
             return Integer.MAX_VALUE;
         }
