@@ -16,8 +16,8 @@ import net.minecraft.world.World;
 
 public class ShapelessOreRecipe implements IRecipe
 {
-    private ItemStack output = null;
-    private ArrayList<Object> input = new ArrayList<Object>();
+    public ItemStack output = null;
+    public ArrayList<Object> input = new ArrayList<Object>();
 
     public ShapelessOreRecipe(Block result, Object... recipe){ this(new ItemStack(result), recipe); }
     public ShapelessOreRecipe(Item  result, Object... recipe){ this(new ItemStack(result), recipe); }

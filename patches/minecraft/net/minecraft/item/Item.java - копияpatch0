@@ -113,7 +113,7 @@
      public Multimap func_111205_h()
      {
          return HashMultimap.create();
-@@ -728,6 +746,603 @@
+@@ -728,6 +746,591 @@
          return this.field_111218_cA == null ? "MISSING_ICON_ITEM_" + field_150901_e.func_148757_b(this) + "_" + this.field_77774_bZ : this.field_111218_cA;
      }
  
@@ -700,24 +700,12 @@
 +    {
 +        return this == Items.field_151166_bC || this == Items.field_151045_i || this == Items.field_151043_k || this == Items.field_151042_j;
 +    }
-+
-+    /**
-+     * Override this to send less NBT to the client.
-+     * Useful when the full NBT is very large and the client only requires a small part of it.
-+     *
-+     * @param stack the ItemStack
-+     * @return NBTTagCompound to send to the client
-+     */
-+    public net.minecraft.nbt.NBTTagCompound getClientNBT(ItemStack stack)
-+    {
-+        return stack.func_77978_p();
-+    }
 +    /* ======================================== FORGE END   =====================================*/
 +
      public static enum ToolMaterial
      {
          WOOD(0, 59, 2.0F, 0.0F, 15),
-@@ -743,6 +1358,10 @@
+@@ -743,6 +1346,10 @@
  
          private static final String __OBFID = "CL_00000042";
  
@@ -728,7 +716,7 @@
          private ToolMaterial(int p_i1874_3_, int p_i1874_4_, float p_i1874_5_, float p_i1874_6_, int p_i1874_7_)
          {
              this.field_78001_f = p_i1874_3_;
-@@ -777,9 +1396,36 @@
+@@ -777,9 +1384,36 @@
              return this.field_78008_j;
          }
  
