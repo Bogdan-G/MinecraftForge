@@ -1,5 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/network/PacketBuffer.java
 +++ ../src-work/minecraft/net/minecraft/network/PacketBuffer.java
+@@ -98,7 +98,7 @@
+ 
+     public void writeItemStackToBuffer(ItemStack p_150788_1_) throws IOException
+     {
+-        if (p_150788_1_ == null)
++        if (p_150788_1_ == null || p_150788_1_.getItem() == null)   // CraftBukkit - NPE fix itemstack.getItem()
+         {
+             this.writeShort(-1);
+         }
 @@ -111,7 +111,7 @@
  
              if (p_150788_1_.func_77973_b().func_77645_m() || p_150788_1_.func_77973_b().func_77651_p())

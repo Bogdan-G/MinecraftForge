@@ -38,7 +38,8 @@ minecraft {
 }
 
 group = 'net.minecraftforge'
-version = getVersionFromGit(getProject())
+//version = getVersionFromGit(getProject())
+version = '7.99.4.1614'
 
 jenkins {
     job = 'fml'

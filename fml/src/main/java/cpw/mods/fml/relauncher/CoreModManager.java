@@ -601,14 +601,14 @@ public class CoreModManager {
             public int compare(ITweaker o1, ITweaker o2)
             {
                 Integer first = null;
-                Integer second = null;
+                Integer second = null;//Revert: warning: o1/o2, instanceof -> getClass().equals()
                 if (o1 instanceof FMLInjectionAndSortingTweaker)
                 {
-                    first = Integer.MIN_VALUE;
+                    first = -2147483648;//Integer.MIN_VALUE
                 }
                 if (o2 instanceof FMLInjectionAndSortingTweaker)
                 {
-                    second = Integer.MIN_VALUE;
+                    second = -2147483648;//Integer.MIN_VALUE
                 }
 
                 if (o1 instanceof FMLPluginWrapper)

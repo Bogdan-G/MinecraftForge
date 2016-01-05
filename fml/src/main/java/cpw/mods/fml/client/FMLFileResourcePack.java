@@ -36,7 +36,7 @@ public class FMLFileResourcePack extends FileResourcePack implements FMLContaine
     @Override
     protected InputStream getInputStreamByName(String resourceName) throws IOException
     {
-        try
+        /*try
         {
             return super.getInputStreamByName(resourceName);
         }
@@ -53,7 +53,8 @@ public class FMLFileResourcePack extends FileResourcePack implements FMLContaine
                         "}").getBytes(Charsets.UTF_8));
             }
             else throw ioe;
-        }
+        }*/
+        return super.getInputStreamByName(resourceName);
     }
 
     @Override

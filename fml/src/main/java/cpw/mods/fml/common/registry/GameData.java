@@ -744,7 +744,9 @@ public class GameData {
 
     protected static boolean isFrozen(FMLControlledNamespacedRegistry<?> registry)
     {
-        return frozen != null && (getMain().iBlockRegistry == registry || getMain().iItemRegistry == registry);
+        //return frozen != null && (getMain().iBlockRegistry == registry || getMain().iItemRegistry == registry);
+        if (frozen != null) { return (getMain().iBlockRegistry == registry || getMain().iItemRegistry == registry); }
+        return false;
     }
 
     protected static GameData getMain()
@@ -848,7 +850,7 @@ public class GameData {
 
         int itemId = iItemRegistry.add(idHint, name, item, availabilityMap);
 
-        if (item instanceof ItemBlock) // verify
+        if (item instanceof ItemBlock) // verify //Revert: broken ? warning: , instanceof -> getClass().equals()
         {
             if (itemId != idHint) throw new IllegalStateException(String.format("ItemBlock at block id %d insertion failed, got id %d.", idHint, itemId));
             verifyItemBlockName((ItemBlock) item);
@@ -884,7 +886,7 @@ public class GameData {
 
         for (Item item : iItemRegistry.typeSafeIterable()) // find matching ItemBlock
         {
-            if (item instanceof ItemBlock && ((ItemBlock) item).field_150939_a == block)
+            if (item instanceof ItemBlock && ((ItemBlock) item).field_150939_a == block) //Revert: broken ? warning: , instanceof -> getClass().equals()
             {
                 itemBlock = (ItemBlock) item;
                 break;
@@ -945,7 +947,7 @@ public class GameData {
      */
     private void freeSlot(int id, Object obj)
     {
-        FMLControlledNamespacedRegistry<?> registry = (obj instanceof Block) ? iBlockRegistry : iItemRegistry;
+        FMLControlledNamespacedRegistry<?> registry = (obj instanceof Block) ? iBlockRegistry : iItemRegistry;//Revert: broken ? warning: , instanceof -> getClass().equals()
         Object thing = registry.getRaw(id);
 
         if (thing != null && thing != obj)

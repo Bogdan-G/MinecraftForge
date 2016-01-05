@@ -137,7 +137,7 @@ public class LoadController
                 for (Entry<String, Throwable> error : errors.entries())
                 {
                     FMLLog.log(Level.ERROR, error.getValue(), "Caught exception from %s", error.getKey());
-                    if (error.getValue() instanceof IFMLHandledException)
+                    if (error.getValue().getClass().equals(IFMLHandledException.class))
                     {
                         toThrow = error.getValue();
                     }
@@ -154,7 +154,7 @@ public class LoadController
                         "ForgeModLoader, especially Optifine, to see if there are fixes available.");
                 throw new RuntimeException("The ForgeModLoader state engine is invalid");
             }
-            if (toThrow != null && toThrow instanceof RuntimeException)
+            if (toThrow != null)//if (toThrow != null && toThrow.getClass().equals(RuntimeException.class))
             {
                 throw (RuntimeException)toThrow;
             }
@@ -179,7 +179,7 @@ public class LoadController
     @Subscribe
     public void propogateStateMessage(FMLEvent stateEvent)
     {
-        if (stateEvent instanceof FMLPreInitializationEvent)
+        if (stateEvent.getClass().equals(FMLPreInitializationEvent.class))
         {
             modObjectList = buildModObjectList();
         }
@@ -213,7 +213,7 @@ public class LoadController
         FMLLog.log(modId, Level.TRACE, "Sent event %s to mod %s", stateEvent.getEventType(), modId);
         ThreadContext.remove("mod");
         activeContainer = null;
-        if (stateEvent instanceof FMLStateEvent)
+        if (stateEvent.getClass().equals(FMLStateEvent.class))
         {
             if (!errors.containsKey(modId))
             {
@@ -254,7 +254,7 @@ public class LoadController
 
     public void errorOccurred(ModContainer modContainer, Throwable exception)
     {
-        if (exception instanceof InvocationTargetException)
+        if (exception.getClass().equals(InvocationTargetException.class))
         {
             errors.put(modContainer.getModId(), ((InvocationTargetException)exception).getCause());
         }

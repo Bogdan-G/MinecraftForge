@@ -46,7 +46,7 @@ public class GuiModsMissing extends GuiErrorScreen
         for (ArtifactVersion v : modsMissing.missingMods)
         {
             offset+=10;
-            if (v instanceof DefaultArtifactVersion)
+            if (v.getClass().equals(DefaultArtifactVersion.class))
             {
                 DefaultArtifactVersion dav =  (DefaultArtifactVersion)v;
                 if (dav.getRange() != null && dav.getRange().isUnboundedAbove())

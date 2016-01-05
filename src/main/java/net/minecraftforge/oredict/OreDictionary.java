@@ -221,7 +221,7 @@ public class OreDictionary
             {
                 ShapedRecipes recipe = (ShapedRecipes)obj;
                 ItemStack output = recipe.getRecipeOutput();
-                if (output != null && containsMatch(false, exclusions, output))
+                if ((output != null && containsMatch(false, exclusions, output)) || output == null)
                 {
                     continue;
                 }
@@ -236,7 +236,7 @@ public class OreDictionary
             {
                 ShapelessRecipes recipe = (ShapelessRecipes)obj;
                 ItemStack output = recipe.getRecipeOutput();
-                if (output != null && containsMatch(false, exclusions, output))
+                if ((output != null && containsMatch(false, exclusions, output)) || output == null)
                 {
                     continue;
                 }
@@ -447,7 +447,7 @@ public class OreDictionary
     {
         while (idToName.size() < id + 1) // TODO: Remove this in 1.8, this is only for backwards compatibility
         {
-            String name = "Filler: " + idToName.size();
+            String name = new StringBuilder().append("Filler: ").append(String.valueOf(idToName.size())).toString();/*"Filler: " + String.valueOf(idToName.size());*/
             idToName.add(name);
             nameToId.put(name, idToName.size() - 1); //0 indexed
             idToStack.add(null);
@@ -488,10 +488,9 @@ public class OreDictionary
 
     public static boolean itemMatches(ItemStack target, ItemStack input, boolean strict)
     {
-        if (input == null && target != null || input != null && target == null)
-        {
-            return false;
-        }
+        //change check
+        if (input == null) { if (target != null) { return false; } }
+        if (input != null) { if (target == null) { return false; } }
         return (target.getItem() == input.getItem() && ((target.getItemDamage() == WILDCARD_VALUE && !strict) || target.getItemDamage() == input.getItemDamage()));
     }
 

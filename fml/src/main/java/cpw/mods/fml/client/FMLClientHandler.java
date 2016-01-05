@@ -492,7 +492,7 @@ public class FMLClientHandler implements IFMLSidedHandler
 
                 client.loadingScreen.resetProgresAndWorkingMessage("");
 
-                Thread.sleep(50);
+                //Thread.sleep(50);
             }
 
             client.loadingScreen.resetProgresAndWorkingMessage(""); // make sure the blank screen is being drawn at the end
@@ -868,7 +868,7 @@ public class FMLClientHandler implements IFMLSidedHandler
         boolean gotIt = false;
         try
         {
-            gotIt = playClientBlock.await(5,TimeUnit.SECONDS);
+            gotIt = playClientBlock.await(30,TimeUnit.SECONDS);
         } catch (InterruptedException e)
         {
         }
@@ -954,12 +954,12 @@ public class FMLClientHandler implements IFMLSidedHandler
                 logger.error("    domain {} has {} location{}:",resourceDomain, resPacks.size(), resPacks.size() != 1 ? "s" :"");
                 for (IResourcePack resPack : resPacks)
                 {
-                    if (resPack instanceof FMLContainerHolder) {
+                    if (resPack.getClass().equals(FMLContainerHolder.class)) {
                         FMLContainerHolder containerHolder = (FMLContainerHolder) resPack;
                         ModContainer fmlContainer = containerHolder.getFMLContainer();
                         logger.error("      mod {} resources at {}", fmlContainer.getModId(), fmlContainer.getSource().getPath());
                     }
-                    else if (resPack instanceof AbstractResourcePack)
+                    else if (resPack.getClass().equals(AbstractResourcePack.class))
                     {
                         AbstractResourcePack resourcePack = (AbstractResourcePack) resPack;
                         File resPath = ObfuscationReflectionHelper.getPrivateValue(AbstractResourcePack.class, resourcePack, "resourcePackFile","field_110597"+"_b");

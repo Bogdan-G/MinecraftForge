@@ -84,7 +84,7 @@ public class FMLPreInitializationEvent extends FMLStateEvent
 
     public Properties getVersionProperties()
     {
-        if (this.modContainer instanceof FMLModContainer)
+        if (this.modContainer.getClass().equals(FMLModContainer.class))
         {
             return ((FMLModContainer)this.modContainer).searchForVersionProperties();
         }

@@ -538,8 +538,8 @@ public class VersionRange
         if ( this == obj )
         {
             return true;
-        }
-        if ( !( obj instanceof VersionRange ) )
+        }//warning: , instanceof -> getClass().equals()
+        if ( !( obj.getClass().equals(VersionRange.class) ) )
         {
             return false;
         }
