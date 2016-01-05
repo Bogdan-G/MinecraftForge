@@ -154,7 +154,7 @@ public class LoadController
                         "ForgeModLoader, especially Optifine, to see if there are fixes available.");
                 throw new RuntimeException("The ForgeModLoader state engine is invalid");
             }
-            if (toThrow != null)//if (toThrow != null && toThrow.getClass().equals(RuntimeException.class))
+            if (toThrow != null && toThrow instanceof RuntimeException)//Revert; if (toThrow != null && toThrow.getClass().equals(RuntimeException.class))
             {
                 throw (RuntimeException)toThrow;
             }
