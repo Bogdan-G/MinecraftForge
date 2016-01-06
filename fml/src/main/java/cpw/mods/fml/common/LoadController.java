@@ -137,7 +137,7 @@ public class LoadController
                 for (Entry<String, Throwable> error : errors.entries())
                 {
                     FMLLog.log(Level.ERROR, error.getValue(), "Caught exception from %s", error.getKey());
-                    if (error.getValue().getClass().equals(IFMLHandledException.class))
+                    if (error.getValue() instanceof IFMLHandledException)
                     {
                         toThrow = error.getValue();
                     }
