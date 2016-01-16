@@ -3,6 +3,8 @@ package net.minecraftforge.client.model;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
+import javax.vecmath.Tuple3f;
+import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
@@ -15,6 +17,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 
 /*
  * Interpolation-friendly affine transformation.
@@ -28,6 +31,7 @@ import com.google.common.base.Objects;
  * should be comparable to using Matrix4f directly.
  * Immutable.
  */
+@SuppressWarnings("deprecation")
 public class TRSRTransformation implements IModelState, ITransformation
 {
     private final Matrix4f matrix;
@@ -67,7 +71,7 @@ public class TRSRTransformation implements IModelState, ITransformation
 
     public static Matrix4f getMatrix(ItemTransformVec3f transform)
     {
-        TRSRTransformation ret = new TRSRTransformation(transform.translation, quatFromYXZDegrees(transform.rotation), transform.scale, null);
+        TRSRTransformation ret = new TRSRTransformation(toVecmath(transform.translation), quatFromYXZDegrees(toVecmath(transform.rotation)), toVecmath(transform.scale), null);
         return blockCenterToCorner(ret).getMatrix();
     }
 
@@ -181,7 +185,6 @@ public class TRSRTransformation implements IModelState, ITransformation
     {
         Matrix4f res = new Matrix4f(), t = new Matrix4f();
         res.setIdentity();
-        if(translation != null) res.setTranslation(translation);
         if(leftRot != null)
         {
             t.set(leftRot);
@@ -200,6 +203,7 @@ public class TRSRTransformation implements IModelState, ITransformation
             t.set(rightRot);
             res.mul(t);
         }
+        if(translation != null) res.setTranslation(translation);
         return res;
     }
 
@@ -221,7 +225,8 @@ public class TRSRTransformation implements IModelState, ITransformation
         b.set(m);
         b.mul(t);
 
-        sortSingularValues(b, v);
+        // FIXME: this doesn't work correctly for some reason; not crucial, so disabling for now; investigate in the future.
+        //sortSingularValues(b, v);
 
         Pair<Float, Float> p;
 
@@ -281,7 +286,7 @@ public class TRSRTransformation implements IModelState, ITransformation
         return f;
     }
 
-    private static final float eps = 1e-7f;
+    private static final float eps = 1e-6f;
     private static final float g = 3f + 2f * (float)Math.sqrt(2);
     private static final float cs = (float)Math.cos(Math.PI / 8);
     private static final float ss = (float)Math.sin(Math.PI / 8);
@@ -309,6 +314,7 @@ public class TRSRTransformation implements IModelState, ITransformation
         m.setColumn(i, t);
     }
 
+    @SuppressWarnings("unused")
     private static void sortSingularValues(Matrix3f b, Quat4f v)
     {
         float p0 = b.m00 * b.m00 + b.m10 * b.m10 + b.m20 * b.m20;
@@ -365,50 +371,59 @@ public class TRSRTransformation implements IModelState, ITransformation
         Quat4f qt = new Quat4f(), ret = new Quat4f(0, 0, 0, 1);
         Pair<Float, Float> p;
         // 01
-        p = approxGivensQuat(m.m00, .5f * (m.m01 + m.m10), m.m11);
-        qt.set(0, 0, p.getLeft(), p.getRight());
-        //qt.normalize();
-        ret.mul(qt);
-        //t.set(qt);
-        t.setIdentity();
-        t.m00 = qt.w * qt.w - qt.z * qt.z;
-        t.m11 = t.m00;
-        t.m10 = 2 * qt.z * qt.w;
-        t.m01 = -t.m10;
-        t.m22 = qt.w * qt.w + qt.z * qt.z;
-        m.mul(m, t);
-        t.transpose();
-        m.mul(t, m);
+        if(m.m01 * m.m01 + m.m10 * m.m10 > eps)
+        {
+            p = approxGivensQuat(m.m00, .5f * (m.m01 + m.m10), m.m11);
+            qt.set(0, 0, p.getLeft(), p.getRight());
+            //qt.normalize();
+            ret.mul(qt);
+            //t.set(qt);
+            t.setIdentity();
+            t.m00 = qt.w * qt.w - qt.z * qt.z;
+            t.m11 = t.m00;
+            t.m10 = 2 * qt.z * qt.w;
+            t.m01 = -t.m10;
+            t.m22 = qt.w * qt.w + qt.z * qt.z;
+            m.mul(m, t);
+            t.transpose();
+            m.mul(t, m);
+        }
         // 02
-        p = approxGivensQuat(m.m00, .5f * (m.m02 + m.m20), m.m22);
-        qt.set(0, -p.getLeft(), 0, p.getRight());
-        //qt.normalize();
-        ret.mul(qt);
-        //t.set(qt);
-        t.setIdentity();
-        t.m00 = qt.w * qt.w - qt.y * qt.y;
-        t.m22 = t.m00;
-        t.m20 = -2 * qt.y * qt.w;
-        t.m02 = -t.m20;
-        t.m11 = qt.w * qt.w + qt.y * qt.y;
-        m.mul(m, t);
-        t.transpose();
-        m.mul(t, m);
+        if(m.m02 * m.m02 + m.m20 * m.m20 > eps)
+        {
+            p = approxGivensQuat(m.m00, .5f * (m.m02 + m.m20), m.m22);
+            qt.set(0, -p.getLeft(), 0, p.getRight());
+            //qt.normalize();
+            ret.mul(qt);
+            //t.set(qt);
+            t.setIdentity();
+            t.m00 = qt.w * qt.w - qt.y * qt.y;
+            t.m22 = t.m00;
+            t.m20 = -2 * qt.y * qt.w;
+            t.m02 = -t.m20;
+            t.m11 = qt.w * qt.w + qt.y * qt.y;
+            m.mul(m, t);
+            t.transpose();
+            m.mul(t, m);
+        }
         // 12
-        p = approxGivensQuat(m.m11, .5f * (m.m12 + m.m21), m.m22);
-        qt.set(p.getLeft(), 0, 0, p.getRight());
-        //qt.normalize();
-        ret.mul(qt);
-        //t.set(qt);
-        t.setIdentity();
-        t.m11 = qt.w * qt.w - qt.x * qt.x;
-        t.m22 = t.m11;
-        t.m21 = 2 * qt.x * qt.w;
-        t.m12 = -t.m21;
-        t.m00 = qt.w * qt.w + qt.x * qt.x;
-        m.mul(m, t);
-        t.transpose();
-        m.mul(t, m);
+        if(m.m12 * m.m12 + m.m21 * m.m21 > eps)
+        {
+            p = approxGivensQuat(m.m11, .5f * (m.m12 + m.m21), m.m22);
+            qt.set(p.getLeft(), 0, 0, p.getRight());
+            //qt.normalize();
+            ret.mul(qt);
+            //t.set(qt);
+            t.setIdentity();
+            t.m11 = qt.w * qt.w - qt.x * qt.x;
+            t.m22 = t.m11;
+            t.m21 = 2 * qt.x * qt.w;
+            t.m12 = -t.m21;
+            t.m00 = qt.w * qt.w + qt.x * qt.x;
+            m.mul(m, t);
+            t.transpose();
+            m.mul(t, m);
+        }
         return ret;
     }
 
@@ -428,7 +443,7 @@ public class TRSRTransformation implements IModelState, ITransformation
      */
     public ItemTransformVec3f toItemTransform()
     {
-        return new ItemTransformVec3f(getTranslation(), toYXZ(getLeftRot()), getScale());
+        return new ItemTransformVec3f(toLwjgl(getTranslation()), toLwjgl(toYXZ(getLeftRot())), toLwjgl(getScale()));
     }
 
     public Matrix4f getMatrix()
@@ -460,9 +475,13 @@ public class TRSRTransformation implements IModelState, ITransformation
         return (Quat4f)rightRot.clone();
     }
 
-    public TRSRTransformation apply(IModelPart part)
+    public Optional<TRSRTransformation> apply(Optional<? extends IModelPart> part)
     {
-        return this;
+        if(part.isPresent())
+        {
+            return Optional.absent();
+        }
+        return Optional.of(this);
     }
 
     public EnumFacing rotate(EnumFacing facing)
@@ -565,5 +584,87 @@ public class TRSRTransformation implements IModelState, ITransformation
         }
         else if (!matrix.equals(other.matrix)) return false;
         return true;
+    }
+
+    public static Vector3f toVecmath(org.lwjgl.util.vector.Vector3f vec)
+    {
+        return new Vector3f(vec.x, vec.y, vec.z);
+    }
+
+    public static Vector4f toVecmath(org.lwjgl.util.vector.Vector4f vec)
+    {
+        return new Vector4f(vec.x, vec.y, vec.z, vec.w);
+    }
+
+    public static Matrix4f toVecmath(org.lwjgl.util.vector.Matrix4f m)
+    {
+        return new Matrix4f(
+            m.m00, m.m10, m.m20, m.m30,
+            m.m01, m.m11, m.m21, m.m31,
+            m.m02, m.m12, m.m22, m.m32,
+            m.m03, m.m13, m.m23, m.m33);
+    }
+
+    public static org.lwjgl.util.vector.Vector3f toLwjgl(Vector3f vec)
+    {
+        return new org.lwjgl.util.vector.Vector3f(vec.x, vec.y, vec.z);
+    }
+
+    public static org.lwjgl.util.vector.Vector4f toLwjgl(Vector4f vec)
+    {
+        return new org.lwjgl.util.vector.Vector4f(vec.x, vec.y, vec.z, vec.w);
+    }
+
+    public static org.lwjgl.util.vector.Matrix4f toLwjgl(Matrix4f m)
+    {
+        org.lwjgl.util.vector.Matrix4f r = new org.lwjgl.util.vector.Matrix4f();
+        r.m00 = m.m00;
+        r.m01 = m.m10;
+        r.m02 = m.m20;
+        r.m03 = m.m30;
+        r.m10 = m.m01;
+        r.m11 = m.m11;
+        r.m12 = m.m21;
+        r.m13 = m.m31;
+        r.m20 = m.m02;
+        r.m21 = m.m12;
+        r.m22 = m.m22;
+        r.m23 = m.m32;
+        r.m30 = m.m03;
+        r.m31 = m.m13;
+        r.m32 = m.m23;
+        r.m33 = m.m33;
+        return r;
+    }
+
+    public static Vector3f lerp(Tuple3f from, Tuple3f to, float progress)
+    {
+        Vector3f res = new Vector3f(from);
+        res.interpolate(from, to, progress);
+        return res;
+    }
+
+    public static Vector4f lerp(Tuple4f from, Tuple4f to, float progress)
+    {
+        Vector4f res = new Vector4f(from);
+        res.interpolate(from, to, progress);
+        return res;
+    }
+
+    public static Quat4f slerp(Quat4f from, Quat4f to, float progress)
+    {
+        Quat4f res = new Quat4f();
+        res.interpolate(from, to, progress);
+        return res;
+    }
+
+    public TRSRTransformation slerp(TRSRTransformation that, float progress)
+    {
+        return new TRSRTransformation(
+            lerp(this.getTranslation(), that.getTranslation(), progress),
+            slerp(this.getLeftRot(), that.getLeftRot(), progress),
+            lerp(this.getScale(), that.getScale(), progress),
+            slerp(this.getRightRot(), that.getRightRot(), progress)
+        );
     }
 }

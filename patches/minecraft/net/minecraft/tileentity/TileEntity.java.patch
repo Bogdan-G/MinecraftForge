@@ -1,34 +1,45 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntity.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntity.java
-@@ -66,6 +66,7 @@
+@@ -17,7 +17,7 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
+-public abstract class TileEntity
++public abstract class TileEntity implements net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
+ {
+     private static final Logger field_145852_a = LogManager.getLogger();
+     private static Map < String, Class <? extends TileEntity >> field_145855_i = Maps. < String, Class <? extends TileEntity >> newHashMap();
+@@ -59,6 +59,8 @@
      public void func_145839_a(NBTTagCompound p_145839_1_)
      {
          this.field_174879_c = new BlockPos(p_145839_1_.func_74762_e("x"), p_145839_1_.func_74762_e("y"), p_145839_1_.func_74762_e("z"));
 +        if (p_145839_1_.func_74764_b("ForgeData")) this.customTileData = p_145839_1_.func_74775_l("ForgeData");
++        if (this.capabilities != null && p_145839_1_.func_74764_b("ForgeCaps")) this.capabilities.deserializeNBT(p_145839_1_.func_74775_l("ForgeCaps"));
      }
  
      public void func_145841_b(NBTTagCompound p_145841_1_)
-@@ -82,6 +83,7 @@
+@@ -75,6 +77,8 @@
              p_145841_1_.func_74768_a("x", this.field_174879_c.func_177958_n());
              p_145841_1_.func_74768_a("y", this.field_174879_c.func_177956_o());
              p_145841_1_.func_74768_a("z", this.field_174879_c.func_177952_p());
 +            if (this.customTileData != null) p_145841_1_.func_74782_a("ForgeData", this.customTileData);
++            if (this.capabilities != null) p_145841_1_.func_74782_a("ForgeCaps", this.capabilities.serializeNBT());
          }
      }
  
-@@ -89,9 +91,10 @@
+@@ -82,9 +86,10 @@
      {
          TileEntity tileentity = null;
  
-+        Class oclass = null;
++        Class <? extends TileEntity > oclass = null;
          try
          {
--            Class oclass = (Class)field_145855_i.get(p_145827_0_.func_74779_i("id"));
+-            Class <? extends TileEntity > oclass = (Class)field_145855_i.get(p_145827_0_.func_74779_i("id"));
 +            oclass = (Class)field_145855_i.get(p_145827_0_.func_74779_i("id"));
  
              if (oclass != null)
              {
-@@ -109,7 +112,17 @@
+@@ -102,7 +107,17 @@
          }
          else
          {
@@ -46,15 +57,15 @@
          }
  
          return tileentity;
-@@ -141,7 +154,6 @@
+@@ -134,7 +149,6 @@
          }
      }
  
 -    @SideOnly(Side.CLIENT)
      public double func_145835_a(double p_145835_1_, double p_145835_3_, double p_145835_5_)
      {
-         double d3 = (double)this.field_174879_c.func_177958_n() + 0.5D - p_145835_1_;
-@@ -284,4 +296,135 @@
+         double d0 = (double)this.field_174879_c.func_177958_n() + 0.5D - p_145835_1_;
+@@ -279,4 +293,176 @@
          func_145826_a(TileEntityFlowerPot.class, "FlowerPot");
          func_145826_a(TileEntityBanner.class, "Banner");
      }
@@ -188,5 +199,46 @@
 +        return this instanceof TileEntityCommandBlock ||
 +               this instanceof TileEntityMobSpawner ||
 +               this instanceof TileEntitySign;
++    }
++
++
++    /**
++     * Called from the Chunk when this is first added to the world. Override instead of adding
++     * if (firstTick) stuff in update. Happens after validate and after it has been placed into the Chunk tileEntity
++     * map.
++     */
++    public void onLoad()
++    {
++        // NOOP
++    }
++
++    private net.minecraftforge.common.capabilities.CapabilityDispatcher capabilities;
++    public TileEntity()
++    {
++        capabilities = net.minecraftforge.event.ForgeEventFactory.gatherCapabilities(this);
++    }
++
++    public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing)
++    {
++        if (getCapability(capability, facing) != null)
++            return true;
++        return capabilities == null ? false : capabilities.hasCapability(capability, facing);
++    }
++
++    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing)
++    {
++        return capabilities == null ? null : capabilities.getCapability(capability, facing);
++    }
++
++    public void deserializeNBT(NBTTagCompound nbt)
++    {
++        this.func_145839_a(nbt);
++    }
++
++    public NBTTagCompound serializeNBT()
++    {
++        NBTTagCompound ret = new NBTTagCompound();
++        this.func_145841_b(ret);
++        return ret;
 +    }
  }
