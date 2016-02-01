@@ -8,7 +8,7 @@ public class ServerToClientConnectionEstablishedHandler extends ChannelInboundHa
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception
     {
-        if (evt.getClass().equals(NetworkHandshakeEstablished.class))
+        if (evt instanceof NetworkHandshakeEstablished)
         {
             ctx.writeAndFlush(new ForgeMessage.FluidIdMapMessage());
             return;

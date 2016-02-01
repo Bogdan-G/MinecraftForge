@@ -98,9 +98,9 @@ public enum LoaderState
         UNLOADED       ("Unloaded",         "U"),
         LOADED         ("Loaded",           "L"),
         CONSTRUCTED    ("Constructed",      "C"),
-        PREINITIALIZED ("Pre-initialized",  "H"),
+        PREINITIALIZED ("Pre-initialized",  "P"),
         INITIALIZED    ("Initialized",      "I"),
-        POSTINITIALIZED("Post-initialized", "J"),
+        POSTINITIALIZED("Post-initialized", "P"),
         AVAILABLE      ("Available",        "A"),
         DISABLED       ("Disabled",         "D"),
         ERRORED        ("Errored",          "E");

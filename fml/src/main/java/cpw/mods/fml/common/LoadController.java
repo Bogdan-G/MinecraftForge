@@ -179,7 +179,7 @@ public class LoadController
     @Subscribe
     public void propogateStateMessage(FMLEvent stateEvent)
     {
-        if (stateEvent.getClass().equals(FMLPreInitializationEvent.class))
+        if (stateEvent instanceof FMLPreInitializationEvent)
         {
             modObjectList = buildModObjectList();
         }
@@ -213,7 +213,7 @@ public class LoadController
         FMLLog.log(modId, Level.TRACE, "Sent event %s to mod %s", stateEvent.getEventType(), modId);
         ThreadContext.remove("mod");
         activeContainer = null;
-        if (stateEvent.getClass().equals(FMLStateEvent.class))
+        if (stateEvent instanceof FMLStateEvent)
         {
             if (!errors.containsKey(modId))
             {
@@ -254,7 +254,7 @@ public class LoadController
 
     public void errorOccurred(ModContainer modContainer, Throwable exception)
     {
-        if (exception.getClass().equals(InvocationTargetException.class))
+        if (exception instanceof InvocationTargetException)
         {
             errors.put(modContainer.getModId(), ((InvocationTargetException)exception).getCause());
         }

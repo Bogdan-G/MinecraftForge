@@ -41,7 +41,7 @@ public class FMLFolderResourcePack extends FolderResourcePack implements FMLCont
     @Override
     protected InputStream getInputStreamByName(String resourceName) throws IOException
     {
-        /*try
+        try
         {
             return super.getInputStreamByName(resourceName);
         }
@@ -58,8 +58,8 @@ public class FMLFolderResourcePack extends FolderResourcePack implements FMLCont
                         "}").getBytes(Charsets.UTF_8));
             }
             else throw ioe;
-        }*/
-        return super.getInputStreamByName(resourceName);
+        }
+        //return super.getInputStreamByName(resourceName);
     }
 
     @Override

@@ -78,7 +78,7 @@ public class RenderBlockFluid implements ISimpleBlockRenderingHandler
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
     {
-        if (block.getClass().equals(BlockFluidBase.class))
+        if (!(block instanceof BlockFluidBase))
         {
             return false;
         }

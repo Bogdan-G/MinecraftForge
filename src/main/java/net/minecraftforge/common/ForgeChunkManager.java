@@ -401,7 +401,7 @@ public class ForgeChunkManager
 
         forcedChunks.put(world, ImmutableSetMultimap.<ChunkCoordIntPair,Ticket>of());
 
-        if (!(world.getClass().equals(WorldServer.class)))
+        if (!(world instanceof WorldServer))
         {
             return;
         }
@@ -545,7 +545,7 @@ public class ForgeChunkManager
     static void unloadWorld(World world)
     {
         // World save fires before this event so the chunk loading info will be done
-        if (!(world.getClass().equals(WorldServer.class)))
+        if (!(world instanceof WorldServer))
         {
             return;
         }
@@ -820,7 +820,7 @@ public class ForgeChunkManager
     static void saveWorld(World world)
     {
         // only persist persistent worlds
-        if (!(world.getClass().equals(WorldServer.class)))
+        if (!(world instanceof WorldServer))
         {
             return;
         }

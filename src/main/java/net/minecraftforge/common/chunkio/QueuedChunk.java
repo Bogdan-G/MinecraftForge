@@ -24,7 +24,7 @@ class QueuedChunk {
 
     @Override
     public boolean equals(Object object) {
-        if (object.getClass().equals(QueuedChunk.class)) {
+        if (object instanceof QueuedChunk) {
             QueuedChunk other = (QueuedChunk) object;
             return x == other.x && z == other.z && world == other.world;
         }

@@ -329,7 +329,9 @@ public class CoreModManager {
                     }
                     catch (IOException e)
                     {
-                        // Noise
+                        // Noise ? go log info
+                        FMLRelaunchLog.log(Level.INFO, e, "- dont close jar file %s - JVM mechanics (?)", coreMod.getName());
+                        continue;
                     }
                 }
             }
