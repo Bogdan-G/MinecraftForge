@@ -1,0 +1,29 @@
+--- ../src-base/minecraft/net/minecraft/world/storage/MapStorage.java
++++ ../src-work/minecraft/net/minecraft/world/storage/MapStorage.java
+@@ -5,6 +5,8 @@
+ import java.io.File;
+ import java.io.FileInputStream;
+ import java.io.FileOutputStream;
++import java.io.BufferedInputStream;
++import java.io.BufferedOutputStream;
+ import java.util.ArrayList;
+ import java.util.HashMap;
+ import java.util.Iterator;
+@@ -57,7 +59,7 @@
+                            throw new RuntimeException("Failed to instantiate " + p_75742_1_.toString(), exception);
+                        }
+
+-                        FileInputStream fileinputstream = new FileInputStream(file1);
++                        BufferedInputStream fileinputstream = new BufferedInputStream(new FileInputStream(file1));
+                        NBTTagCompound nbttagcompound = CompressedStreamTools.readCompressed(fileinputstream);
+                        fileinputstream.close();
+                        worldsaveddata.readFromNBT(nbttagcompound.getCompoundTag("data"));
+@@ -152,7 +154,7 @@
+
+            if (file1 != null && file1.exists())
+            {
+-                DataInputStream datainputstream = new DataInputStream(new FileInputStream(file1));
++                DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new FileInputStream(file1)));
+                NBTTagCompound nbttagcompound = CompressedStreamTools.read(datainputstream);
+                datainputstream.close();
+                Iterator iterator = nbttagcompound.func_150296_c().iterator();

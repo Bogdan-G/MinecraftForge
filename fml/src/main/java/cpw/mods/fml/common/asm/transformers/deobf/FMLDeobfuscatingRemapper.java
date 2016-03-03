@@ -14,6 +14,8 @@ package cpw.mods.fml.common.asm.transformers.deobf;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -75,7 +77,7 @@ public class FMLDeobfuscatingRemapper extends Remapper {
         try
         {
             File mapData = new File(deobfFileName);
-            LZMAInputSupplier zis = new LZMAInputSupplier(new FileInputStream(mapData));
+            LZMAInputSupplier zis = new LZMAInputSupplier(new BufferedInputStream(new FileInputStream(mapData)));
             CharSource srgSource = zis.asCharSource(Charsets.UTF_8);
             List<String> srgList = srgSource.readLines();
             rawMethodMaps = Maps.newHashMap();

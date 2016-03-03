@@ -1,0 +1,25 @@
+--- ../src-base/minecraft/net/minecraft/server/dedicated/PropertyManager.java
++++ ../src-work/minecraft/net/minecraft/server/dedicated/PropertyManager.java
+@@ -7,8 +7,8 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
++import java.io.*;
+@SideOnly(Side.SERVER)
+public class PropertyManager
+@@ -24,11 +24,11 @@
+
+        if (p_i45278_1_.exists())
+        {
+-            FileInputStream fileinputstream = null;
++            BufferedInputStream fileinputstream = null;
+
+            try
+            {
+-                fileinputstream = new FileInputStream(p_i45278_1_);
++                fileinputstream = new BufferedInputStream(new FileInputStream(p_i45278_1_));
+                this.serverProperties.load(fileinputstream);
+            }
+            catch (Exception exception)

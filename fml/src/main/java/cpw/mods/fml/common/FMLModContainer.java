@@ -14,6 +14,8 @@ package cpw.mods.fml.common;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -236,7 +238,7 @@ public class FMLModContainer implements ModContainer
                 if (propsFile.exists() && propsFile.isFile())
                 {
                     version = new Properties();
-                    FileInputStream fis = new FileInputStream(propsFile);
+                    BufferedInputStream fis = new BufferedInputStream(new FileInputStream(propsFile));
                     version.load(fis);
                     fis.close();
                 }

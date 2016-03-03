@@ -45,6 +45,8 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -76,8 +78,8 @@ public class GDiffPatcher {
 		throws IOException
 	{
         RandomAccessFileSeekableSource source =new RandomAccessFileSeekableSource(new RandomAccessFile(sourceFile, "r"));
-        InputStream patch = new FileInputStream(patchFile);
-        OutputStream output = new FileOutputStream(outputFile);
+        InputStream patch = new BufferedInputStream(new FileInputStream(patchFile));
+        OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile));
         try {
             patch(source, patch, output);
         } catch (IOException e) {

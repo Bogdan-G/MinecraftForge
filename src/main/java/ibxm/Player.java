@@ -21,7 +21,7 @@ public class Player {
 			System.err.println( "Usage: java ibxm.Player <module file>" );
 			System.exit( 0 );
 		}
-		FileInputStream file_input_stream = new FileInputStream( args[ 0 ] );
+		InputStream file_input_stream = new BufferedInputStream(new FileInputStream( args[ 0 ] ));
 		Player player = new Player();
 		player.set_module( Player.load_module( file_input_stream ) );
 		file_input_stream.close();

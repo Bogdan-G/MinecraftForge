@@ -14,6 +14,8 @@ package cpw.mods.fml.client;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -670,13 +672,13 @@ public class FMLClientHandler implements IFMLSidedHandler
         NBTTagCompound leveldat;
         try
         {
-            leveldat = CompressedStreamTools.readCompressed(new FileInputStream(new File(dir, "level.dat")));
+            leveldat = CompressedStreamTools.readCompressed(new BufferedInputStream(new FileInputStream(new File(dir, "level.dat"))));
         }
         catch (Exception e)
         {
             try
             {
-                leveldat = CompressedStreamTools.readCompressed(new FileInputStream(new File(dir, "level.dat_old")));
+                leveldat = CompressedStreamTools.readCompressed(new BufferedInputStream(new FileInputStream(new File(dir, "level.dat_old"))));
             }
             catch (Exception e1)
             {

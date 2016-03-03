@@ -15,6 +15,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -815,7 +817,7 @@ public class Configuration
 
             if (file.canRead())
             {
-                input = new UnicodeInputStreamReader(new FileInputStream(file), defaultEncoding);
+                input = new UnicodeInputStreamReader(new BufferedInputStream(new FileInputStream(file)), defaultEncoding);
                 defaultEncoding = input.getEncoding();
                 buffer = new BufferedReader(input);
 
