@@ -843,9 +843,10 @@ public class Property
             catch (NumberFormatException e){}
         }
 
-        int[] primitives = new int[nums.size()];
+        int nums_sS=nums.size();
+        int[] primitives = new int[nums_sS];
 
-        for (int i = 0; i < nums.size(); i++)
+        for (int i = 0; i < nums_sS; i++)
         {
             primitives[i] = nums.get(i);
         }
@@ -892,9 +893,10 @@ public class Property
             catch (NumberFormatException e){}
         }
 
-        boolean[] primitives = new boolean[tmp.size()];
+        int temp_sS=tmp.size();
+        boolean[] primitives = new boolean[temp_sS];
 
-        for (int i = 0; i < tmp.size(); i++)
+        for (int i = 0; i < temp_sS; i++)
         {
             primitives[i] = tmp.get(i);
         }
@@ -938,9 +940,10 @@ public class Property
             catch (NumberFormatException e) {}
         }
 
-        double[] primitives = new double[tmp.size()];
+        int temp_sS=tmp.size();
+        double[] primitives = new double[temp_sS];
 
-        for (int i = 0; i < tmp.size(); i++)
+        for (int i = 0; i < temp_sS; i++)
         {
             primitives[i] = tmp.get(i);
         }

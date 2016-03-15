@@ -698,14 +698,16 @@ public class GuiIngameForge extends GuiIngame
         RenderGameOverlayEvent.Text event = new RenderGameOverlayEvent.Text(eventParent, left, right);
         if (!MinecraftForge.EVENT_BUS.post(event))
         {
-            for (int x = 0; x < left.size(); x++)
+            int left_sS=left.size();
+            for (int x = 0; x < left_sS; x++)
             {
                 String msg = left.get(x);
                 if (msg == null) continue;
                 fontrenderer.drawStringWithShadow(msg, 2, 2 + x * 10, WHITE);
             }
 
-            for (int x = 0; x < right.size(); x++)
+           int right_sS=right.size();
+            for (int x = 0; x < right_sS; x++)
             {
                 String msg = right.get(x);
                 if (msg == null) continue;

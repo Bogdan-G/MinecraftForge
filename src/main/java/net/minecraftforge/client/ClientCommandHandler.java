@@ -119,14 +119,16 @@ public class ClientCommandHandler extends CommandHandler
                 {
                     if (leftOfCursor.indexOf(' ') == -1)
                     {
-                        for (int i = 0; i < commands.size(); i++)
+                        int commands_sS=commands.size();
+                        for (int i = 0; i < commands_sS; i++)
                         {
                             commands.set(i, GRAY + "/" + commands.get(i) + RESET);
                         }
                     }
                     else
                     {
-                        for (int i = 0; i < commands.size(); i++)
+                        int commands_sS=commands.size();
+                        for (int i = 0; i < commands_sS; i++)
                         {
                             commands.set(i, GRAY + commands.get(i) + RESET);
                         }

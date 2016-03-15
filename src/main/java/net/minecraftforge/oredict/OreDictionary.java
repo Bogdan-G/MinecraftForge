@@ -576,7 +576,8 @@ public class OreDictionary
     {
         //System.out.println("Baking OreDictionary:");
         stackToId.clear();
-        for (int id = 0; id < idToStack.size(); id++)
+        int idToStack_sS=idToStack.size();
+        for (int id = 0; id < idToStack_sS; id++)
         {
             List<ItemStack> ores = idToStack.get(id);
             if (ores == null) continue;

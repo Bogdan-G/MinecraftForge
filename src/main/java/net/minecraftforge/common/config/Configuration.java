@@ -944,7 +944,7 @@ public class Configuration
                                     }
 
                                     Property prop = new Property(name, line.substring(i + 1), type, true);
-                                    i = line.length();int line_sS=line.length();
+                                    i = line.length();line_sS=line.length();
 
                                     currentCat.put(name, prop);
 
