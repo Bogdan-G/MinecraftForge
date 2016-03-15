@@ -46,11 +46,12 @@ public class ShapelessOreRecipe implements IRecipe
             else
             {
                 String ret = "Invalid shapeless ore recipe: ";
+                StringBuilder retSB = new StringBuilder(ret);
                 for (Object tmp :  recipe)
                 {
-                    ret += tmp + ", ";
+                    retSB.append(tmp).append(", ");
                 }
-                ret += output;
+                retSB.append(output); ret = String.valueOf(retSB);
                 throw new RuntimeException(ret);
             }
         }

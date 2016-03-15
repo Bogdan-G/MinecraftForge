@@ -51,34 +51,39 @@ public class ShapedOreRecipe implements IRecipe
         if (recipe[idx] instanceof String[])
         {
             String[] parts = ((String[])recipe[idx++]);
+            StringBuilder shapeSB = new StringBuilder(shape);
 
             for (String s : parts)
             {
                 width = s.length();
-                shape += s;
+                shapeSB.append(s);
             }
 
+            shape=String.valueOf(shapeSB);
             height = parts.length;
         }
         else
         {
+            StringBuilder shapeSB = new StringBuilder(shape);
             while (recipe[idx] instanceof String)
             {
                 String s = (String)recipe[idx++];
-                shape += s;
+                shapeSB.append(s);
                 width = s.length();
                 height++;
             }
+            shape=String.valueOf(shapeSB);
         }
 
         if (width * height != shape.length())
         {
             String ret = "Invalid shaped ore recipe: ";
+            StringBuilder retSB = new StringBuilder(ret);
             for (Object tmp :  recipe)
             {
-                ret += tmp + ", ";
+                retSB.append(tmp).append(", ");
             }
-            ret += output;
+            retSB.append(output); ret = String.valueOf(retSB);
             throw new RuntimeException(ret);
         }
 

@@ -527,7 +527,7 @@ public class GuiIngameForge extends GuiIngame
                 mc.mcProfiler.startSection("expLevel");
                 boolean flag1 = false;
                 int color = flag1 ? 16777215 : 8453920;
-                String text = "" + mc.thePlayer.experienceLevel;
+                String text = String.valueOf(mc.thePlayer.experienceLevel);
                 int x = (width - fontrenderer.getStringWidth(text)) / 2;
                 int y = height - 31 - 4;
                 fontrenderer.drawString(text, x + 1, y, 0);
@@ -814,7 +814,7 @@ public class GuiIngameForge extends GuiIngame
                         if (maxX - endX > 5)
                         {
                             Score score = scoreobjective.getScoreboard().func_96529_a(player.name, scoreobjective);
-                            String scoreDisplay = EnumChatFormatting.YELLOW + "" + score.getScorePoints();
+                            String scoreDisplay = String.valueOf(EnumChatFormatting.YELLOW) + String.valueOf(score.getScorePoints());
                             fontrenderer.drawStringWithShadow(scoreDisplay, maxX - fontrenderer.getStringWidth(scoreDisplay), yPos, 16777215);
                         }
                     }

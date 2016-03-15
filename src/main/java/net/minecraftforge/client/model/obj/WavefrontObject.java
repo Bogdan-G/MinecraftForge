@@ -83,7 +83,7 @@ public class WavefrontObject implements IModelCustom
                 lineCount++;
                 currentLine = currentLine.replaceAll("\\s+", " ").trim();
 
-                if (currentLine.startsWith("#") || currentLine.length() == 0)
+                if (currentLine.charAt(0) == '#' || currentLine.length() == 0)//currentLine.startsWith("#")
                 {
                     continue;
                 }

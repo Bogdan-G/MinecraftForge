@@ -39,7 +39,7 @@ public class ClientCommandHandler extends CommandHandler
     {
         message = message.trim();
 
-        if (message.startsWith("/"))
+        if (message.charAt(0) == '/')//message.startsWith("/")
         {
             message = message.substring(1);
         }
