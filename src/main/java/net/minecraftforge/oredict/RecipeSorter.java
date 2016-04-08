@@ -2,7 +2,7 @@ package net.minecraftforge.oredict;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
+import java.util.List;import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,8 +40,8 @@ public class RecipeSorter implements Comparator<IRecipe>
         private String name;
         private Class<?> cls;
         private Category cat;
-        List<String> before = Lists.newArrayList();
-        List<String> after = Lists.newArrayList();
+        List<String> before = new ArrayList();
+        List<String> after = new ArrayList();
 
         private SortEntry(String name, Class<?> cls, Category cat, String deps)
         {
@@ -99,10 +99,10 @@ public class RecipeSorter implements Comparator<IRecipe>
         }
     };
 
-    private static Map<Class, Category>     categories = Maps.newHashMap();
+    private static Map<Class, Category>     categories = new HashMap();
     //private static Map<String, Class>       types = Maps.newHashMap();
-    private static Map<String, SortEntry>   entries = Maps.newHashMap();
-    private static Map<Class, Integer>      priorities = Maps.newHashMap();
+    private static Map<String, SortEntry>   entries = new HashMap();
+    private static Map<Class, Integer>      priorities = new HashMap();
 
     public static RecipeSorter INSTANCE = new RecipeSorter();
     private static boolean isDirty = true;
@@ -136,7 +136,7 @@ public class RecipeSorter implements Comparator<IRecipe>
         return getPriority(r2) - getPriority(r1); // high priority value first! 
     }
 
-    private static Set<Class> warned = Sets.newHashSet();
+    private static Set<Class> warned = new HashSet();
     @SuppressWarnings("unchecked")
     public static void sortCraftManager()
     {

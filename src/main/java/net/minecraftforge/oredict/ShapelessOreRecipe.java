@@ -92,7 +92,8 @@ public class ShapelessOreRecipe implements IRecipe
     {
         ArrayList<Object> required = new ArrayList<Object>(input);
 
-        for (int x = 0; x < var1.getSizeInventory(); x++)
+        int var1_getSizeInventory_sS=var1.getSizeInventory();
+        for (int x = 0; x < var1_getSizeInventory_sS; x++)
         {
             ItemStack slot = var1.getStackInSlot(x);
 
