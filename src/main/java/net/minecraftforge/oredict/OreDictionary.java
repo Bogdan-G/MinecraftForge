@@ -40,10 +40,10 @@ public class OreDictionary
     private static boolean hasInit = false;
     private static List<String>          idToName = new ArrayList<String>();
     private static Map<String, Integer>  nameToId = new HashMap<String, Integer>(128);
-    private static List<ArrayList<ItemStack>> idToStack = Lists.newArrayList(); //ToDo: Unqualify to List when possible {1.8}
-    private static List<ArrayList<ItemStack>> idToStackUn = Lists.newArrayList(); //ToDo: Unqualify to List when possible {1.8}
-    private static Map<Integer, List<Integer>> stackToId = Maps.newHashMapWithExpectedSize(96); // Calculated from 128 * 0.75
-    public static final ArrayList<ItemStack> EMPTY_LIST = new UnmodifiableArrayList(Lists.newArrayList()); //ToDo: Unqualify to List when possible {1.8}
+    private static List<ArrayList<ItemStack>> idToStack = new ArrayList(); //ToDo: Unqualify to List when possible {1.8}
+    private static List<ArrayList<ItemStack>> idToStackUn = new ArrayList(); //ToDo: Unqualify to List when possible {1.8}
+    private static Map<Integer, List<Integer>> stackToId = new HashMap((int)(128 * 0.75)); // Calculated from 128 * 0.75
+    public static final ArrayList<ItemStack> EMPTY_LIST = new UnmodifiableArrayList(new ArrayList()); //ToDo: Unqualify to List when possible {1.8}
 
     /**
      * Minecraft changed from -1 to Short.MAX_VALUE in 1.5 release for the "block wildcard". Use this in case it
