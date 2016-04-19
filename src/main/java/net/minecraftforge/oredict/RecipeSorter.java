@@ -3,8 +3,8 @@ package net.minecraftforge.oredict;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
+import java.util.Map;import java.util.HashMap;
+import java.util.Set;import java.util.HashSet;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;

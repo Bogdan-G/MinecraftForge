@@ -62,7 +62,7 @@ public class ModDiscoverer
             {
                 if (minecraftSources[i].isFile())
                 {
-                    if (knownLibraries.contains(minecraftSources[i].getName()))
+                    if (knownLibraries.contains(minecraftSources[i].getName()) || minecraftSources[i].getAbsolutePath().startsWith(String.valueOf(System.getProperty("java.home"))))
                     {
                         FMLLog.finer("Skipping known library file %s", minecraftSources[i].getAbsolutePath());
                     }
