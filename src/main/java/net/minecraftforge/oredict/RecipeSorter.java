@@ -3,7 +3,7 @@ package net.minecraftforge.oredict;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;import java.util.ArrayList;
-import java.util.Map;import java.util.HashMap;
+import java.util.Map;import java.util.HashMap;import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;import java.util.HashSet;
 
 import com.google.common.base.Joiner;
@@ -53,7 +53,7 @@ public class RecipeSorter implements Comparator<IRecipe>
 
         private void parseDepends(String deps)
         {
-            if (deps.isEmpty()) return;
+            if (deps.length()==0) return;
             for (String dep : deps.split(" "))
             {
                 if (dep.startsWith("before:"))
@@ -99,10 +99,10 @@ public class RecipeSorter implements Comparator<IRecipe>
         }
     };
 
-    private static Map<Class, Category>     categories = new HashMap();
+    private static Map<Class, Category>     categories = new ConcurrentHashMap();
     //private static Map<String, Class>       types = Maps.newHashMap();
-    private static Map<String, SortEntry>   entries = new HashMap();
-    private static Map<Class, Integer>      priorities = new HashMap();
+    private static Map<String, SortEntry>   entries = new ConcurrentHashMap();
+    private static Map<Class, Integer>      priorities = new ConcurrentHashMap();
 
     public static RecipeSorter INSTANCE = new RecipeSorter();
     private static boolean isDirty = true;

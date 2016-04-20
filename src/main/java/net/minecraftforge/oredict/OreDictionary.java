@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashMap;import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -39,10 +39,10 @@ public class OreDictionary
 {
     private static boolean hasInit = false;
     private static List<String>          idToName = new ArrayList<String>();
-    private static Map<String, Integer>  nameToId = new HashMap<String, Integer>(128);
+    private static Map<String, Integer>  nameToId = new ConcurrentHashMap<String, Integer>(128);
     private static List<ArrayList<ItemStack>> idToStack = new ArrayList(); //ToDo: Unqualify to List when possible {1.8}
     private static List<ArrayList<ItemStack>> idToStackUn = new ArrayList(); //ToDo: Unqualify to List when possible {1.8}
-    private static Map<Integer, List<Integer>> stackToId = new HashMap((int)(128 * 0.75)); // Calculated from 128 * 0.75
+    private static Map<Integer, List<Integer>> stackToId = new ConcurrentHashMap((int)(128 * 0.75)); // Calculated from 128 * 0.75
     public static final ArrayList<ItemStack> EMPTY_LIST = new ArrayList(); //ToDo: Unqualify to List when possible {1.8}
 
     /**
