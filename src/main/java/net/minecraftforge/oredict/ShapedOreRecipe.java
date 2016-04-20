@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Map.Entry;import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.crafting.IRecipe;
@@ -87,7 +87,7 @@ public class ShapedOreRecipe implements IRecipe
             throw new RuntimeException(ret);
         }
 
-        HashMap<Character, Object> itemMap = new HashMap<Character, Object>();
+        ConcurrentHashMap<Character, Object> itemMap = new ConcurrentHashMap<Character, Object>();
 
         for (; idx < recipe.length; idx += 2)
         {
@@ -113,11 +113,12 @@ public class ShapedOreRecipe implements IRecipe
             else
             {
                 String ret = "Invalid shaped ore recipe: ";
+                StringBuilder retSB = new StringBuilder(ret);
                 for (Object tmp :  recipe)
                 {
-                    ret += tmp + ", ";
+                    retSB.append(tmp).append(", ");
                 }
-                ret += output;
+                retSB.append(output); ret = String.valueOf(retSB);
                 throw new RuntimeException(ret);
             }
         }
