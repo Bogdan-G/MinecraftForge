@@ -296,7 +296,9 @@ public class FMLContainer extends DummyModContainer implements WorldAccessContai
                     "You will not be able to load until they are present again.\n\n" +
                     "Missing Blocks/Items:\n";
 
-            for (String s : failedElements) text += s + "\n";
+            StringBuilder textSB = new StringBuilder(text);
+            for (String s : failedElements) textSB.append(s).append("\n");
+            text=String.valueOf(textSB);
 
             StartupQuery.notify(text);
             StartupQuery.abort();

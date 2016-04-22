@@ -52,7 +52,7 @@ public class GenDiffSet {
                 fileName = "_"+name;
             }
             File targetFile = new File(targetDir, fileName.replace('/', File.separatorChar) + ".class");
-            jarName = jarName+".class";
+            jarName += /*jarName+*/".class";
             if (targetFile.exists())
             {
                 String sourceClassName = name.replace('/', '.');

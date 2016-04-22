@@ -159,7 +159,7 @@ public class GameData {
         {
             return;
         }
-        if (Boolean.valueOf(System.getProperty("fml.dumpRegistry", "false")).booleanValue())
+        if (Boolean.valueOf(System.getProperty("fml.dumpRegistry", "false"))/*.booleanValue()*/)
         {
             ImmutableListMultimap.Builder<String, String> builder = ImmutableListMultimap.builder();
             for (String modId : customItemStacks.rowKeySet())
@@ -379,7 +379,9 @@ public class GameData {
                         "removed while repairing this world save.\n\n" +
                         "Missing mods:\n";
 
-            for (String mod : modsMissing) text += mod+"\n";
+            StringBuilder textSB = new StringBuilder(text);
+            for (String mod : modsMissing) textSB.append(mod).append("\n");
+            text=String.valueOf(textSB);
 
             confirmed = StartupQuery.confirm(text);
             if (!confirmed) StartupQuery.abort();
@@ -672,7 +674,9 @@ public class GameData {
                     "A world backup will be automatically created in your saves directory.\n\n" +
                     "Missing Blocks/Items:\n";
 
-            for (String s : defaulted) text += s + "\n";
+            StringBuilder textSB = new StringBuilder(text);
+            for (String s : defaulted) textSB.append(s).append("\n");
+            text=String.valueOf(textSB);
 
             boolean confirmed = StartupQuery.confirm(text);
             if (!confirmed) StartupQuery.abort();

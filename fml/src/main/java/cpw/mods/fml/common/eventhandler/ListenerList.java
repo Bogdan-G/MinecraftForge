@@ -60,10 +60,11 @@ public class ListenerList
 
         ListenerListInst[] newList = new ListenerListInst[max];
         int x = 0;
-        for (; x < lists.length; x++)
+        /*for (; x < lists.length; x++)
         {
             newList[x] = lists[x];
-        }
+        }*/
+        System.arraycopy(lists, 0, newList, 0, lists.length);x=lists.length;
         for(; x < max; x++)
         {
             if (parent != null)

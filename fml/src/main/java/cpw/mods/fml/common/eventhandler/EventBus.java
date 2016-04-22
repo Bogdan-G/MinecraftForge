@@ -1,11 +1,11 @@
 package cpw.mods.fml.common.eventhandler;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
+import java.lang.reflect.Method;import java.lang.ref.*;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentHashMap;import java.util.*;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +25,7 @@ public class EventBus implements IEventExceptionHandler
     private static int maxID = 0;
 
     private ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners = new ConcurrentHashMap<Object, ArrayList<IEventListener>>();
-    private Map<Object,ModContainer> listenerOwners = new MapMaker().weakKeys().weakValues().makeMap();
+    private Map<Object,ModContainer> listenerOwners = new /*MapMaker().weakKeys().weakValues().makeMap()*/WeakHashMap<Object,ModContainer>();
     private final int busID = maxID++;
     private IEventExceptionHandler exceptionHandler;
 

@@ -46,20 +46,20 @@ group = 'net.minecraftforge'
 //version = getVersionFromJava(getProject(), 'src/main/java/net/minecraftforge/common/ForgeVersion.java')
 version = '1.7.10-10.13.5.0-1.7.10'
 
-jenkins {
+/*jenkins {
     job = 'minecraftforge'
-}
+}*/
 
 // crowdin stuff
-if (project.hasProperty("crowdinKey"))
-    tasks.getLocalizations.apiKey = project.crowdinKey
+/*if (project.hasProperty("crowdinKey"))
+    tasks.getLocalizations.apiKey = project.crowdinKey*/
 
 
 launch4j {
     jreMinVersion = '1.6.0'
 }
 
-uploadArchives {
+/*uploadArchives {
     repositories {
         add getProject().repositories.mavenLocal()
     }
@@ -125,4 +125,4 @@ uploadArchives {
             }
         }
     }
-}
+}*/

@@ -4,7 +4,7 @@
  import net.minecraft.world.biome.BiomeGenBase;
  import net.minecraft.world.biome.WorldChunkManager;
  import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-+import net.minecraftforge.common.MinecraftForge;
++import net.minecraftforge.common.MinecraftForge;import java.util.concurrent.ConcurrentHashMap;
 +import net.minecraftforge.event.entity.EntityEvent;
 +import net.minecraftforge.event.world.ChunkEvent;
 +

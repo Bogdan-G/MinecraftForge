@@ -151,9 +151,10 @@ public class GuiSlider extends GuiButtonExt
             }
             else
             {
+                StringBuilder valSB = new StringBuilder(val);
                 while (val.substring(val.indexOf(".") + 1).length() < precision)
                 {
-                    val = val + "0";
+                    val = String.valueOf(valSB.append("0"));
                 }
             }
         }

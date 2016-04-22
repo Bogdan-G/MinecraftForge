@@ -41,11 +41,11 @@ group = 'net.minecraftforge'
 //version = getVersionFromGit(getProject())
 version = '7.99.4.1614'
 
-jenkins {
+/*jenkins {
     job = 'fml'
-}
+}*/
 
-uploadArchives {
+/*uploadArchives {
     repositories {
         if (project.hasProperty("filesmaven")) {
             logger.info('Publishing to files server')
@@ -109,4 +109,4 @@ uploadArchives {
             }
         }
     }
-}
+}*/
