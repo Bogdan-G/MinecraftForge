@@ -274,7 +274,7 @@ public class OreDictionary
             val = idToName.size() - 1; //0 indexed
             nameToId.put(name, val);
             idToStack.add(new ArrayList<ItemStack>());
-            idToStackUn.add(new UnmodifiableArrayList(idToStack.get(val)));
+            idToStackUn.add(/*new UnmodifiableArrayList(*/idToStack.get(val)/*)*/);
         }
         return val;
     }

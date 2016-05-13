@@ -872,14 +872,13 @@ public class Loader
         if (fmlBrandingProperties == null)
         {
             Properties loaded = new Properties();
-            try
-            {
-                loaded.load(getClass().getClassLoader().getResourceAsStream("fmlbranding.properties"));
-            }
-            catch (Exception e)
-            {
-                // File not found - ignore
-            }
+            java.io.InputStream streamMFA = getClass().getClassLoader().getResourceAsStream("fmlbranding.properties");//MinecraftForkage
+            if(streamMFA != null) { 
+              try { 
+                loaded.load(streamMFA);
+                streamMFA.close(); 
+              } catch(IOException e) { 
+                cpw.mods.fml.common.FMLLog.warning(String.valueOf(e)); } }
             fmlBrandingProperties = Maps.fromProperties(loaded);
         }
         return fmlBrandingProperties;

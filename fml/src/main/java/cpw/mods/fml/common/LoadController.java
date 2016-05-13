@@ -194,7 +194,7 @@ public class LoadController
 
     private void sendEventToModContainer(FMLEvent stateEvent, ModContainer mc)
     {
-        String modId = mc.getModId();
+        try { String modId = mc.getModId();
         Collection<String> requirements =  Collections2.transform(mc.getRequirements(),new ArtifactVersionNameFunction());
         for (ArtifactVersion av : mc.getDependencies())
         {
@@ -223,7 +223,7 @@ public class LoadController
             {
                 modStates.put(modId, ModState.ERRORED);
             }
-        }
+        }} catch(Throwable e) {FMLLog.warning(String.valueOf(e));}
     }
 
     public ImmutableBiMap<ModContainer, Object> buildModObjectList()
