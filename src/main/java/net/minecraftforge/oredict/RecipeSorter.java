@@ -40,8 +40,8 @@ public class RecipeSorter implements Comparator<IRecipe>
         private String name;
         private Class<?> cls;
         private Category cat;
-        List<String> before = new ArrayList();
-        List<String> after = new ArrayList();
+        List<String> before = Lists.newArrayList();
+        List<String> after = Lists.newArrayList();
 
         private SortEntry(String name, Class<?> cls, Category cat, String deps)
         {
@@ -99,10 +99,10 @@ public class RecipeSorter implements Comparator<IRecipe>
         }
     };
 
-    private static Map<Class, Category>     categories = new ConcurrentHashMap();
+    private static Map<Class, Category>     categories = Maps.newHashMap();
     //private static Map<String, Class>       types = Maps.newHashMap();
-    private static Map<String, SortEntry>   entries = new ConcurrentHashMap();
-    private static Map<Class, Integer>      priorities = new ConcurrentHashMap();
+    private static Map<String, SortEntry>   entries = Maps.newHashMap();
+    private static Map<Class, Integer>      priorities = Maps.newHashMap();
 
     public static RecipeSorter INSTANCE = new RecipeSorter();
     private static boolean isDirty = true;

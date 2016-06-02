@@ -87,7 +87,7 @@ public class ShapedOreRecipe implements IRecipe
             throw new RuntimeException(ret);
         }
 
-        ConcurrentHashMap<Character, Object> itemMap = new ConcurrentHashMap<Character, Object>();
+        HashMap<Character, Object> itemMap = new HashMap<Character, Object>();
 
         for (; idx < recipe.length; idx += 2)
         {

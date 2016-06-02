@@ -878,7 +878,8 @@ public class Loader
                 loaded.load(streamMFA);
                 streamMFA.close(); 
               } catch(IOException e) { 
-                cpw.mods.fml.common.FMLLog.warning(String.valueOf(e)); } }
+                cpw.mods.fml.common.FMLLog.warning(String.valueOf(e)); 
+                } }
             fmlBrandingProperties = Maps.fromProperties(loaded);
         }
         return fmlBrandingProperties;
