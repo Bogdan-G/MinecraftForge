@@ -58,7 +58,7 @@ import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.LoaderException;
 import cpw.mods.fml.common.LoaderState;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;import org.bogdang.modifications.random.XSTR;
 
 public class GameRegistry
 {
@@ -101,7 +101,7 @@ public class GameRegistry
             computeSortedGeneratorList();
         }
         long worldSeed = world.getSeed();
-        Random fmlRandom = new Random(worldSeed);
+        Random fmlRandom = new XSTR(worldSeed);
         long xSeed = fmlRandom.nextLong() >> 2 + 1L;
         long zSeed = fmlRandom.nextLong() >> 2 + 1L;
         long chunkSeed = (xSeed * chunkX + zSeed * chunkZ) ^ worldSeed;
