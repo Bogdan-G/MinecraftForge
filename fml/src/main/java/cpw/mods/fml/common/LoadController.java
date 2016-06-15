@@ -347,7 +347,7 @@ public class LoadController
     }
     private FMLSecurityManager accessibleManager = new FMLSecurityManager();
 
-    class FMLSecurityManager extends SecurityManager
+    static class FMLSecurityManager extends SecurityManager
     {
         Class<?>[] getStackClasses()
         {

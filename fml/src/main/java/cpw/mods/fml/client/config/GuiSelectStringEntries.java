@@ -73,7 +73,7 @@ public class GuiSelectStringEntries extends GuiListExtended
         }
     }
     
-    public static class EntryComparator implements Comparator<Entry<Object, String>>
+    public static class EntryComparator implements Comparator<Entry<Object, String>>, java.io.Serializable
     {
         @Override
         public int compare(Entry<Object, String> o1, Entry<Object, String> o2)

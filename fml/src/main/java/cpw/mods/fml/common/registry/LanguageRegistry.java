@@ -221,7 +221,7 @@ public class LanguageRegistry
                 langPack.loadFromXML(langStream);
             }
             else {
-                langPack.load(new InputStreamReader(langStream,Charsets.UTF_8));
+                InputStreamReader temp7_f = new InputStreamReader(langStream,Charsets.UTF_8);langPack.load(temp7_f);try{temp7_f.close();}catch (IOException ex) {}
             }
 
             addStringLocalization(langPack, lang);
@@ -295,7 +295,7 @@ public class LanguageRegistry
         }
         if (added.size() > 0)
             FMLLog.fine("Found translations in %s [%s]", source.getName(), Joiner.on(", ").join(added));
-        zf.close();
+        try{zf.close();}catch (Exception e) {}
     }
 
     private void searchDirForLanguages(File source, String path, Side side) throws IOException

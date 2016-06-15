@@ -232,14 +232,14 @@ public class ConfigElement<T> implements IConfigElement<T>
             {
                 Double[] da = new Double[aVal.length];
                 for(int i = 0; i < aVal.length; i++)
-                    da[i] = Double.valueOf(aVal[i].toString());
+                    da[i] = Double.valueOf(aVal[i]/*.toString()*/);
                 return da;
             }
             else if (type == Property.Type.INTEGER)
             {
                 Integer[] ia = new Integer[aVal.length];
                 for(int i = 0; i < aVal.length; i++)
-                    ia[i] = Integer.valueOf(aVal[i].toString());
+                    ia[i] = Integer.valueOf(aVal[i]/*.toString()*/);
                 return ia;
             }
             else
@@ -277,14 +277,14 @@ public class ConfigElement<T> implements IConfigElement<T>
             {
                 Double[] da = new Double[aVal.length];
                 for(int i = 0; i < aVal.length; i++)
-                    da[i] = Double.valueOf(aVal[i].toString());
+                    da[i] = Double.valueOf(aVal[i]/*.toString()*/);
                 return da;
             }
             else if (type == Property.Type.INTEGER)
             {
                 Integer[] ia = new Integer[aVal.length];
                 for(int i = 0; i < aVal.length; i++)
-                    ia[i] = Integer.valueOf(aVal[i].toString());
+                    ia[i] = Integer.valueOf(aVal[i]/*.toString()*/);
                 return ia;
             }
             else

@@ -230,7 +230,7 @@ public class FMLModContainer implements ModContainer
                     version = new Properties();
                     version.load(source.getInputStream(versionFile));
                 }
-                source.close();
+                try{source.close();}catch (Exception e) {}
             }
             else if (getSource().isDirectory())
             {
@@ -240,7 +240,7 @@ public class FMLModContainer implements ModContainer
                     version = new Properties();
                     BufferedInputStream fis = new BufferedInputStream(new FileInputStream(propsFile));
                     version.load(fis);
-                    fis.close();
+                    try{fis.close();}catch (Exception e) {}
                 }
             }
             return version;

@@ -60,7 +60,7 @@ import cpw.mods.fml.relauncher.FMLRelaunchLog;
 public class AccessTransformer implements IClassTransformer
 {
     private static final boolean DEBUG = Boolean.parseBoolean(System.getProperty("fml.debugAccessTransformer", "false"));
-    class Modifier
+    static class Modifier
     {
         public String name = "";
         public String desc = "";

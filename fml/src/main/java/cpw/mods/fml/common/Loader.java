@@ -368,7 +368,7 @@ public class Loader
         return discoverer;
     }
 
-    private class ModIdComparator implements Comparator<ModContainer>
+    private static class ModIdComparator implements Comparator<ModContainer>
     {
         @Override
         public int compare(ModContainer o1, ModContainer o2)
@@ -577,8 +577,8 @@ public class Loader
             FMLLog.finer("Found a mod state file %s", forcedModFile.getName());
             try
             {
-                forcedModListProperties.load(new FileReader(forcedModFile));
-                FMLLog.finer("Loaded states for %d mods from file", forcedModListProperties.size());
+                FileReader temp3_f = new FileReader(forcedModFile);forcedModListProperties.load(temp3_f);
+                FMLLog.finer("Loaded states for %d mods from file", forcedModListProperties.size());try{temp3_f.close();}catch (Exception e) {}
             }
             catch (Exception e)
             {
@@ -635,10 +635,10 @@ public class Loader
         List<String> branding = FMLCommonHandler.instance().getBrandings(false);
 
         Joiner.on(' ').skipNulls().appendTo(ret, branding);
-        if (modController != null)
-        {
+        //if (modController != null)
+        //{
             modController.printModStates(ret);
-        }
+        //}
         return ret.toString();
     }
 
@@ -1009,10 +1009,10 @@ public class Loader
 
         try
         {
-            Properties props = new Properties();
-            props.load(new FileReader(forcedModFile));
-            props.put(modId, "false");
-            props.store(new FileWriter(forcedModFile), null);
+            Properties props = new Properties();FileReader temp1_f = new FileReader(forcedModFile);
+            props.load(temp1_f);
+            props.put(modId, "false");FileWriter temp2_f = new FileWriter(forcedModFile);
+            props.store(temp2_f, null);try{temp1_f.close();temp2_f.close();}catch (Exception e) {}
         }
         catch (Exception e)
         {
@@ -1041,7 +1041,7 @@ public class Loader
         JsonElement injectedDeps;
         try
         {
-            injectedDeps = parser.parse(new FileReader(injectedDepFile));
+            FileReader temp5_f = new FileReader(injectedDepFile);injectedDeps = parser.parse(temp5_f);
             for (JsonElement el : injectedDeps.getAsJsonArray())
             {
                 JsonObject jo = el.getAsJsonObject();
@@ -1060,7 +1060,7 @@ public class Loader
                         throw new RuntimeException("Unable to parse type");
                     }
                 }
-            }
+            }try{temp5_f.close();}catch (Exception e) {}
         } catch (Exception e)
         {
             FMLLog.getLogger().log(Level.ERROR, "Unable to parse {} - skipping", injectedDepFile);

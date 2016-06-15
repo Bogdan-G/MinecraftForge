@@ -202,6 +202,11 @@ public class Channel {
 				break;
 			case 0x05:
 				/* Tone Portamento + Volume Slide.*/
+				//set_volume_slide_param( effect_param );
+				//volume_slide();
+				//break;
+			case 0x0A:
+				/* Volume Slide.*/
 				set_volume_slide_param( effect_param );
 				volume_slide();
 				break;
@@ -225,11 +230,11 @@ public class Channel {
 				/* Set Sample Index.*/
 				set_sample_index( effect_param << 8 );
 				break;
-			case 0x0A:
+			/*case 0x0A:
 				/* Volume Slide.*/
-				set_volume_slide_param( effect_param );
+				/*set_volume_slide_param( effect_param );
 				volume_slide();
-				break;
+				break;*/
 			case 0x0B:
 				/* Pattern Jump.*/
 				break;
@@ -252,6 +257,10 @@ public class Channel {
 				break;
 			case 0x11:
 				/* global Volume Slide.*/
+				//set_volume_slide_param( effect_param );
+				//break;
+			case 0x19:
+				/* Panning Slide.*/
 				set_volume_slide_param( effect_param );
 				break;
 			case 0x14:
@@ -264,10 +273,10 @@ public class Channel {
 				/* Set Envelope Tick.*/
 				set_envelope_tick( effect_param );
 				break;
-			case 0x19:
+			/*case 0x19:
 				/* Panning Slide.*/
-				set_volume_slide_param( effect_param );
-				break;
+				/*set_volume_slide_param( effect_param );
+				break;*/
 			case 0x1B:
 				/* Retrig + Volume Slide.*/
 				set_retrig_param( effect_param );

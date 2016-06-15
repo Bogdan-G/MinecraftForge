@@ -95,7 +95,7 @@ public class BiomeDictionary
          */
         public static Type getType(String name, Type... subTypes)
         {
-            name = name.toUpperCase();
+            name = name.toUpperCase(Locale.ENGLISH);
             for (Type t : values())
             {
                 if (t.name().equals(name))
@@ -104,7 +104,9 @@ public class BiomeDictionary
             Type ret = EnumHelper.addEnum(Type.class, name, new Class[]{Type[].class}, new Object[]{subTypes});
             if (ret.ordinal() >= typeInfoList.length)
             {
-                typeInfoList = Arrays.copyOf(typeInfoList, ret.ordinal()+1);
+                Type[] temp = new Type[ret.ordinal()+1];
+                System.arraycopy(typeInfoList, 0, temp, 0, ret.ordinal()+1);//typeInfoList = Arrays.copyOf(typeInfoList, ret.ordinal()+1);
+                System.arraycopy(temp, 0, typeInfoList, 0, ret.ordinal()+1);
             }
             for(BiomeInfo bInfo:biomeList)
             {

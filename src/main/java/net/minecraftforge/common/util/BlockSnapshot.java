@@ -32,7 +32,7 @@ public class BlockSnapshot implements Serializable
     public int flag;
     private final NBTTagCompound nbt;
     public transient World world;
-    public final UniqueIdentifier blockIdentifier;
+    public transient final UniqueIdentifier blockIdentifier;
 
     public BlockSnapshot(World world, int x, int y, int z, Block block, int meta)
     {

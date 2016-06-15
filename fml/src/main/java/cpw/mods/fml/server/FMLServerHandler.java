@@ -14,7 +14,7 @@ package cpw.mods.fml.server;
 
 import java.io.File;
 import java.util.Iterator;
-import java.util.List;
+import java.util.List;import java.util.Locale;
 import java.util.Set;
 
 import net.minecraft.command.ServerCommand;
@@ -180,7 +180,7 @@ public class FMLServerHandler implements IFMLSidedHandler
                 {
                     for (Iterator<ServerCommand> it = GenericIterableFactory.newCastingIterable(dedServer.pendingCommandList, ServerCommand.class).iterator(); it.hasNext(); )
                     {
-                        String cmd = it.next().command.trim().toLowerCase();
+                        String cmd = it.next().command.trim().toLowerCase(Locale.ENGLISH);
 
                         if (cmd.equals("/fml confirm"))
                         {

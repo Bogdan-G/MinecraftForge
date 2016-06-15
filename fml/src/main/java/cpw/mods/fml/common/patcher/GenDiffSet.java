@@ -94,7 +94,7 @@ public class GenDiffSet {
                 }
             }
         }
-        sourceZip.close();
+        try{sourceZip.close();}catch (Exception e) {}
     }
 
 }

@@ -46,7 +46,7 @@ public class DefaultArtifactVersion implements ArtifactVersion
     @Override
     public boolean equals(Object obj)
     {
-        return ((DefaultArtifactVersion)obj).containsVersion(this);
+        return obj != null && ((DefaultArtifactVersion)obj).containsVersion(this);
     }
 
     @Override

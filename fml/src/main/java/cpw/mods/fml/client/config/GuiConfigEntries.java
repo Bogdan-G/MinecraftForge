@@ -812,9 +812,9 @@ public class GuiConfigEntries extends GuiListExtended
                     Double.valueOf(configElement.get().toString()), configElement.getType() == ConfigGuiType.DOUBLE, true));
 
             if (configElement.getType() == ConfigGuiType.INTEGER)
-                this.beforeValue = Integer.valueOf(configElement.get().toString());
+                this.beforeValue = Integer.parseInt(configElement.get().toString());
             else
-                this.beforeValue = Double.valueOf(configElement.get().toString());
+                this.beforeValue = Double.parseDouble(configElement.get().toString());
         }
 
         @Override
@@ -830,9 +830,9 @@ public class GuiConfigEntries extends GuiListExtended
         public boolean isDefault()
         {
             if (configElement.getType() == ConfigGuiType.INTEGER)
-                return ((GuiSlider) this.btnValue).getValueInt() == Integer.valueOf(configElement.getDefault().toString());
+                return ((GuiSlider) this.btnValue).getValueInt() == Integer.parseInt(configElement.getDefault().toString());
             else
-                return ((GuiSlider) this.btnValue).getValue() == Double.valueOf(configElement.getDefault().toString());
+                return ((GuiSlider) this.btnValue).getValue() == Double.parseDouble(configElement.getDefault().toString());
         }
 
         @Override
@@ -990,7 +990,7 @@ public class GuiConfigEntries extends GuiListExtended
         public IntegerEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement)
         {
             super(owningScreen, owningEntryList, configElement);
-            this.beforeValue = Integer.valueOf(configElement.get().toString());
+            this.beforeValue = Integer.parseInt(configElement.get().toString());
         }
 
         @Override
@@ -1011,7 +1011,7 @@ public class GuiConfigEntries extends GuiListExtended
                     try
                     {
                         long value = Long.parseLong(textFieldValue.getText().trim());
-                        if (value < Integer.valueOf(configElement.getMinValue().toString()) || value > Integer.valueOf(configElement.getMaxValue().toString()))
+                        if (value < Integer.parseInt(configElement.getMinValue().toString()) || value > Integer.parseInt(configElement.getMaxValue().toString()))
                             this.isValidValue = false;
                         else
                             this.isValidValue = true;
@@ -1067,7 +1067,7 @@ public class GuiConfigEntries extends GuiListExtended
                     try
                     {
                         int value = Integer.parseInt(textFieldValue.getText().trim());
-                        if (value < Integer.valueOf(configElement.getMinValue().toString()))
+                        if (value < Integer.parseInt(configElement.getMinValue().toString()))
                             this.configElement.set(configElement.getMinValue());
                         else
                             this.configElement.set(configElement.getMaxValue());
@@ -1542,9 +1542,9 @@ public class GuiConfigEntries extends GuiListExtended
                         EnumChatFormatting.GREEN + name + "\n" + EnumChatFormatting.RED + "No tooltip defined.", 300));
 
             if ((configElement.getType() == ConfigGuiType.INTEGER
-                    && (Integer.valueOf(configElement.getMinValue().toString()) != Integer.MIN_VALUE || Integer.valueOf(configElement.getMaxValue().toString()) != Integer.MAX_VALUE))
+                    && (Integer.parseInt(configElement.getMinValue().toString()) != Integer.MIN_VALUE || Integer.parseInt(configElement.getMaxValue().toString()) != Integer.MAX_VALUE))
                     || (configElement.getType() == ConfigGuiType.DOUBLE
-                    && (Double.valueOf(configElement.getMinValue().toString()) != -Double.MAX_VALUE || Double.valueOf(configElement.getMaxValue().toString()) != Double.MAX_VALUE)))
+                    && (Double.parseDouble(configElement.getMinValue().toString()) != -Double.MAX_VALUE || Double.parseDouble(configElement.getMaxValue().toString()) != Double.MAX_VALUE)))
                 toolTip.addAll(this.mc.fontRenderer.listFormattedStringToWidth(
                         EnumChatFormatting.AQUA + I18n.format("fml.configgui.tooltip.defaultNumeric", configElement.getMinValue(), configElement.getMaxValue(), configElement.getDefault()), 300));
             else if (configElement.getType() != ConfigGuiType.CONFIG_CATEGORY)

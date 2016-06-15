@@ -369,7 +369,7 @@ public class GuiEditArrayEntries extends GuiListExtended
                     try
                     {
                         long value = Long.parseLong(textFieldValue.getText().trim());
-                        if (value < Integer.valueOf(configElement.getMinValue().toString()) || value > Integer.valueOf(configElement.getMaxValue().toString()))
+                        if (value < Long.parseLong(configElement.getMinValue().toString()) || value > Long.parseLong(configElement.getMaxValue().toString()))
                             this.isValidValue = false;
                         else
                             this.isValidValue = true;

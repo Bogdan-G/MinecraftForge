@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
+import java.util.List;import java.util.Locale;
 
 import com.google.common.collect.ImmutableList;
 
@@ -180,7 +180,7 @@ public class BiomeManager
         
         public static BiomeType getType(String name)
         {
-            name = name.toUpperCase();
+            name = name.toUpperCase(Locale.ENGLISH);
             
             for (BiomeType t : values())
             {

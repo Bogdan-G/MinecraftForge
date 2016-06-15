@@ -7,7 +7,7 @@ package net.minecraftforge.common.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.regex.Pattern;
+import java.util.regex.Pattern;import java.util.Locale;
 
 import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
@@ -761,7 +761,7 @@ public class Property
      */
     public boolean isBooleanValue()
     {
-        return ("true".equals(value.toLowerCase()) || "false".equals(value.toLowerCase()));
+        return ("true".equals(value.toLowerCase(Locale.ENGLISH)) || "false".equals(value.toLowerCase(Locale.ENGLISH)));
     }
 
     /**

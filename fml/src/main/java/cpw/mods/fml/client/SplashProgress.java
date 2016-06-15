@@ -13,7 +13,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.IntBuffer;
-import java.util.Iterator;
+import java.util.Iterator;import java.util.Locale;
 import java.util.Properties;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
@@ -106,7 +106,7 @@ public class SplashProgress
 
     private static int getHex(String name, int def)
     {
-        return Integer.decode(getString(name, "0x" + Integer.toString(def, 16).toUpperCase()));
+        return Integer.decode(getString(name, "0x" + Integer.toString(def, 16).toUpperCase(Locale.ENGLISH)));
     }
 
     public static void start()

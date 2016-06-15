@@ -539,7 +539,7 @@ public class VersionRange
         {
             return true;
         }//warning: , instanceof -> getClass().equals()
-        if ( !( obj.getClass().equals(VersionRange.class) ) )
+        if ( obj == null || !(obj.getClass() == VersionRange.class.getClass()))
         {
             return false;
         }

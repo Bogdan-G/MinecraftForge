@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.security.CodeSource;
-import java.security.cert.Certificate;
+import java.security.cert.Certificate;import java.util.Locale;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -38,9 +38,9 @@ import cpw.mods.fml.relauncher.Side;
 
 public class FMLSanityChecker implements IFMLCallHook
 {
-    private static final String FMLFINGERPRINT =   "51:0A:FB:4C:AF:A4:A0:F2:F5:CF:C5:0E:B4:CC:3C:30:24:4A:E3:8E".toLowerCase().replace(":", "");
-    private static final String FORGEFINGERPRINT = "E3:C3:D5:0C:7C:98:6D:F7:4C:64:5C:0A:C5:46:39:74:1C:90:A5:57".toLowerCase().replace(":", "");
-    private static final String MCFINGERPRINT =    "CD:99:95:96:56:F7:53:DC:28:D8:63:B4:67:69:F7:F8:FB:AE:FC:FC".toLowerCase().replace(":", "");
+    private static final String FMLFINGERPRINT =   "51:0A:FB:4C:AF:A4:A0:F2:F5:CF:C5:0E:B4:CC:3C:30:24:4A:E3:8E".toLowerCase(Locale.ENGLISH).replace(":", "");
+    private static final String FORGEFINGERPRINT = "E3:C3:D5:0C:7C:98:6D:F7:4C:64:5C:0A:C5:46:39:74:1C:90:A5:57".toLowerCase(Locale.ENGLISH).replace(":", "");
+    private static final String MCFINGERPRINT =    "CD:99:95:96:56:F7:53:DC:28:D8:63:B4:67:69:F7:F8:FB:AE:FC:FC".toLowerCase(Locale.ENGLISH).replace(":", "");
     private LaunchClassLoader cl;
     private boolean liveEnv;
     public static File fmlLocation;

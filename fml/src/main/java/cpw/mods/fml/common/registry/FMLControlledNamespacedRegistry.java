@@ -60,7 +60,7 @@ public class FMLControlledNamespacedRegistry<I> extends RegistryNamespaced {
             // id lookup failed -> obj is not in the obj<->id map
             if (!isSubstituted && id < 0) throw new IllegalStateException(String.format("Registry entry for %s %s, name %s, doesn't yield an id.", type, obj, name));
             // id is too high
-            if (id > maxId) throw new IllegalStateException(String.format("Registry entry for %s %s, name %s uses the too large id %d.", type, obj, name));
+            if (id > maxId) throw new IllegalStateException(String.format("Registry entry for %s %s, name %s uses the too large id %d.", type, obj, name, id));//FB:FS - VA_FORMAT_STRING_MISSING_ARGUMENT
             // name lookup failed -> obj is not in the obj<->name map
             if (name == null) throw new IllegalStateException(String.format("Registry entry for %s %s, id %d, doesn't yield a name.", type, obj, id));
             // empty name

@@ -121,12 +121,12 @@ public class WavefrontObject implements IModelCustom
 
                     Face face = parseFace(currentLine, lineCount);
 
-                    if (face != null)
-                    {
+                    //if (face != null)
+                    //{
                         currentGroupObject.faces.add(face);
-                    }
+                    //}
                 }
-                else if (currentLine.startsWith("g ") | currentLine.startsWith("o "))
+                else if (currentLine.startsWith("g ") || currentLine.startsWith("o "))
                 {
                     GroupObject group = parseGroupObject(currentLine, lineCount);
 

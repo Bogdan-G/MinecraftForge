@@ -15,7 +15,7 @@ package cpw.mods.fml.common;
 public class WrongMinecraftVersionException extends RuntimeException
 {
     private static final long serialVersionUID = 1L;
-    public ModContainer mod;
+    public transient ModContainer mod;
 
     public WrongMinecraftVersionException(ModContainer mod)
     {

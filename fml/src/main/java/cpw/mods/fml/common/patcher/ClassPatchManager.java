@@ -35,10 +35,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.repackage.com.nothome.delta.GDiffPatcher;
 
 public class ClassPatchManager {
-    public static final ClassPatchManager INSTANCE = new ClassPatchManager();
-
     public static final boolean dumpPatched = Boolean.parseBoolean(System.getProperty("fml.dumpPatchedClasses", "false"));
+
     public static final boolean DEBUG = Boolean.parseBoolean(System.getProperty("fml.debugClassPatchManager", "false"));
+    public static final ClassPatchManager INSTANCE = new ClassPatchManager();
 
     private GDiffPatcher patcher = new GDiffPatcher();
     private ListMultimap<String, ClassPatch> patches;

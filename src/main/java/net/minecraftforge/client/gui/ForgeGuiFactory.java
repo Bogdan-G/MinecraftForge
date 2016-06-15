@@ -320,9 +320,9 @@ public class ForgeGuiFactory implements IModGuiFactory
                     this.owningEntryList.saveConfigElements();
                     for(IConfigElement ice : this.owningScreen.configElements)
                         if ("maximumTicketCount".equals(ice.getName()))
-                            maxTickets = Integer.valueOf(ice.get().toString());
+                            maxTickets = Integer.parseInt(ice.get().toString());
                         else if ("maximumChunksPerTicket".equals(ice.getName()))
-                            maxChunks = Integer.valueOf(ice.get().toString());
+                            maxChunks = Integer.parseInt(ice.get().toString());
                     
                     ForgeChunkManager.addConfigProperty(modObject, "maximumTicketCount", String.valueOf(maxTickets), Property.Type.INTEGER);
                     ForgeChunkManager.addConfigProperty(modObject, "maximumChunksPerTicket", String.valueOf(maxChunks), Property.Type.INTEGER);

@@ -199,7 +199,7 @@ public class Fluid
     public String getLocalizedName()
     {
         String s = this.getUnlocalizedName();
-        return s == null ? "" : StatCollector.translateToLocal(s);
+        return /*s == null ? "" : */StatCollector.translateToLocal(s);
     }
 
     /**

@@ -148,10 +148,10 @@ public class MinecraftForge
            try
            {
                Class cls = Class.forName(s, false, MinecraftForge.class.getClassLoader());
-               if (cls != null && !Callable.class.isAssignableFrom(cls))
-               {
+               //if (cls != null && !Callable.class.isAssignableFrom(cls))
+               //{
                    //FMLLog.info("\t% s is not a instance of callable!", s);
-               }
+               //}
            }
            catch (Exception e){}
        }
