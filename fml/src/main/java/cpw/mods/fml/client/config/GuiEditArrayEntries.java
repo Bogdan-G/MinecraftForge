@@ -88,7 +88,7 @@ public class GuiEditArrayEntries extends GuiListExtended
         }
         else if (configElement.isList() && configElement.getType().equals(ConfigGuiType.BOOLEAN))
             for (Object value : currentValues)
-                listEntries.add(new BooleanEntry(this.owningGui, this, configElement, Boolean.valueOf(value.toString())));
+                listEntries.add(new BooleanEntry(this.owningGui, this, configElement, Boolean.parseBoolean(value.toString())));
         else if (configElement.isList() && configElement.getType().equals(ConfigGuiType.INTEGER))
             for (Object value : currentValues)
                 listEntries.add(new IntegerEntry(this.owningGui, this, configElement, Integer.parseInt(value.toString())));
@@ -134,7 +134,7 @@ public class GuiEditArrayEntries extends GuiListExtended
     public void addNewEntry(int index)
     {
         if (configElement.isList() && configElement.getType() == ConfigGuiType.BOOLEAN)
-            listEntries.add(index, new BooleanEntry(this.owningGui, this, this.configElement, Boolean.valueOf(true)));
+            listEntries.add(index, new BooleanEntry(this.owningGui, this, this.configElement, /*Boolean.valueOf*/(true)));
         else if (configElement.isList() && configElement.getType() == ConfigGuiType.INTEGER)
             listEntries.add(index, new IntegerEntry(this.owningGui, this, this.configElement, 0));
         else if (configElement.isList() && configElement.getType() == ConfigGuiType.DOUBLE)
@@ -233,8 +233,9 @@ public class GuiEditArrayEntries extends GuiListExtended
             ArrayEntry entry = (ArrayEntry) ((GuiConfig) owningGui.parentScreen).entryList.getListEntry(owningGui.slotIndex);
 
             Object[] ao = new Object[listLength];
-            for (int i = 0; i < listLength; i++)
-                ao[i] = listEntries.get(i).getValue();
+            System.arraycopy(listEntries.toArray(), 0, ao, 0, listLength);
+            /*for (int i = 0; i < listLength; i++)
+                ao[i] = listEntries.get(i).getValue();*/
 
             entry.setListFromChildScreen(ao);
         }
@@ -243,32 +244,36 @@ public class GuiEditArrayEntries extends GuiListExtended
             if (configElement.isList() && configElement.getType() == ConfigGuiType.BOOLEAN)
             {
                 Boolean[] abol = new Boolean[listLength];
-                for (int i = 0; i < listLength; i++)
-                    abol[i] = Boolean.valueOf(listEntries.get(i).getValue().toString());
+                System.arraycopy(listEntries.toArray(), 0, abol, 0, listLength);
+                /*for (int i = 0; i < listLength; i++)
+                    abol[i] = Boolean.valueOf(listEntries.get(i).getValue().toString());*/
 
                 configElement.set(abol);
             }
             else if (configElement.isList() && configElement.getType() == ConfigGuiType.INTEGER)
             {
                 Integer[] ai = new Integer[listLength];
-                for (int i = 0; i < listLength; i++)
-                    ai[i] = Integer.valueOf(listEntries.get(i).getValue().toString());
+                System.arraycopy(listEntries.toArray(), 0, ai, 0, listLength);
+                /*for (int i = 0; i < listLength; i++)
+                    ai[i] = Integer.valueOf(listEntries.get(i).getValue().toString());*/
 
                 configElement.set(ai);
             }
             else if (configElement.isList() && configElement.getType() == ConfigGuiType.DOUBLE)
             {
                 Double[] ad = new Double[listLength];
-                for (int i = 0; i < listLength; i++)
-                    ad[i] = Double.valueOf(listEntries.get(i).getValue().toString());
+                System.arraycopy(listEntries.toArray(), 0, ad, 0, listLength);
+                /*for (int i = 0; i < listLength; i++)
+                    ad[i] = Double.valueOf(listEntries.get(i).getValue().toString());*/
 
                 configElement.set(ad);
             }
             else if (configElement.isList())
             {
                 String[] as = new String[listLength];
-                for (int i = 0; i < listLength; i++)
-                    as[i] = listEntries.get(i).getValue().toString();
+                System.arraycopy(listEntries.toArray(), 0, as, 0, listLength);
+                /*for (int i = 0; i < listLength; i++)
+                    as[i] = listEntries.get(i).getValue().toString();*/
 
                 configElement.set(as);
             }
@@ -302,7 +307,7 @@ public class GuiEditArrayEntries extends GuiListExtended
                 String validChars = "0123456789";
                 String before = this.textFieldValue.getText();
                 if (validChars.contains(String.valueOf(eventChar)) ||
-                        (!before.startsWith("-") && this.textFieldValue.getCursorPosition() == 0 && eventChar == '-')
+                        (before.charAt(0) != '-'/*startsWith("-")*/ && this.textFieldValue.getCursorPosition() == 0 && eventChar == '-')
                         || (!before.contains(".") && eventChar == '.')
                         || eventKey == Keyboard.KEY_BACK || eventKey == Keyboard.KEY_DELETE || eventKey == Keyboard.KEY_LEFT || eventKey == Keyboard.KEY_RIGHT
                         || eventKey == Keyboard.KEY_HOME || eventKey == Keyboard.KEY_END)
@@ -313,7 +318,7 @@ public class GuiEditArrayEntries extends GuiListExtended
                     try
                     {
                         double value = Double.parseDouble(textFieldValue.getText().trim());
-                        if (value < Double.valueOf(configElement.getMinValue().toString()) || value > Double.valueOf(configElement.getMaxValue().toString()))
+                        if (value < Double.parseDouble(configElement.getMinValue().toString()) || value > Double.parseDouble(configElement.getMaxValue().toString()))
                             this.isValidValue = false;
                         else
                             this.isValidValue = true;
@@ -333,7 +338,7 @@ public class GuiEditArrayEntries extends GuiListExtended
         {
             try
             {
-                return Double.valueOf(this.textFieldValue.getText().trim());
+                return Double.parseDouble(this.textFieldValue.getText().trim());
             }
             catch (Throwable e)
             {
@@ -359,7 +364,7 @@ public class GuiEditArrayEntries extends GuiListExtended
                 String validChars = "0123456789";
                 String before = this.textFieldValue.getText();
                 if (validChars.contains(String.valueOf(eventChar))
-                        || (!before.startsWith("-") && this.textFieldValue.getCursorPosition() == 0 && eventChar == '-')
+                        || (before.charAt(0) != '-'/*startsWith("-")*/ && this.textFieldValue.getCursorPosition() == 0 && eventChar == '-')
                         || eventKey == Keyboard.KEY_BACK || eventKey == Keyboard.KEY_DELETE
                         || eventKey == Keyboard.KEY_LEFT || eventKey == Keyboard.KEY_RIGHT || eventKey == Keyboard.KEY_HOME || eventKey == Keyboard.KEY_END)
                     this.textFieldValue.textboxKeyTyped((owningScreen.enabled ? eventChar : Keyboard.CHAR_NONE), eventKey);
@@ -389,7 +394,7 @@ public class GuiEditArrayEntries extends GuiListExtended
         {
             try
             {
-                return Integer.valueOf(this.textFieldValue.getText().trim());
+                return Integer.parseInt(this.textFieldValue.getText().trim());
             }
             catch (Throwable e)
             {
@@ -526,7 +531,7 @@ public class GuiEditArrayEntries extends GuiListExtended
         @Override
         public Object getValue()
         {
-            return Boolean.valueOf(value);
+            return /*Boolean.valueOf*/(value);
         }
     }
 

@@ -229,8 +229,8 @@ public class Delta {
         {
             return "Source"+
                 " checksum=" + this.checksum +
-                " source=" + this.source +
-                "";
+                " source=" + this.source/* +
+                ""*/;
         }
 
     }

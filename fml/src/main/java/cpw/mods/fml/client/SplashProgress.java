@@ -365,7 +365,7 @@ public class SplashProgress
                 setColor(barColor);
                 drawBox((barWidth - 2) * (b.getStep() + 1) / (b.getSteps() + 1), barHeight - 2); // Step can sometimes be 0.
                 // progress text
-                String progress = "" + b.getStep() + "/" + b.getSteps();
+                String progress = String.valueOf(new StringBuilder().append(b.getStep()).append('/').append(b.getSteps()));
                 glTranslatef(((float)barWidth - 2) / 2 - fontRenderer.getStringWidth(progress), 2, 0);
                 setColor(fontColor);
                 glScalef(2, 2, 1);

@@ -93,8 +93,8 @@ public class ByteBufferSeekableSource implements SeekableSource {
     {
         return "BBSeekable" +
             " bb=" + this.bb.position() + "-" + bb.limit() +
-            " cur=" + this.cur.position() + "-" + cur.limit() +
-            "";
+            " cur=" + this.cur.position() + "-" + cur.limit()/* +
+            ""*/;
     }
     
 }

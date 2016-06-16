@@ -58,7 +58,7 @@ public class FMLTweaker implements ITweaker {
 
         for (String arg : args)
         {
-            if (arg.startsWith("-"))
+            if (arg.charAt(0) == '-'/*startsWith("-")*/)
             {
                 if (classifier != null)
                 {

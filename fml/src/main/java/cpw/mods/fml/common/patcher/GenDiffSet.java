@@ -40,7 +40,7 @@ public class GenDiffSet {
         boolean kill = killTarget.equalsIgnoreCase("true");
 
         File f = new File(outputDir);
-        f.mkdirs();
+        f.mkdirs();byte[] tempbyte_1 = new byte[0];
 
         for (String name : remapper.getObfedClasses())
         {
@@ -52,14 +52,14 @@ public class GenDiffSet {
                 fileName = "_"+name;
             }
             File targetFile = new File(targetDir, fileName.replace('/', File.separatorChar) + ".class");
-            jarName += /*jarName+*/".class";
+            jarName = String.valueOf(new StringBuilder().append(jarName).append(".class"));
             if (targetFile.exists())
             {
                 String sourceClassName = name.replace('/', '.');
                 String targetClassName = remapper.map(name).replace('/', '.');
                 JarEntry entry = sourceZip.getJarEntry(jarName);
 
-                byte[] vanillaBytes = entry != null ? ByteStreams.toByteArray(sourceZip.getInputStream(entry)) : new byte[0];
+                byte[] vanillaBytes = entry != null ? ByteStreams.toByteArray(sourceZip.getInputStream(entry)) : tempbyte_1;
                 byte[] patchedBytes = Files.toByteArray(targetFile);
 
                 byte[] diff = delta.compute(vanillaBytes, patchedBytes);

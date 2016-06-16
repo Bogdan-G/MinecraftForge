@@ -139,7 +139,7 @@ public class LanguageRegistry
         } else {
             throw new IllegalArgumentException(String.format("Illegal object for naming %s",objectToName));
         }
-        objectName+=".name";
+        objectName=String.valueOf(new StringBuilder().append(objectName).append(".name"));
         addStringLocalization(objectName, lang, name);
     }
 

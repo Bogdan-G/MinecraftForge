@@ -672,7 +672,7 @@ public class Loader
             }
             String instruction = depparts.get(0);
             String target = depparts.get(1);
-            boolean targetIsAll = target.startsWith("*");
+            boolean targetIsAll = (target.charAt(0) == '*')/*startsWith("*")*/;
 
             // Cannot have an "all" relationship with anything except pure *
             if (targetIsAll && target.length() > 1)

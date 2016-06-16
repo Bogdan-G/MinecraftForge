@@ -242,7 +242,7 @@ public class MarkerTransformer implements IClassTransformer
 
                 String entryName = entry.getName();
 
-                if (entryName.endsWith(".class") && !entryName.startsWith("."))
+                if (entryName.endsWith(".class") && entryName.charAt(0) != '.'/*startsWith(".")*/)
                 {
                     ClassNode cls = new ClassNode();
                     ClassReader rdr = new ClassReader(entryData);

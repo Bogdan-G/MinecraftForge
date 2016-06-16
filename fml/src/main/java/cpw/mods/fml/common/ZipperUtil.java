@@ -43,7 +43,7 @@ public class ZipperUtil {
                     if (kid.isDirectory())
                     {
                         queue.push(kid);
-                        name = name.endsWith("/") ? name : name + "/";
+                        if (!name.endsWith("/")) {name +=/* name.endsWith("/") ? name : name + */"/";}
                         zout.putNextEntry(new ZipEntry(name));
                     } else
                     {
@@ -55,7 +55,7 @@ public class ZipperUtil {
             }
         } finally
         {
-            res.close();
+            try{res.close();}catch (IOException ex) {}
         }
     }
 

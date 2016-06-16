@@ -1001,7 +1001,7 @@ public class GuiConfigEntries extends GuiListExtended
                 String validChars = "0123456789";
                 String before = this.textFieldValue.getText();
                 if (validChars.contains(String.valueOf(eventChar))
-                        || (!before.startsWith("-") && this.textFieldValue.getCursorPosition() == 0 && eventChar == '-')
+                        || (before.charAt(0) != '-'/*startsWith("-")*/ && this.textFieldValue.getCursorPosition() == 0 && eventChar == '-')
                         || eventKey == Keyboard.KEY_BACK || eventKey == Keyboard.KEY_DELETE
                         || eventKey == Keyboard.KEY_LEFT || eventKey == Keyboard.KEY_RIGHT || eventKey == Keyboard.KEY_HOME || eventKey == Keyboard.KEY_END)
                     this.textFieldValue.textboxKeyTyped((enabled() ? eventChar : Keyboard.CHAR_NONE), eventKey);
@@ -1011,7 +1011,7 @@ public class GuiConfigEntries extends GuiListExtended
                     try
                     {
                         long value = Long.parseLong(textFieldValue.getText().trim());
-                        if (value < Integer.parseInt(configElement.getMinValue().toString()) || value > Integer.parseInt(configElement.getMaxValue().toString()))
+                        if (value < Long.parseLong(configElement.getMinValue().toString()) || value > Long.parseLong(configElement.getMaxValue().toString()))
                             this.isValidValue = false;
                         else
                             this.isValidValue = true;
@@ -1108,7 +1108,7 @@ public class GuiConfigEntries extends GuiListExtended
                 String validChars = "0123456789";
                 String before = this.textFieldValue.getText();
                 if (validChars.contains(String.valueOf(eventChar)) ||
-                        (!before.startsWith("-") && this.textFieldValue.getCursorPosition() == 0 && eventChar == '-')
+                        (before.charAt(0) != '-'/*startsWith("-")*/ && this.textFieldValue.getCursorPosition() == 0 && eventChar == '-')
                         || (!before.contains(".") && eventChar == '.')
                         || eventKey == Keyboard.KEY_BACK || eventKey == Keyboard.KEY_DELETE || eventKey == Keyboard.KEY_LEFT || eventKey == Keyboard.KEY_RIGHT
                         || eventKey == Keyboard.KEY_HOME || eventKey == Keyboard.KEY_END)
@@ -1119,7 +1119,7 @@ public class GuiConfigEntries extends GuiListExtended
                     try
                     {
                         double value = Double.parseDouble(textFieldValue.getText().trim());
-                        if (value < Double.valueOf(configElement.getMinValue().toString()) || value > Double.valueOf(configElement.getMaxValue().toString()))
+                        if (value < Double.parseDouble(configElement.getMinValue().toString()) || value > Double.parseDouble(configElement.getMaxValue().toString()))
                             this.isValidValue = false;
                         else
                             this.isValidValue = true;
@@ -1175,7 +1175,7 @@ public class GuiConfigEntries extends GuiListExtended
                     try
                     {
                         double value = Double.parseDouble(textFieldValue.getText().trim());
-                        if (value < Double.valueOf(configElement.getMinValue().toString()))
+                        if (value < Double.parseDouble(configElement.getMinValue().toString()))
                             this.configElement.set(configElement.getMinValue());
                         else
                             this.configElement.set(configElement.getMaxValue());

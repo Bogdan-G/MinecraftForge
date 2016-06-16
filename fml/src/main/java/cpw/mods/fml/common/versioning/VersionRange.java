@@ -163,7 +163,7 @@ public class VersionRange
 
             process = process.substring( index + 1 ).trim();
 
-            if ( process.length() > 0 && process.startsWith( "," ) )
+            if ( process.length() > 0 && process.charAt(0) == ','/*startsWith( "," )*/ )
             {
                 process = process.substring( 1 ).trim();
             }
@@ -189,7 +189,7 @@ public class VersionRange
     private static Restriction parseRestriction( String spec )
         throws InvalidVersionSpecificationException
     {
-        boolean lowerBoundInclusive = spec.startsWith( "[" );
+        boolean lowerBoundInclusive = (spec.charAt(0) == '[')/*startsWith( "[" )*/;
         boolean upperBoundInclusive = spec.endsWith( "]" );
 
         String process = spec.substring( 1, spec.length() - 1 ).trim();

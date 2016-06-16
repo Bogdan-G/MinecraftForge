@@ -125,7 +125,7 @@ public class GuiIngameForge extends GuiIngame
         {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             zLevel = -90.0F;
-            rand.setSeed((long)(updateCounter * 312871));
+            rand.setSeed(updateCounter * 312871L);
 
             if (renderCrosshairs) renderCrosshairs(width, height);
             if (renderBossHealth) renderBossHealth();
@@ -337,7 +337,7 @@ public class GuiIngameForge extends GuiIngame
         mc.mcProfiler.startSection("health");
         GL11.glEnable(GL11.GL_BLEND);
 
-        boolean highlight = mc.thePlayer.hurtResistantTime / 3 % 2 == 1;
+        boolean highlight = ((mc.thePlayer.hurtResistantTime / 3) & 1) == 1;
 
         if (mc.thePlayer.hurtResistantTime < 10)
         {
@@ -353,7 +353,7 @@ public class GuiIngameForge extends GuiIngame
         int healthRows = MathHelper.ceiling_float_int((healthMax + absorb) / 2.0F / 10.0F);
         int rowHeight = Math.max(10 - (healthRows - 2), 3);
 
-        this.rand.setSeed((long)(updateCounter * 312871));
+        this.rand.setSeed(updateCounter * 312871L);
 
         int left = width / 2 - 91;
         int top = height - left_height;
