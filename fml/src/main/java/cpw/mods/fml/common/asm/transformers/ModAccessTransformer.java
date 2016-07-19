@@ -15,6 +15,7 @@ import cpw.mods.fml.relauncher.FMLRelaunchLog;
 
 public class ModAccessTransformer extends AccessTransformer {
     private static Map<String, String> embedded = Maps.newHashMap(); //Needs to be primitive so that both classloaders get the same class.
+    private static final boolean logDebugInfo = Boolean.parseBoolean(System.getProperty("fml.debugAccessTransformer", "false"));
     @SuppressWarnings("unchecked")
 	public ModAccessTransformer() throws Exception
     {
@@ -33,7 +34,7 @@ public class ModAccessTransformer extends AccessTransformer {
             int added = getModifiers().size() - old_count;
             if (added > 0)
             {
-                FMLRelaunchLog.fine("Loaded %d rules from AccessTransformer mod jar file %s\n", added, e.getKey());
+                if (logDebugInfo) FMLRelaunchLog.fine("Loaded %d rules from AccessTransformer mod jar file %s\n", added, e.getKey());
             }
         }
     }

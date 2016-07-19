@@ -76,6 +76,11 @@ public class ForgeHooks
         }
     }
     static final List<SeedEntry> seedList = new ArrayList<SeedEntry>();
+    private static final Pattern pat = Pattern.compile(
+                //         schema                          ipv4            OR           namespace                 port     path         ends
+                //   |-----------------|        |-------------------------|  |----------------------------|    |---------| |--|   |---------------|
+                "((?:[a-z0-9]{2,}:\\/\\/)?(?:(?:[0-9]{1,3}\\.){3}[0-9]{1,3}|(?:[-\\w_\\.]{1,}\\.[a-z]{2,}?))(?::[0-9]{1,5})?.*?(?=[!\"\u00A7 \n]|$))",
+                Pattern.CASE_INSENSITIVE);
 
     public static ItemStack getGrassSeed(World world)
     {
@@ -391,11 +396,7 @@ public class ForgeHooks
         // Includes ipv4 and domain pattern
         // Matches an ip (xx.xxx.xx.xxx) or a domain (something.com) with or
         // without a protocol or path.
-        final Pattern URL_PATTERN = Pattern.compile(
-                //         schema                          ipv4            OR           namespace                 port     path         ends
-                //   |-----------------|        |-------------------------|  |----------------------------|    |---------| |--|   |---------------|
-                "((?:[a-z0-9]{2,}:\\/\\/)?(?:(?:[0-9]{1,3}\\.){3}[0-9]{1,3}|(?:[-\\w_\\.]{1,}\\.[a-z]{2,}?))(?::[0-9]{1,5})?.*?(?=[!\"\u00A7 \n]|$))",
-                Pattern.CASE_INSENSITIVE);
+        final Pattern URL_PATTERN = pat;
         IChatComponent ichat = new ChatComponentText("");
         Matcher matcher = URL_PATTERN.matcher(string);
         int lastEnd = 0;

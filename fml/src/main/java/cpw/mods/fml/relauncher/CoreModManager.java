@@ -68,6 +68,7 @@ public class CoreModManager {
     private static File mcDir;
     private static List<String> reparsedCoremods = Lists.newArrayList();
     private static List<String> accessTransformers = Lists.newArrayList();
+    private static final boolean logDebugInfo = Boolean.parseBoolean(System.getProperty("fml.debugCoreModManager", "false"));
 
     private static class FMLPluginWrapper implements ITweaker {
         public final String name;
@@ -101,13 +102,13 @@ public class CoreModManager {
         @Override
         public void injectIntoClassLoader(LaunchClassLoader classLoader)
         {
-            FMLRelaunchLog.fine("Injecting coremod %s {%s} class transformers", name, coreModInstance.getClass().getName());
+            if (logDebugInfo) FMLRelaunchLog.fine("Injecting coremod %s {%s} class transformers", name, coreModInstance.getClass().getName());
             if (coreModInstance.getASMTransformerClass() != null) for (String transformer : coreModInstance.getASMTransformerClass())
             {
-                FMLRelaunchLog.finer("Registering transformer %s", transformer);
+                if (logDebugInfo) FMLRelaunchLog.finer("Registering transformer %s", transformer);
                 classLoader.registerTransformer(transformer);
             }
-            FMLRelaunchLog.fine("Injection complete");
+            if (logDebugInfo) FMLRelaunchLog.fine("Injection complete");
 
             FMLRelaunchLog.fine("Running coremod plugin for %s {%s}", name, coreModInstance.getClass().getName());
             Map<String, Object> data = new HashMap<String, Object>();
@@ -170,7 +171,7 @@ public class CoreModManager {
             byte[] bs = classLoader.getClassBytes("net.minecraft.world.World");
             if (bs != null)
             {
-                FMLRelaunchLog.info("Managed to load a deobfuscated Minecraft name- we are in a deobfuscated environment. Skipping runtime deobfuscation");
+                if (logDebugInfo) FMLRelaunchLog.info("Managed to load a deobfuscated Minecraft name- we are in a deobfuscated environment. Skipping runtime deobfuscation");
                 deobfuscatedEnvironment = true;
             }
         }
@@ -180,7 +181,7 @@ public class CoreModManager {
 
         if (!deobfuscatedEnvironment)
         {
-            FMLRelaunchLog.fine("Enabling runtime deobfuscation");
+            if (logDebugInfo) FMLRelaunchLog.fine("Enabling runtime deobfuscation");
         }
 
         tweaker.injectCascadingTweak("cpw.mods.fml.common.launcher.FMLInjectionAndSortingTweaker");
@@ -205,7 +206,7 @@ public class CoreModManager {
             throw new RuntimeException("A fatal error has occured - no valid fml load plugin was found - this is a completely corrupt FML installation.");
         }
 
-        FMLRelaunchLog.fine("All fundamental core mods are successfully located");
+        if (logDebugInfo) FMLRelaunchLog.fine("All fundamental core mods are successfully located");
         // Now that we have the root plugins loaded - lets see what else might
         // be around
         String commandLineCoremods = System.getProperty("fml.coreMods.load", "");
@@ -300,7 +301,7 @@ public class CoreModManager {
 
         for (File coreMod : coreModList)
         {
-            FMLRelaunchLog.fine("Examining for coremod candidacy %s", coreMod.getName());
+            if (logDebugInfo) FMLRelaunchLog.fine("Examining for coremod candidacy %s", coreMod.getName());
             JarFile jar = null;
             Attributes mfAttributes;
             try
@@ -356,7 +357,7 @@ public class CoreModManager {
             String modSide = mfAttributes.containsKey(MODSIDE) ? mfAttributes.getValue(MODSIDE) : "BOTH";
             if (! ("BOTH".equals(modSide) || FMLLaunchHandler.side.name().equals(modSide)))
             {
-                FMLRelaunchLog.fine("Mod %s has ModSide meta-inf value %s, and we're %s. It will be ignored", coreMod.getName(), modSide, FMLLaunchHandler.side.name());
+                if (logDebugInfo) FMLRelaunchLog.fine("Mod %s has ModSide meta-inf value %s, and we're %s. It will be ignored", coreMod.getName(), modSide, FMLLaunchHandler.side.name());
                 loadedCoremods.add(coreMod.getName());
                 continue;
             }
@@ -364,7 +365,7 @@ public class CoreModManager {
             if (fmlCorePlugin == null)
             {
                 // Not a coremod
-                FMLRelaunchLog.fine("Not found coremod data in %s", coreMod.getName());
+                if (logDebugInfo) FMLRelaunchLog.fine("Not found coremod data in %s", coreMod.getName());
                 continue;
             }
             // Support things that are mod jars, but not FML mod jars
@@ -373,12 +374,12 @@ public class CoreModManager {
                 classLoader.addURL(coreMod.toURI().toURL());
                 if (!mfAttributes.containsKey(COREMODCONTAINSFMLMOD))
                 {
-                    FMLRelaunchLog.finer("Adding %s to the list of known coremods, it will not be examined again", coreMod.getName());
+                    if (logDebugInfo) FMLRelaunchLog.finer("Adding %s to the list of known coremods, it will not be examined again", coreMod.getName());
                     loadedCoremods.add(coreMod.getName());
                 }
                 else
                 {
-                    FMLRelaunchLog.finer("Found FMLCorePluginContainsFMLMod marker in %s, it will be examined later for regular @Mod instances",
+                    if (logDebugInfo) FMLRelaunchLog.finer("Found FMLCorePluginContainsFMLMod marker in %s, it will be examined later for regular @Mod instances",
                             coreMod.getName());
                     reparsedCoremods.add(coreMod.getName());
                 }
@@ -457,7 +458,7 @@ public class CoreModManager {
         String coreModName = coreModClass.substring(coreModClass.lastIndexOf('.') + 1);
         try
         {
-            FMLRelaunchLog.fine("Instantiating coremod class %s", coreModName);
+            if (logDebugInfo) FMLRelaunchLog.fine("Instantiating coremod class %s", coreModName);
             classLoader.addTransformerExclusion(coreModClass);
             Class<?> coreModClazz = Class.forName(coreModClass, true, classLoader);
             Name coreModNameAnn = coreModClazz.getAnnotation(IFMLLoadingPlugin.Name.class);
@@ -469,7 +470,7 @@ public class CoreModManager {
             MCVersion requiredMCVersion = coreModClazz.getAnnotation(IFMLLoadingPlugin.MCVersion.class);
             if (!Arrays.asList(rootPlugins).contains(coreModClass) && (requiredMCVersion == null || Strings.isNullOrEmpty(requiredMCVersion.value())))
             {
-                FMLRelaunchLog.log(Level.WARN, "The coremod %s does not have a MCVersion annotation, it may cause issues with this version of Minecraft",
+                if (logDebugInfo) FMLRelaunchLog.log(Level.WARN, "The coremod %s does not have a MCVersion annotation, it may cause issues with this version of Minecraft",
                         coreModClass);
             }
             else if (requiredMCVersion != null && !FMLInjectionData.mccversion.equals(requiredMCVersion.value()))
@@ -480,7 +481,7 @@ public class CoreModManager {
             }
             else if (requiredMCVersion != null)
             {
-                FMLRelaunchLog.log(Level.DEBUG, "The coremod %s requested minecraft version %s and minecraft is %s. It will be loaded.", coreModClass,
+                if (logDebugInfo) FMLRelaunchLog.log(Level.DEBUG, "The coremod %s requested minecraft version %s and minecraft is %s. It will be loaded.", coreModClass,
                         requiredMCVersion.value(), FMLInjectionData.mccversion);
             }
             TransformerExclusions trExclusions = coreModClazz.getAnnotation(IFMLLoadingPlugin.TransformerExclusions.class);
@@ -504,32 +505,32 @@ public class CoreModManager {
             String accessTransformerClass = plugin.getAccessTransformerClass();
             if (accessTransformerClass != null)
             {
-                FMLRelaunchLog.log(Level.DEBUG, "Added access transformer class %s to enqueued access transformers", accessTransformerClass);
+                if (logDebugInfo) FMLRelaunchLog.log(Level.DEBUG, "Added access transformer class %s to enqueued access transformers", accessTransformerClass);
                 accessTransformers.add(accessTransformerClass);
             }
             FMLPluginWrapper wrap = new FMLPluginWrapper(coreModName, plugin, location, sortIndex, dependencies);
             loadPlugins.add(wrap);
-            FMLRelaunchLog.fine("Enqueued coremod %s", coreModName);
+            if (logDebugInfo) FMLRelaunchLog.fine("Enqueued coremod %s", coreModName);
             return wrap;
         }
         catch (ClassNotFoundException cnfe)
         {
             if (!Lists.newArrayList(rootPlugins).contains(coreModClass))
-                FMLRelaunchLog.log(Level.ERROR, cnfe, "Coremod %s: Unable to class load the plugin %s", coreModName, coreModClass);
+                if (logDebugInfo) FMLRelaunchLog.log(Level.ERROR, cnfe, "Coremod %s: Unable to class load the plugin %s", coreModName, coreModClass);
             else
-                FMLRelaunchLog.fine("Skipping root plugin %s", coreModClass);
+                if (logDebugInfo) FMLRelaunchLog.fine("Skipping root plugin %s", coreModClass);
         }
         catch (ClassCastException cce)
         {
-            FMLRelaunchLog.log(Level.ERROR, cce, "Coremod %s: The plugin %s is not an implementor of IFMLLoadingPlugin", coreModName, coreModClass);
+            if (logDebugInfo) FMLRelaunchLog.log(Level.ERROR, cce, "Coremod %s: The plugin %s is not an implementor of IFMLLoadingPlugin", coreModName, coreModClass);
         }
         catch (InstantiationException ie)
         {
-            FMLRelaunchLog.log(Level.ERROR, ie, "Coremod %s: The plugin class %s was not instantiable", coreModName, coreModClass);
+            if (logDebugInfo) FMLRelaunchLog.log(Level.ERROR, ie, "Coremod %s: The plugin class %s was not instantiable", coreModName, coreModClass);
         }
         catch (IllegalAccessException iae)
         {
-            FMLRelaunchLog.log(Level.ERROR, iae, "Coremod %s: The plugin class %s was not accessible", coreModName, coreModClass);
+            if (logDebugInfo) FMLRelaunchLog.log(Level.ERROR, iae, "Coremod %s: The plugin class %s was not accessible", coreModName, coreModClass);
         }
         return null;
     }

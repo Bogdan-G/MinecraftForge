@@ -25,6 +25,8 @@ public class FMLConfigGuiFactory implements IModGuiFactory
     public static class FMLConfigGuiScreen extends GuiConfig 
     {
 
+        private static final Pattern precommaDelimitedPattern = Pattern.compile("([A-Za-z]+((,){1}( )*|$))+?");
+
         public FMLConfigGuiScreen(GuiScreen parent)
         {
             super(parent, getConfigElements(), "FML", false, false, I18n.format("fml.config.sample.title"));
@@ -37,7 +39,7 @@ public class FMLConfigGuiFactory implements IModGuiFactory
             List<IConfigElement> listsList = new ArrayList<IConfigElement>();
             List<IConfigElement> stringsList = new ArrayList<IConfigElement>();
             List<IConfigElement> numbersList = new ArrayList<IConfigElement>();
-            Pattern commaDelimitedPattern = Pattern.compile("([A-Za-z]+((,){1}( )*|$))+?");
+            Pattern commaDelimitedPattern = precommaDelimitedPattern;
             
             // Top Level Settings
             list.add(new DummyConfigElement<Boolean>("imABoolean", true, ConfigGuiType.BOOLEAN, "fml.config.sample.imABoolean").setRequiresMcRestart(true));

@@ -57,7 +57,7 @@ public class ShapelessOreRecipe implements IRecipe
         }
     }
 
-    @SuppressWarnings("unchecked")
+    /*@*//*SuppressWarnings("unchecked")*/
     ShapelessOreRecipe(ShapelessRecipes recipe, Map<ItemStack, String> replacements)
     {
         output = recipe.getRecipeOutput();
@@ -86,7 +86,7 @@ public class ShapelessOreRecipe implements IRecipe
     @Override
     public ItemStack getCraftingResult(InventoryCrafting var1){ return output.copy(); }
 
-    @SuppressWarnings("unchecked")
+    /*@*//*SuppressWarnings("unchecked")*/
     @Override
     public boolean matches(InventoryCrafting var1, World world)
     {

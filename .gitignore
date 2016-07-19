@@ -25,3 +25,6 @@ dist-builds
 dist-builds2
 fix_bug_comp
 /fb/*
+FGS.jar
+/libs/*
+ForgeGradle-1.2-SNAPSHOT.jar

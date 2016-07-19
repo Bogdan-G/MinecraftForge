@@ -8,6 +8,23 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
+@@ -41,11 +42,11 @@
+     private static final Logger field_147635_d = LogManager.getLogger();
+     public static final ResourceLocation field_110575_b = new ResourceLocation("textures/atlas/blocks.png");
+     public static final ResourceLocation field_110576_c = new ResourceLocation("textures/atlas/items.png");
+-    private final List field_94258_i = Lists.newArrayList();
+-    private final Map field_110574_e = Maps.newHashMap();
+-    private final Map field_94252_e = Maps.newHashMap();
+-    private final int field_94255_a;
+-    private final String field_94254_c;
++    private List field_94258_i = Lists.newArrayList();
++    private Map field_110574_e = Maps.newHashMap();
++    private Map field_94252_e = Maps.newHashMap();
++    private int field_94255_a;
++    private String field_94254_c;
+     private int field_147637_k = 1;
+     private final TextureAtlasSprite field_94249_f = new TextureAtlasSprite("missingno");
+     private static final String __OBFID = "CL_00001058";
 @@ -98,11 +99,14 @@
  
      public void func_110571_b(IResourceManager p_110571_1_)

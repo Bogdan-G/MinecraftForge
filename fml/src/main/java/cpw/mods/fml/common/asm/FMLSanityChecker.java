@@ -44,6 +44,7 @@ public class FMLSanityChecker implements IFMLCallHook
     private LaunchClassLoader cl;
     private boolean liveEnv;
     public static File fmlLocation;
+    private static final boolean DEBUGsc = Boolean.parseBoolean(System.getProperty("fml.debugClassPatchManager", "false"));
 
     @Override
     public Void call() throws Exception
@@ -63,17 +64,20 @@ public class FMLSanityChecker implements IFMLCallHook
                     String fingerprint = CertificateHelper.getFingerprint(cert);
                     if (fingerprint.equals(FMLFINGERPRINT))
                     {
-                        FMLRelaunchLog.info("Found valid fingerprint for FML. Certificate fingerprint %s", fingerprint);
+                        final boolean DEBUG=DEBUGsc;
+                        if (DEBUG) FMLRelaunchLog.info("Found valid fingerprint for FML. Certificate fingerprint %s", fingerprint);
                         goodFML = true;
                     }
                     else if (fingerprint.equals(FORGEFINGERPRINT))
                     {
-                        FMLRelaunchLog.info("Found valid fingerprint for Minecraft Forge. Certificate fingerprint %s", fingerprint);
+                        final boolean DEBUG=DEBUGsc;
+                        if (DEBUG) FMLRelaunchLog.info("Found valid fingerprint for Minecraft Forge. Certificate fingerprint %s", fingerprint);
                         goodFML = true;
                     }
                     else
                     {
-                        FMLRelaunchLog.severe("Found invalid fingerprint for FML: %s", fingerprint);
+                        final boolean DEBUG=DEBUGsc;
+                        if (DEBUG) FMLRelaunchLog.severe("Found invalid fingerprint for FML: %s", fingerprint);
                     }
                 }
             }
@@ -117,7 +121,8 @@ public class FMLSanityChecker implements IFMLCallHook
                         String fingerprint = CertificateHelper.getFingerprint(cert);
                         if (fingerprint.equals(MCFINGERPRINT))
                         {
-                            FMLRelaunchLog.info("Found valid fingerprint for Minecraft. Certificate fingerprint %s", fingerprint);
+                            final boolean DEBUG=DEBUGsc;
+                            if (DEBUG) FMLRelaunchLog.info("Found valid fingerprint for Minecraft. Certificate fingerprint %s", fingerprint);
                             goodMC = true;
                         }
                     }

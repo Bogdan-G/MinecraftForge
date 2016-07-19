@@ -10,9 +10,18 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            name 'spigot'
+            url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        }
+        maven {
+           name 'maven2'
+           url 'http://repo1.maven.org/maven/'
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        //classpath files('ForgeGradle-1.2-SNAPSHOT.jar')
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT-2'
     }
 }
 
@@ -24,6 +33,8 @@ import static net.minecraftforge.gradle.dev.ForgeDevPlugin.*
 
 apply plugin: 'maven'
 apply plugin: 'forgedev'
+
+//[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 repositories {
     mavenLocal()

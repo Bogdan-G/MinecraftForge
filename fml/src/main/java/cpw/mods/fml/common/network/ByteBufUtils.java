@@ -214,7 +214,7 @@ public class ByteBufUtils {
     public static String getContentDump(ByteBuf buffer)
     {
         int currentLength = buffer.readableBytes();
-        StringBuffer returnString = new StringBuffer((currentLength * 3) + // The
+        StringBuilder returnString = new StringBuilder((currentLength * 3) + // The
                                                                            // hex
                 (currentLength) + // The ascii
                 (currentLength / 4) + // The tabs/\n's

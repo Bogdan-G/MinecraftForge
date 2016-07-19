@@ -8,6 +8,7 @@ import net.minecraft.launchwrapper.IClassTransformer;
 
 public class TerminalTransformer implements IClassTransformer
 {
+    private static final boolean logDebugInfo = Boolean.parseBoolean(System.getProperty("fml.debugTerminalTransformer", "false"));
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass)
     {
@@ -56,7 +57,7 @@ public class TerminalTransformer implements IClassTransformer
                 {
                     if (opcode == Opcodes.INVOKESTATIC && owner.equals("java/lang/System") && name.equals("exit") && desc.equals("(I)V"))
                     {
-                        if (warn)
+                        if (warn && logDebugInfo)
                         {
                             FMLRelaunchLog.warning("=============================================================");
                             FMLRelaunchLog.warning("MOD HAS DIRECT REFERENCE System.exit() THIS IS NOT ALLOWED REROUTING TO FML!");
@@ -69,7 +70,7 @@ public class TerminalTransformer implements IClassTransformer
                     }
                     else if (opcode == Opcodes.INVOKEVIRTUAL && owner.equals("java/lang/Runtime") && name.equals("exit") && desc.equals("(I)V"))
                     {
-                        if (warn)
+                        if (warn && logDebugInfo)
                         {
                             FMLRelaunchLog.warning("=============================================================");
                             FMLRelaunchLog.warning("MOD HAS DIRECT REFERENCE Runtime.exit() THIS IS NOT ALLOWED REROUTING TO FML!");
@@ -84,7 +85,7 @@ public class TerminalTransformer implements IClassTransformer
                     }
                     else if (opcode == Opcodes.INVOKEVIRTUAL && owner.equals("java/lang/Runtime") && name.equals("halt") && desc.equals("(I)V"))
                     {
-                        if (warn)
+                        if (warn && logDebugInfo)
                         {
                             FMLRelaunchLog.warning("=============================================================");
                             FMLRelaunchLog.warning("MOD HAS DIRECT REFERENCE Runtime.halt() THIS IS NOT ALLOWED REROUTING TO FML!");

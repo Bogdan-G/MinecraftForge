@@ -137,7 +137,7 @@ public class RecipeSorter implements Comparator<IRecipe>, java.io.Serializable
     }
 
     private static Set<Class> warned = new HashSet();
-    @SuppressWarnings("unchecked")
+    /*@*//*SuppressWarnings("unchecked")*/
     public static void sortCraftManager()
     {
         bake();

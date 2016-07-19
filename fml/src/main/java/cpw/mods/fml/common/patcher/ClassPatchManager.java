@@ -45,6 +45,8 @@ public class ClassPatchManager {
 
     private Map<String,byte[]> patchedClasses = Maps.newHashMap();
     private File tempDir;
+    private static final Pattern prebinpatchMatcher1 = Pattern.compile(String.format("binpatch/%s/.*.binpatch", "client"));
+    private static final Pattern prebinpatchMatcher2 = Pattern.compile(String.format("binpatch/%s/.*.binpatch", "server"));
     private ClassPatchManager()
     {
         if (dumpPatched)
@@ -145,7 +147,9 @@ public class ClassPatchManager {
 
     public void setup(Side side)
     {
-        Pattern binpatchMatcher = Pattern.compile(String.format("binpatch/%s/.*.binpatch", side.toString().toLowerCase(Locale.ENGLISH)));
+        Pattern binpatchMatcher;
+        if (side.isClient()) binpatchMatcher = prebinpatchMatcher1;
+        else/* if (side.isServer())*/ binpatchMatcher = prebinpatchMatcher2;
         JarInputStream jis;
         try
         {
@@ -195,9 +199,9 @@ public class ClassPatchManager {
             {
             }
         } while (true);
-        FMLRelaunchLog.fine("Read %d binary patches", patches.size());
-        if (DEBUG)
-            FMLRelaunchLog.fine("Patch list :\n\t%s", Joiner.on("\t\n").join(patches.asMap().entrySet()));
+        if (DEBUG) {
+            FMLRelaunchLog.fine("Read %d binary patches", patches.size());
+            FMLRelaunchLog.fine("Patch list :\n\t%s", Joiner.on("\t\n").join(patches.asMap().entrySet()));}
         patchedClasses.clear();
     }
 
@@ -212,7 +216,7 @@ public class ClassPatchManager {
         }
         catch (IOException e)
         {
-            FMLRelaunchLog.log(Level.WARN, e, "Unable to read binpatch file %s - ignoring", patchEntry.getName());
+            if (DEBUG) FMLRelaunchLog.log(Level.WARN, e, "Unable to read binpatch file %s - ignoring", patchEntry.getName());
             return null;
         }
         String name = input.readUTF();

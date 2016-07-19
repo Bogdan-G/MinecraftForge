@@ -369,7 +369,7 @@ public class Delta {
             return getTextDump(bb);
         }
 
-        private void append(StringBuffer sb, int value) {
+        private void append(StringBuilder sb, int value) {
             char b1 = (char)((value >> 4) & 0x0F);
             char b2 = (char)((value) & 0x0F);
             sb.append( Character.forDigit(b1, 16) );
@@ -378,7 +378,7 @@ public class Delta {
 
         public String getTextDump(ByteBuffer bb)
         {
-            StringBuffer sb = new StringBuffer(bb.remaining() * 2);
+            StringBuilder sb = new StringBuilder(bb.remaining() * 2);
             bb.mark();
             while (bb.hasRemaining()) {
                 int val = bb.get();

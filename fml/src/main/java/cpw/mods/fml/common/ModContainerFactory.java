@@ -30,7 +30,7 @@ import cpw.mods.fml.common.discovery.asm.ModAnnotation;
 public class ModContainerFactory
 {
     public static Map<Type, Constructor<? extends ModContainer>> modTypes = Maps.newHashMap();
-    private static Pattern modClass = Pattern.compile(".*(\\.|)(mod\\_[^\\s$]+)$");
+    private static final Pattern modClass = Pattern.compile(".*(\\.|)(mod\\_[^\\s$]+)$");
     private static ModContainerFactory INSTANCE = new ModContainerFactory();
     
     private ModContainerFactory() {

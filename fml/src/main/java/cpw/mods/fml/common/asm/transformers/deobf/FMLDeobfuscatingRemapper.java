@@ -105,7 +105,7 @@ public class FMLDeobfuscatingRemapper extends Remapper {
         }
         catch (IOException ioe)
         {
-            FMLRelaunchLog.log(Level.ERROR, "An error occurred loading the deobfuscation map data", ioe);
+            if (DEBUG_REMAPPING) FMLRelaunchLog.log(Level.ERROR, "An error occurred loading the deobfuscation map data", ioe);
         }
         methodNameMaps = Maps.newHashMapWithExpectedSize(rawMethodMaps.size());
         fieldNameMaps = Maps.newHashMapWithExpectedSize(rawFieldMaps.size());
@@ -145,7 +145,7 @@ public class FMLDeobfuscatingRemapper extends Remapper {
         }
         catch (IOException ioe)
         {
-            FMLRelaunchLog.log(Level.ERROR, ioe, "An error occurred loading the deobfuscation map data");
+            if (DEBUG_REMAPPING) FMLRelaunchLog.log(Level.ERROR, ioe, "An error occurred loading the deobfuscation map data");
         }
         methodNameMaps = Maps.newHashMapWithExpectedSize(rawMethodMaps.size());
         fieldNameMaps = Maps.newHashMapWithExpectedSize(rawFieldMaps.size());
@@ -209,7 +209,7 @@ public class FMLDeobfuscatingRemapper extends Remapper {
             }
             catch (IOException e)
             {
-                FMLRelaunchLog.log(Level.ERROR,e, "A critical exception occured reading a class file %s", owner);
+                if (DEBUG_REMAPPING) FMLRelaunchLog.log(Level.ERROR,e, "A critical exception occured reading a class file %s", owner);
             }
             return null;
         }
@@ -352,12 +352,12 @@ public class FMLDeobfuscatingRemapper extends Remapper {
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            if (DEBUG_REMAPPING) e.printStackTrace();
         }
     }
     public void mergeSuperMaps(String name, String superName, String[] interfaces)
     {
-//        System.out.printf("Computing super maps for %s: %s %s\n", name, superName, Arrays.asList(interfaces));
+        if (DEBUG_REMAPPING) System.out.printf("Computing super maps for %s: %s %s\n", name, superName, Arrays.asList(interfaces));
         if (classNameBiMap == null || classNameBiMap.isEmpty())
         {
             return;
@@ -400,7 +400,7 @@ public class FMLDeobfuscatingRemapper extends Remapper {
         }
         methodNameMaps.put(name, ImmutableMap.copyOf(methodMap));
         fieldNameMaps.put(name, ImmutableMap.copyOf(fieldMap));
-//        System.out.printf("Maps: %s %s\n", name, methodMap);
+        if (DEBUG_REMAPPING) System.out.printf("Maps: %s %s\n", name, methodMap);
     }
 
     public Set<String> getObfedClasses()

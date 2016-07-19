@@ -13,6 +13,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
 public class FMLDeobfTweaker implements ITweaker {
+    private static final boolean logDebugInfo = Boolean.parseBoolean(System.getProperty("fml.debugDeobfTweaker", "false"));
     @Override
     public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile)
     {
@@ -35,13 +36,13 @@ public class FMLDeobfTweaker implements ITweaker {
         classLoader.registerTransformer("cpw.mods.fml.common.asm.transformers.ItemStackTransformer");
         try
         {
-            FMLRelaunchLog.fine("Validating minecraft");
+            if (logDebugInfo) FMLRelaunchLog.fine("Validating minecraft");
             Class<?> loaderClazz = Class.forName("cpw.mods.fml.common.Loader", true, classLoader);
             Method m = loaderClazz.getMethod("injectData", Object[].class);
             m.invoke(null, (Object)FMLInjectionData.data());
             m = loaderClazz.getMethod("instance");
             m.invoke(null);
-            FMLRelaunchLog.fine("Minecraft validated, launching...");
+            if (logDebugInfo) FMLRelaunchLog.fine("Minecraft validated, launching...");
         }
         catch (Exception e)
         {

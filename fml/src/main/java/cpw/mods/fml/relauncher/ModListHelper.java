@@ -23,6 +23,7 @@ public class ModListHelper {
     private static File mcDirectory;
     private static Set<File> visitedFiles = Sets.newHashSet();
     public static final Map<String,File> additionalMods = Maps.newLinkedHashMap();
+    private static final boolean logDebugInfo = Boolean.parseBoolean(System.getProperty("fml.debugModListHelper", "false"));
     static void parseModList(File minecraftDirectory)
     {
         FMLRelaunchLog.fine("Attempting to load commandline specified mods, relative to %s", minecraftDirectory.getAbsolutePath());
@@ -121,7 +122,7 @@ public class ModListHelper {
         }
         else
         {
-            FMLRelaunchLog.fine("Adding %s (%s) to the mod list", descriptor, modFile.getAbsolutePath());
+            if (logDebugInfo) FMLRelaunchLog.fine("Adding %s (%s) to the mod list", descriptor, modFile.getAbsolutePath());
             additionalMods.put(descriptor, modFile);
         }
     }

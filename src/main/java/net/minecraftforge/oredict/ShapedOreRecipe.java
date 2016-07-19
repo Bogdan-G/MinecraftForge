@@ -189,7 +189,7 @@ public class ShapedOreRecipe implements IRecipe
         return false;
     }
 
-    @SuppressWarnings("unchecked")
+    /*@*//*SuppressWarnings("unchecked")*/
     private boolean checkMatch(InventoryCrafting inv, int startX, int startY, boolean mirror)
     {
         for (int x = 0; x < MAX_CRAFT_GRID_WIDTH; x++)
