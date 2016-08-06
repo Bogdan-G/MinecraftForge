@@ -351,15 +351,24 @@ public class OreDictionary
         {
             id = GameData.getItemRegistry().getId(registryName);
         }
-        List<Integer> ids = stackToId.get(id);
-        if (ids != null) set.addAll(ids);
-        ids = stackToId.get(id | ((stack.getItemDamage() + 1) << 16));
-        if (ids != null) set.addAll(ids);
+        int count = 0, r0_int = 0;
+        List<Integer> ids = null;
+        if (stackToId.get(id) != null) {
+          ids=stackToId.get(id);
+          if (ids.size() != 0) set.addAll(ids);
+        }
+        if (stackToId.get(r0_int=(id | ((stack.getItemDamage() + 1) << 16))) != null) {
+          ids = stackToId.get(r0_int);
+          if (ids.size() != 0) set.addAll(ids);
+          else return new int[0];
+        }
+        if (ids == null) return new int[0];
 
-        Integer[] tmp = set.toArray(new Integer[set.size()]);
-        int[] ret = new int[tmp.length];
-        for (int x = 0; x < tmp.length; x++)
-            ret[x] = tmp[x];
+        int[] ret = new int[set.size()];
+        for(Iterator<Integer> it = set.iterator(); it.hasNext();)
+        {
+            ret[count++] = it.next();
+        }
         return ret;
     }
 
@@ -488,10 +497,10 @@ public class OreDictionary
 
     public static boolean itemMatches(ItemStack target, ItemStack input, boolean strict)
     {
-        //change check
-        if (input == null) { if (target != null) { return false; } }
-        if (input != null) { if (target == null) { return false; } }
-        return (target.getItem() == input.getItem() && ((target.getItemDamage() == WILDCARD_VALUE && !strict) || target.getItemDamage() == input.getItemDamage()));
+        //change check 2, need pass both null values?
+        if (input != null && target != null) {
+        return (target.getItem() == input.getItem() && ((target.getItemDamage() == WILDCARD_VALUE && !strict) || target.getItemDamage() == input.getItemDamage()));}
+        else { return false; }
     }
 
     //Convenience functions that make for cleaner code mod side. They all drill down to registerOre(String, int, ItemStack)
