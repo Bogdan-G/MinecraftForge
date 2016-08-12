@@ -416,7 +416,7 @@
                  }
  
 -                throw new ReportedException(crashreport);
-+                FMLLog.warning("Found initialization crash, stacktrace:", throwable2);/*if (ForgeModContainer.removeErroringEntities)
++                FMLLog.log(org.apache.logging.log4j.Level.WARN, throwable2, "Found initialization crash, stacktrace: %s", throwable2);/*if (ForgeModContainer.removeErroringEntities)
 +                {
 +                    FMLLog.getLogger().log(org.apache.logging.log4j.Level.ERROR, crashreport.func_71502_e());
 +                    func_72900_e(entity);
@@ -434,7 +434,7 @@
                      entity.func_85029_a(crashreportcategory);
 -                    throw new ReportedException(crashreport);
 +
-+                    FMLLog.warning("Found initialization crash, stacktrace:", throwable1);/*if (ForgeModContainer.removeErroringEntities)
++                    FMLLog.log(org.apache.logging.log4j.Level.WARN, throwable1, "Found initialization crash, stacktrace: %s", throwable1);/*if (ForgeModContainer.removeErroringEntities)
 +                    {
 +                        FMLLog.getLogger().log(org.apache.logging.log4j.Level.ERROR, crashreport.func_71502_e());
 +                        func_72900_e(entity);
@@ -451,7 +451,7 @@
                      crashreportcategory = crashreport.func_85058_a("Block entity being ticked");
                      tileentity.func_145828_a(crashreportcategory);
 -                    throw new ReportedException(crashreport);
-+                    FMLLog.warning("Found initialization crash, stacktrace:", throwable);/*if (ForgeModContainer.removeErroringTileEntities)
++                    FMLLog.log(org.apache.logging.log4j.Level.WARN, throwable, "Found initialization crash, stacktrace: %s", throwable);/*if (ForgeModContainer.removeErroringTileEntities)
 +                    {
 +                        FMLLog.getLogger().log(org.apache.logging.log4j.Level.ERROR, crashreport.func_71502_e());
 +                        tileentity.func_145843_s();
