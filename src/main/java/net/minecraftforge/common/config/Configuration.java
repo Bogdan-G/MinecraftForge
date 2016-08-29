@@ -63,8 +63,8 @@ public class Configuration
 
     File file;
 
-    private Map<String, ConfigCategory> categories = new TreeMap<String, ConfigCategory>();
-    private Map<String, Configuration> children = new TreeMap<String, Configuration>();
+    private Map<String, ConfigCategory> categories = new org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap<String, ConfigCategory>();
+    private Map<String, Configuration> children = new org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap<String, Configuration>();
 
     private boolean caseSensitiveCustomCategories;
     public String defaultEncoding = DEFAULT_ENCODING;
@@ -847,7 +847,7 @@ public class Configuration
                     if (start.matches())
                     {
                         fileName = start.group(1);
-                        categories = new TreeMap<String, ConfigCategory>();
+                        categories = new org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap<String, ConfigCategory>();
                         continue;
                     }
                     else if (end.matches())

@@ -70,6 +70,11 @@ launch4j {
     jreMinVersion = '1.6.0'
 }
 
+/*dependencies {
+    compile fileTree(dir: "libs", include: "*.jar")
+}*/
+
+
 /*uploadArchives {
     repositories {
         add getProject().repositories.mavenLocal()

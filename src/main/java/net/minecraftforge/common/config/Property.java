@@ -832,7 +832,7 @@ public class Property
      */
     public int[] getIntList()
     {
-        ArrayList<Integer> nums = new ArrayList<Integer>();
+        /*ArrayList<Integer>*/org.eclipse.collections.impl.list.mutable.primitive.IntArrayList nums = new org.eclipse.collections.impl.list.mutable.primitive.IntArrayList/*<Integer>*/();
 
         for (String value : values)
         {
@@ -883,7 +883,7 @@ public class Property
      */
     public boolean[] getBooleanList()
     {
-        ArrayList<Boolean> tmp = new ArrayList<Boolean>();
+        /*ArrayList<Boolean>*/org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList tmp = new org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList/*<Boolean>*/();
         for (String value : values)
         {
             try
@@ -930,7 +930,7 @@ public class Property
      */
     public double[] getDoubleList()
     {
-        ArrayList<Double> tmp = new ArrayList<Double>();
+        /*ArrayList<Double>*/org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList tmp = new org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList/*<Double>*/();
         for (String value : values)
         {
             try
