@@ -32,7 +32,7 @@ public class ConfigCategory implements Map<String, Property>
     private String comment;
     private String languagekey;
     private /*Array*/List<ConfigCategory> children = new org.eclipse.collections.impl.list.mutable.FastList<ConfigCategory>();
-    private Map<String, Property> properties = new org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap<String, Property>();
+    private Map<String, Property> properties = new org.eclipse.collections.impl.map.mutable.UnifiedMap<String, Property>();//TreeSortedMap
     private int propNumber = 0;
     public final ConfigCategory parent;
     private boolean changed = false;

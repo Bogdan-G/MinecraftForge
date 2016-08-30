@@ -25,6 +25,15 @@
      private int field_147637_k = 1;
      private final TextureAtlasSprite field_94249_f = new TextureAtlasSprite("missingno");
      private static final String __OBFID = "CL_00001058";
+@@ -45,6 +46,6 @@
+     private int field_94255_a;
+     private String field_94254_c;
+     private int field_147637_k = 1;
+-    private final TextureAtlasSprite field_94249_f = new TextureAtlasSprite("missingno");
++    private TextureAtlasSprite field_94249_f = new TextureAtlasSprite("missingno");
+     private static final String __OBFID = "CL_00001058";
+     private boolean skipFirst = false;
+ 
 @@ -98,11 +99,14 @@
  
      public void func_110571_b(IResourceManager p_110571_1_)

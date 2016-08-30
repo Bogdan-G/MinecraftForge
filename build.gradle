@@ -22,6 +22,7 @@ buildscript {
     dependencies {
         //classpath files('ForgeGradle-1.2-SNAPSHOT.jar')
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT-2'
+        classpath fileTree(dir: "libs", include: "*.jar")
     }
 }
 

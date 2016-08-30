@@ -80,8 +80,8 @@ public class FMLDeobfuscatingRemapper extends Remapper {
             LZMAInputSupplier zis = new LZMAInputSupplier(new BufferedInputStream(new FileInputStream(mapData)));
             CharSource srgSource = zis.asCharSource(Charsets.UTF_8);
             List<String> srgList = srgSource.readLines();
-            rawMethodMaps = Maps.newHashMap();
-            rawFieldMaps = Maps.newHashMap();
+            rawMethodMaps = new org.eclipse.collections.impl.map.mutable.UnifiedMap();//Maps.newHashMap();
+            rawFieldMaps = new org.eclipse.collections.impl.map.mutable.UnifiedMap();//Maps.newHashMap();
             Builder<String, String> builder = ImmutableBiMap.<String,String>builder();
             Splitter splitter = Splitter.on(CharMatcher.anyOf(": ")).omitEmptyStrings().trimResults();
             for (String line : srgList)
@@ -107,8 +107,8 @@ public class FMLDeobfuscatingRemapper extends Remapper {
         {
             if (DEBUG_REMAPPING) FMLRelaunchLog.log(Level.ERROR, "An error occurred loading the deobfuscation map data", ioe);
         }
-        methodNameMaps = Maps.newHashMapWithExpectedSize(rawMethodMaps.size());
-        fieldNameMaps = Maps.newHashMapWithExpectedSize(rawFieldMaps.size());
+        methodNameMaps = org.eclipse.collections.impl.map.mutable.UnifiedMap.newMap((int) ((float) rawMethodMaps.size() / 0.95F + 1.0F), 0.95F);//Maps.newHashMapWithExpectedSize(rawMethodMaps.size());
+        fieldNameMaps = org.eclipse.collections.impl.map.mutable.UnifiedMap.newMap((int) ((float) rawFieldMaps.size() / 0.95F + 1.0F), 0.95F);//Maps.newHashMapWithExpectedSize(rawFieldMaps.size());
 
     }
     public void setup(File mcDir, LaunchClassLoader classLoader, String deobfFileName)
@@ -120,8 +120,8 @@ public class FMLDeobfuscatingRemapper extends Remapper {
             LZMAInputSupplier zis = new LZMAInputSupplier(classData);
             CharSource srgSource = zis.asCharSource(Charsets.UTF_8);
             List<String> srgList = srgSource.readLines();
-            rawMethodMaps = Maps.newHashMap();
-            rawFieldMaps = Maps.newHashMap();
+            rawMethodMaps = new org.eclipse.collections.impl.map.mutable.UnifiedMap();//Maps.newHashMap();
+            rawFieldMaps = new org.eclipse.collections.impl.map.mutable.UnifiedMap();//Maps.newHashMap();
             Builder<String, String> builder = ImmutableBiMap.<String,String>builder();
             Splitter splitter = Splitter.on(CharMatcher.anyOf(": ")).omitEmptyStrings().trimResults();
             for (String line : srgList)
@@ -147,8 +147,8 @@ public class FMLDeobfuscatingRemapper extends Remapper {
         {
             if (DEBUG_REMAPPING) FMLRelaunchLog.log(Level.ERROR, ioe, "An error occurred loading the deobfuscation map data");
         }
-        methodNameMaps = Maps.newHashMapWithExpectedSize(rawMethodMaps.size());
-        fieldNameMaps = Maps.newHashMapWithExpectedSize(rawFieldMaps.size());
+        methodNameMaps = org.eclipse.collections.impl.map.mutable.UnifiedMap.newMap((int) ((float) rawMethodMaps.size() / 0.95F + 1.0F), 0.95F);//Maps.newHashMapWithExpectedSize(rawMethodMaps.size());
+        fieldNameMaps = org.eclipse.collections.impl.map.mutable.UnifiedMap.newMap((int) ((float) rawFieldMaps.size() / 0.95F + 1.0F), 0.95F);//Maps.newHashMapWithExpectedSize(rawFieldMaps.size());
     }
 
     public boolean isRemappedClass(String className)
@@ -200,7 +200,7 @@ public class FMLDeobfuscatingRemapper extends Remapper {
                 ClassReader cr = new ClassReader(classBytes);
                 ClassNode classNode = new ClassNode();
                 cr.accept(classNode, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-                Map<String,String> resMap = Maps.newHashMap();
+                Map<String,String> resMap = org.eclipse.collections.impl.map.mutable.UnifiedMap.newMap(16, 0.95F);//Maps.newHashMap();
                 for (FieldNode fieldNode : (List<FieldNode>) classNode.fields) {
                     resMap.put(fieldNode.name, fieldNode.desc);
                 }
