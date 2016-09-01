@@ -40,8 +40,8 @@ public class RecipeSorter implements Comparator<IRecipe>, java.io.Serializable
         private String name;
         private Class<?> cls;
         private Category cat;
-        List<String> before = Lists.newArrayList();
-        List<String> after = Lists.newArrayList();
+        List<String> before = new org.eclipse.collections.impl.list.mutable.FastList();//Lists.newArrayList();
+        List<String> after = new org.eclipse.collections.impl.list.mutable.FastList();//Lists.newArrayList();
 
         private SortEntry(String name, Class<?> cls, Category cat, String deps)
         {
@@ -99,10 +99,10 @@ public class RecipeSorter implements Comparator<IRecipe>, java.io.Serializable
         }
     };
 
-    private static Map<Class, Category>     categories = Maps.newHashMap();
+    private static Map<Class, Category>     categories = new org.eclipse.collections.impl.map.mutable.UnifiedMap(16, 0.90F);//Maps.newHashMap();
     //private static Map<String, Class>       types = Maps.newHashMap();
-    private static Map<String, SortEntry>   entries = Maps.newHashMap();
-    private static Map<Class, Integer>      priorities = Maps.newHashMap();
+    private static Map<String, SortEntry>   entries = new org.eclipse.collections.impl.map.mutable.UnifiedMap(16, 0.90F);//Maps.newHashMap();
+    private static Map<Class, Integer>      priorities = new org.eclipse.collections.impl.map.mutable.UnifiedMap(16, 0.90F);//Maps.newHashMap();
 
     public static RecipeSorter INSTANCE = new RecipeSorter();
     private static boolean isDirty = true;

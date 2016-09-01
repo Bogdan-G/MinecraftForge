@@ -38,11 +38,11 @@ import cpw.mods.fml.common.registry.GameData;
 public class OreDictionary
 {
     private static boolean hasInit = false;
-    private static List<String>          idToName = new ArrayList<String>();
-    private static Map<String, Integer>  nameToId = new HashMap<String, Integer>(128);
-    private static List<ArrayList<ItemStack>> idToStack = Lists.newArrayList(); //ToDo: Unqualify to List when possible {1.8}
-    private static List<ArrayList<ItemStack>> idToStackUn = Lists.newArrayList(); //ToDo: Unqualify to List when possible {1.8}
-    private static Map<Integer, List<Integer>> stackToId = Maps.newHashMapWithExpectedSize(96); // Calculated from 128 * 0.75
+    private static List<String>          idToName = new org.eclipse.collections.impl.list.mutable.FastList();//new ArrayList<String>();
+    private static Map<String, Integer>  nameToId = new org.eclipse.collections.impl.map.mutable.UnifiedMap(128, 0.90F);//HashMap<String, Integer>(128);
+    private static List<ArrayList<ItemStack>> idToStack = new org.eclipse.collections.impl.list.mutable.FastList();//Lists.newArrayList(); //ToDo: Unqualify to List when possible {1.8}
+    private static List<ArrayList<ItemStack>> idToStackUn = new org.eclipse.collections.impl.list.mutable.FastList();//Lists.newArrayList(); //ToDo: Unqualify to List when possible {1.8}
+    private static Map<Integer, List<Integer>> stackToId = new org.eclipse.collections.impl.map.mutable.UnifiedMap(128, 0.90F);//Maps.newHashMapWithExpectedSize(96); // Calculated from 128 * 0.75
     public static final ArrayList<ItemStack> EMPTY_LIST = Lists.newArrayList(); //ToDo: Unqualify to List when possible {1.8}
 
     /**
@@ -335,7 +335,7 @@ public class OreDictionary
     {
         if (stack == null || stack.getItem() == null) return new int[0];
 
-        Set<Integer> set = new HashSet<Integer>();
+        Set<Integer> set = new org.eclipse.collections.impl.set.mutable.UnifiedSet();//new HashSet<Integer>();
 
         // HACK: use the registry name's ID. It is unique and it knows about substitutions. Fallback to a -1 value (what Item.getIDForItem would have returned) in the case where the registry is not aware of the item yet
         // IT should be noted that -1 will fail the gate further down, if an entry already exists with value -1 for this name. This is what is broken and being warned about.

@@ -8,6 +8,15 @@
          this.field_71459_aj = p_i1103_5_;
          this.field_71443_c = p_i1103_2_;
          this.field_71440_d = p_i1103_3_;
+@@ -287,7 +286,7 @@
+         this.field_71435_Y = p_i1103_3_;
+         this.field_71431_Q = p_i1103_4_;
+         this.field_147129_ai = func_147122_X();
+-        ImageIO.setUseCache(false);
++        ImageIO.setUseCache(true);
+         kl.func_151354_b();
+     }
+ 
 @@ -430,7 +429,7 @@
  
          try

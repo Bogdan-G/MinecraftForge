@@ -28,3 +28,4 @@ fix_bug_comp
 FGS.jar
 /libs/*
 ForgeGradle-1.2-SNAPSHOT.jar
+/eclipse0/*

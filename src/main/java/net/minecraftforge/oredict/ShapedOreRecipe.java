@@ -87,7 +87,7 @@ public class ShapedOreRecipe implements IRecipe
             throw new RuntimeException(ret);
         }
 
-        HashMap<Character, Object> itemMap = new HashMap<Character, Object>();
+        /*Hash*/Map<Character, Object> itemMap = new org.eclipse.collections.impl.map.mutable.UnifiedMap(16, 0.90F);//HashMap<Character, Object>();
 
         for (; idx < recipe.length; idx += 2)
         {
