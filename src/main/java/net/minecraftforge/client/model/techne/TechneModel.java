@@ -4,11 +4,8 @@ import java.awt.Dimension;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -17,6 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.lwjgl.opengl.GL11;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -35,21 +33,21 @@ import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.client.model.ModelFormatException;
 
 /**
- * Techne model importer, based on iChun's Hats importer
+ * A fixed up version of the Forge's original Techne model importer. Techne model importer, based on iChun's Hats importer
+ * 
+ * You must load your .tcn file and then bind the Techne texture yourself.
+ *
+ * @author iChun, Calclavia
  */
 @SideOnly(Side.CLIENT)
 public class TechneModel extends ModelBase implements IModelCustom {
-    public static final List<String> cubeTypes = Arrays.asList(
-            "d9e621f7-957f-4b77-b1ae-20dcd0da7751",
-            "de81aa14-bd60-4228-8d8d-5238bcd3caaa"
-            );
+    public static final List<String> cubeTypes = Arrays.asList("d9e621f7-957f-4b77-b1ae-20dcd0da7751", "de81aa14-bd60-4228-8d8d-5238bcd3caaa");
     
     private String fileName;
     private Map<String, byte[]> zipContents = new HashMap<String, byte[]>();
     
-    private Map<String, ModelRenderer> parts = new LinkedHashMap<String, ModelRenderer>();
+    public Map<String, ModelRenderer> parts = new LinkedHashMap<String, ModelRenderer>();
     private String texture = null;
-    private Dimension textureDims = null;
     private int textureName;
     private boolean textureNameSet = false;
 
@@ -62,7 +60,7 @@ public class TechneModel extends ModelBase implements IModelCustom {
             IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
             loadTechneModel(res.getInputStream());
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             throw new ModelFormatException("IO Exception reading model format", e);
         }
@@ -121,21 +119,13 @@ public class TechneModel extends ModelBase implements IModelCustom {
                 texture = modelTexture.getTextContent();
             }
 
-            NodeList textureDim = document.getElementsByTagName("TextureSize");
-            if (textureDim.getLength() > 0)
+            NodeList textureSize = document.getElementsByTagName("TextureSize");
+            for (int i = 0; i < textureSize.getLength(); i++)
             {
-                try
-                {
-                    String[] tmp = textureDim.item(0).getTextContent().split(",");
-                    if (tmp.length == 2)
-                    {
-                        this.textureDims = new Dimension(Integer.parseInt(tmp[0]), Integer.parseInt(tmp[1]));
-                    }
-                }
-                catch (NumberFormatException e)
-                {
-                    throw new ModelFormatException("Model " + fileName + " contains a TextureSize tag with invalid data");
-                }
+                String size = textureSize.item(i).getTextContent();
+                String[] textureDimensions = size.split(",");
+                textureWidth = Integer.parseInt(textureDimensions[0]);
+                textureHeight = Integer.parseInt(textureDimensions[1]);
             }
             
             NodeList shapes = document.getElementsByTagName("Shape");
@@ -219,18 +209,17 @@ public class TechneModel extends ModelBase implements IModelCustom {
                     }
                     
                     // That's what the ModelBase subclassing is needed for
-                    ModelRenderer cube = new ModelRenderer(this, Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
+                    ModelRenderer cube = new ModelRenderer(this, shapeName);
+                    cube.setTextureOffset(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
                     cube.mirror = mirrored;
-                    cube.addBox(Float.parseFloat(offset[0]), Float.parseFloat(offset[1]), Float.parseFloat(offset[2]), Integer.parseInt(size[0]), Integer.parseInt(size[1]), Integer.parseInt(size[2]));
-                    cube.setRotationPoint(Float.parseFloat(position[0]), Float.parseFloat(position[1]) - 23.4F, Float.parseFloat(position[2]));
+                    cube.setRotationPoint(Float.parseFloat(position[0]), Float.parseFloat(position[1]) - 16, Float.parseFloat(position[2]));
+                    cube.rotateAngleX = (float) Math.toRadians(Float.parseFloat(rotation[0]));
+                    cube.rotateAngleY = (float) Math.toRadians(Float.parseFloat(rotation[1]));
+                    cube.rotateAngleZ = (float) Math.toRadians(Float.parseFloat(rotation[2]));
 
-                    cube.rotateAngleX = (float)Math.toRadians(Float.parseFloat(rotation[0]));
-                    cube.rotateAngleY = (float)Math.toRadians(Float.parseFloat(rotation[1]));
-                    cube.rotateAngleZ = (float)Math.toRadians(Float.parseFloat(rotation[2]));
-
-                    if (this.textureDims != null)
+                    if (parts.containsKey(shapeName))
                     {
-                        cube.setTextureSize((int)textureDims.getWidth(), (int)textureDims.getHeight());
+                        throw new ModelFormatException("Model contained duplicate part name: '" + shapeName + "' node #" + i);
                     }
 
                     parts.put(shapeName, cube);
@@ -262,40 +251,6 @@ public class TechneModel extends ModelBase implements IModelCustom {
     
     private void bindTexture()
     {
-        /* TODO: Update to 1.6
-        if (texture != null)
-        {
-            if (!textureNameSet)
-            {
-                try
-                {
-                    byte[] textureEntry = zipContents.get(texture);
-                    if (textureEntry == null)
-                    {
-                        throw new ModelFormatException("Model " + fileName + " has no such texture " + texture);
-                    }
-                    
-                    BufferedImage image = ImageIO.read(new ByteArrayInputStream(textureEntry));
-                    textureName = Minecraft.getMinecraft().renderEngine.allocateAndSetupTexture(image);
-                    textureNameSet = true;
-                }
-                catch (ZipException e)
-                {
-                    throw new ModelFormatException("Model " + fileName + " is not a valid zip file");
-                }
-                catch (IOException e)
-                {
-                    throw new ModelFormatException("Texture for model " + fileName + " could not be read", e);
-                }
-            }
-            
-            if (textureNameSet)
-            {
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureName);
-                Minecraft.getMinecraft().renderEngine.resetBoundTexture();
-            }
-        }
-        */
     }
     
     @Override
@@ -304,15 +259,23 @@ public class TechneModel extends ModelBase implements IModelCustom {
         return "tcn";
     }
 
+    private void setup()
+    {
+        GL11.glScalef(-1.0F, -1.0F, 1.0F);
+    }
+
     @Override
     public void renderAll()
     {
+        GL11.glPushMatrix();
         bindTexture();
+        setup();
         
         for (ModelRenderer part : parts.values())
         {
-            part.renderWithRotation(1.0F);
+            part.render(0.0625f);
         }
+        GL11.glPopMatrix();
     }
 
     @Override
@@ -321,45 +284,83 @@ public class TechneModel extends ModelBase implements IModelCustom {
         ModelRenderer part = parts.get(partName);
         if (part != null)
         {
+            GL11.glPushMatrix();
+            setup();
             bindTexture();
             
-            part.renderWithRotation(1.0F);
+            part.render(0.0625f);
+            GL11.glPopMatrix();
         }
     }
 
     @Override
     public void renderOnly(String... groupNames)
     {
+        GL11.glPushMatrix();
+        setup();
         bindTexture();
-        for (ModelRenderer part : parts.values())
+        Iterator<Entry<String, ModelRenderer>> it = parts.entrySet().iterator();
+        while (it.hasNext())
         {
+            Entry<String, ModelRenderer> entry = it.next();
             for (String groupName : groupNames)
             {
-                if (groupName.equalsIgnoreCase(part.boxName))
+                if (entry.getKey().equalsIgnoreCase(groupName))
                 {
-                    part.render(1.0f);
+                    entry.getValue().render(0.0625f);
                 }
             }
         }
+        GL11.glPopMatrix();
+    }
+
+    public void renderOnlyAroundPivot(double angle, double rotX, double rotY, double rotZ, String... groupNames)
+    {
+        GL11.glPushMatrix();
+        setup();
+        bindTexture();
+
+        Iterator<Entry<String, ModelRenderer>> it = parts.entrySet().iterator();
+
+        while (it.hasNext())
+        {
+            Entry<String, ModelRenderer> entry = it.next();
+            for (String groupName : groupNames)
+            {
+                if (entry.getKey().equalsIgnoreCase(groupName))
+                {
+                    GL11.glPushMatrix();
+                    ModelRenderer model = entry.getValue();
+                    GL11.glTranslatef(model.rotationPointX / 16, model.rotationPointY / 16, model.rotationPointZ / 16);
+                    GL11.glRotated(angle, rotX, rotY, rotZ);
+                    GL11.glTranslatef(-model.rotationPointX / 16, -model.rotationPointY / 16, -model.rotationPointZ / 16);
+                    model.render(0.0625f);
+                    GL11.glPopMatrix();
+                }
+            }
+        }
+        GL11.glPopMatrix();
     }
 
     @Override
     public void renderAllExcept(String... excludedGroupNames)
     {
-        for (ModelRenderer part : parts.values())
+        GL11.glPushMatrix();
+        setup();
+        Iterator<Entry<String, ModelRenderer>> it = parts.entrySet().iterator();
+        loop:
+        while (it.hasNext())
         {
-            boolean skipPart=false;
-            for (String excludedGroupName : excludedGroupNames)
+            Entry<String, ModelRenderer> entry = it.next();
+            for (String groupName : excludedGroupNames)
             {
-                if (excludedGroupName.equalsIgnoreCase(part.boxName))
+                if (entry.getKey().equalsIgnoreCase(groupName))
                 {
-                    skipPart=true;
+                    continue loop;
                 }
             }
-            if(!skipPart)
-            {
-                part.render(1.0f);
-            }
+            entry.getValue().render(0.0625f);
         }
+        GL11.glPopMatrix();
     }
 }
