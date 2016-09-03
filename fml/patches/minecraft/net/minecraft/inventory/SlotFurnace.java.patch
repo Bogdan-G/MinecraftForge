@@ -7,11 +7,22 @@
  import net.minecraft.entity.item.EntityXPOrb;
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.init.Items;
-@@ -83,6 +84,8 @@
+@@ -37,6 +38,7 @@
  
-         this.field_75228_b = 0;
+     public void func_82870_a(EntityPlayer p_82870_1_, ItemStack p_82870_2_)
+     {
++        if(field_75228_b > 0)//Parse comment:Fix ContainerFurnace invalid call after -onSlotChange(ItemStack,ItemStack), without removing valid call after -decrStackSize(int).
+         this.func_75208_c(p_82870_2_);
+         super.func_82870_a(p_82870_1_, p_82870_2_);
+     }
+@@ -80,6 +83,8 @@
+             }
+         }
  
+-        this.field_75228_b = 0;
 +        FMLCommonHandler.instance().firePlayerSmeltedEvent(field_75229_a, p_75208_1_);
+ 
++        this.field_75228_b = 0;
 +
          if (p_75208_1_.func_77973_b() == Items.field_151042_j)
          {
