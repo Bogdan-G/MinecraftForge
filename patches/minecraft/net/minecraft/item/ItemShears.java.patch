@@ -74,7 +74,7 @@
 +    @Override
 +    public boolean onBlockStartBreak(ItemStack itemstack, int x, int y, int z, EntityPlayer player)
 +    {
-+        if (player.field_70170_p.field_72995_K)
++        if (player.field_70170_p.field_72995_K || player.field_71075_bZ.field_75098_d)
 +        {
 +            return false;
 +        }
