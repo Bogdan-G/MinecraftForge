@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.client.C15PacketClientSettings;
 import net.minecraft.server.management.ItemInWorldManager;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
@@ -37,4 +38,6 @@ public class FakePlayer extends EntityPlayerMP
     @Override public void onUpdate(){ return; }
     @Override public void travelToDimension(int dim){ return; }
     @Override public void func_147100_a(C15PacketClientSettings pkt){ return; }
+    @Override protected void onNewPotionEffect(PotionEffect potionEffect){ return; }
+    @Override public void addPotionEffect(PotionEffect par1PotionEffect){ return; }
 }
