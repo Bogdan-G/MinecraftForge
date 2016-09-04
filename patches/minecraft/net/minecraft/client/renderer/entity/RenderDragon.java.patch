@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/entity/RenderDragon.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/entity/RenderDragon.java
+@@ -155,7 +155,7 @@
+                 f2 = (f1 - 0.8F) / 0.2F;
+             }
+ 
+-            Random random = new Random(432L);
++            Random random = new org.bogdang.modifications.random.XSTR(432L);
+             GL11.glDisable(GL11.GL_TEXTURE_2D);
+             GL11.glShadeModel(GL11.GL_SMOOTH);
+             GL11.glEnable(GL11.GL_BLEND);

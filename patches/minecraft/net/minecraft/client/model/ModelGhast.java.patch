@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/model/ModelGhast.java
++++ ../src-work/minecraft/net/minecraft/client/model/ModelGhast.java
+@@ -20,7 +20,7 @@
+         this.field_78128_a = new ModelRenderer(this, 0, 0);
+         this.field_78128_a.addBox(-8.0F, -8.0F, -8.0F, 16, 16, 16);
+         this.field_78128_a.rotationPointY += (float)(24 + b0);
+-        Random random = new Random(1660L);
++        Random random = new org.bogdang.modifications.random.XSTR(1660L);
+ 
+         for (int i = 0; i < this.field_78127_b.length; ++i)
+         {

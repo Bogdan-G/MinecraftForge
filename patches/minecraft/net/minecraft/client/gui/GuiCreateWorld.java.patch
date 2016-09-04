@@ -1,5 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/client/gui/GuiCreateWorld.java
 +++ ../src-work/minecraft/net/minecraft/client/gui/GuiCreateWorld.java
+@@ -191,7 +191,7 @@
+                 }
+ 
+                 this.field_146345_x = true;
+-                long i = (new Random()).nextLong();
++                long i = (new org.bogdang.modifications.random.XSTR()).nextLong();
+                 String s = this.field_146335_h.getText();
+ 
+                 if (!MathHelper.stringNullOrLengthZero(s))
 @@ -320,7 +320,7 @@
              }
              else if (p_146284_1_.field_146127_k == 8)

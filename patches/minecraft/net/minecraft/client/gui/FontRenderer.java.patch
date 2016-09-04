@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/FontRenderer.java
++++ ../src-work/minecraft/net/minecraft/client/gui/FontRenderer.java
+@@ -28,7 +28,7 @@
+     private static final ResourceLocation[] field_111274_c = new ResourceLocation[256];
+     protected int[] field_78286_d = new int[256];
+     public int field_78288_b = 9;
+-    public Random field_78289_c = new Random();
++    public Random field_78289_c = new org.bogdang.modifications.random.XSTR();
+     protected byte[] field_78287_e = new byte[65536];
+     private int[] field_78285_g = new int[32];
+     protected final ResourceLocation field_111273_g;

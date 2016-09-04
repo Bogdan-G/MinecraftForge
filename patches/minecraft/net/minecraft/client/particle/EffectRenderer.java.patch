@@ -12,6 +12,15 @@
  import org.lwjgl.opengl.GL11;
  
  @SideOnly(Side.CLIENT)
+@@ -28,7 +30,7 @@
+     protected World field_78878_a;
+     private List[] field_78876_b = new List[4];
+     private TextureManager field_78877_c;
+-    private Random field_78875_d = new Random();
++    private Random field_78875_d = new org.bogdang.modifications.random.XSTR();
+     private static final String __OBFID = "CL_00000915";
+ 
+     public EffectRenderer(World p_i1220_1_, TextureManager p_i1220_2_)
 @@ -70,7 +72,10 @@
  
                  try

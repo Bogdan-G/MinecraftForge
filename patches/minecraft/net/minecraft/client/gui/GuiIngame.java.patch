@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiIngame.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiIngame.java
+@@ -25,7 +25,7 @@
+     protected static final ResourceLocation field_110330_c = new ResourceLocation("textures/gui/widgets.png");
+     protected static final ResourceLocation field_110328_d = new ResourceLocation("textures/misc/pumpkinblur.png");
+     protected static final RenderItem field_73841_b = new RenderItem();
+-    protected final Random field_73842_c = new Random();
++    protected final Random field_73842_c = new org.bogdang.modifications.random.XSTR();
+     protected final Minecraft field_73839_d;
+     protected final GuiNewChat field_73840_e;
+     protected final GuiStreamIndicator field_152127_m;

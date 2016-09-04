@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiWinGame.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiWinGame.java
+@@ -70,7 +70,7 @@
+                 String s1 = "" + EnumChatFormatting.WHITE + EnumChatFormatting.OBFUSCATED + EnumChatFormatting.GREEN + EnumChatFormatting.AQUA;
+                 short short1 = 274;
+                 BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(this.mc.getResourceManager().getResource(new ResourceLocation("texts/end.txt")).getInputStream(), Charsets.UTF_8));
+-                Random random = new Random(8124371L);
++                Random random = new org.bogdang.modifications.random.XSTR(8124371L);
+                 int i;
+ 
+                 while ((s = bufferedreader.readLine()) != null)

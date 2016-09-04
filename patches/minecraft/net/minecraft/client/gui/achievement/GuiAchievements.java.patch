@@ -72,6 +72,15 @@
          GL11.glEnable(GL11.GL_TEXTURE_2D);
          GL11.glDisable(GL11.GL_LIGHTING);
          GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+@@ -274,7 +302,7 @@
+         boolean flag2 = true;
+         boolean flag3 = true;
+         boolean flag4 = true;
+-        Random random = new Random();
++        Random random = new org.bogdang.modifications.random.XSTR();
+         float f1 = 16.0F / this.field_146570_r;
+         float f2 = 16.0F / this.field_146570_r;
+         int i3;
 @@ -339,11 +367,12 @@
          int j4;
          int l4;

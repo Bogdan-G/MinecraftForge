@@ -36,6 +36,16 @@
      }
  
      protected void func_77036_a(EntityLivingBase p_77036_1_, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float p_77036_7_)
+@@ -353,7 +361,7 @@
+         if (i > 0)
+         {
+             EntityArrow entityarrow = new EntityArrow(p_85093_1_.field_70170_p, p_85093_1_.field_70165_t, p_85093_1_.field_70163_u, p_85093_1_.field_70161_v);
+-            Random random = new Random((long)p_85093_1_.func_145782_y());
++            Random random = new org.bogdang.modifications.random.XSTR((long)p_85093_1_.func_145782_y());
+             RenderHelper.func_74518_a();
+ 
+             for (int j = 0; j < i; ++j)
+             {
 @@ -416,6 +424,7 @@
  
      protected void func_77033_b(EntityLivingBase p_77033_1_, double p_77033_2_, double p_77033_4_, double p_77033_6_)

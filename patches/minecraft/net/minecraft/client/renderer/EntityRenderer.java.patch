@@ -13,6 +13,15 @@
  
  @SideOnly(Side.CLIENT)
  public class EntityRenderer implements IResourceManagerReloadListener
+@@ -129,7 +135,7 @@
+         this.field_147713_ae = field_147708_e;
+         this.field_78503_V = 1.0D;
+         this.field_78508_Y = Minecraft.func_71386_F();
+-        this.field_78537_ab = new Random();
++        this.field_78537_ab = new org.bogdang.modifications.random.XSTR();
+         this.field_78521_m = GLAllocation.func_74529_h(16);
+         this.field_78531_r = p_i45076_1_;
+         this.field_147711_ac = p_i45076_2_;
 @@ -358,7 +364,7 @@
  
                              if (d3 < d2 || d2 == 0.0D)

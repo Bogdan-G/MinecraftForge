@@ -1,0 +1,23 @@
+--- ../src-base/minecraft/net/minecraft/client/util/RenderDistanceSorter.java
++++ ../src-work/minecraft/net/minecraft/client/util/RenderDistanceSorter.java
+@@ -21,13 +21,13 @@
+ 
+     public int compare(RenderList p_compare_1_, RenderList p_compare_2_)
+     {
+-        int i = p_compare_1_.field_78429_a - this.field_152632_a;
+-        int j = p_compare_1_.field_78428_c - this.field_152633_b;
+-        int k = p_compare_2_.field_78429_a - this.field_152632_a;
+-        int l = p_compare_2_.field_78428_c - this.field_152633_b;
+-        int i1 = i * i + j * j;
+-        int j1 = k * k + l * l;
+-        return ComparisonChain.start().compare(j1, i1).result();
++        int i = -p_compare_1_.field_78429_a + this.field_152632_a;
++        int j = -p_compare_1_.field_78428_c + this.field_152633_b;
++        int k = -p_compare_2_.field_78429_a + this.field_152632_a;
++        int l = -p_compare_2_.field_78428_c + this.field_152633_b;
++        int i1 = i * i + j * j;
++        int j1 = k * k + l * l;
++        return ComparisonChain.start().compare(j1, i1).result();
+     }
+ 
+     public int compare(Object p_compare_1_, Object p_compare_2_)

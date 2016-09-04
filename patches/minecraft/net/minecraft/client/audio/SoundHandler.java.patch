@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/audio/SoundHandler.java
++++ ../src-work/minecraft/net/minecraft/client/audio/SoundHandler.java
+@@ -257,7 +257,7 @@
+         }
+         else
+         {
+-            return (SoundEventAccessorComposite)arraylist.get((new Random()).nextInt(arraylist.size()));
++            return (SoundEventAccessorComposite)arraylist.get((new org.bogdang.modifications.random.XSTR()).nextInt(arraylist.size()));
+         }
+     }
+ 

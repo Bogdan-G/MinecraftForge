@@ -10,6 +10,15 @@
  @SideOnly(Side.CLIENT)
  public class RenderGlobal implements IWorldAccess
  {
+@@ -215,7 +218,7 @@
+ 
+     private void func_72730_g()
+     {
+-        Random random = new Random(10842L);
++        Random random = new org.bogdang.modifications.random.XSTR(10842L);
+         Tessellator tessellator = Tessellator.field_78398_a;
+         tessellator.func_78382_b();
+  
 @@ -376,8 +379,10 @@
  
      public void func_147589_a(EntityLivingBase p_147589_1_, ICamera p_147589_2_, float p_147589_3_)

@@ -1,0 +1,40 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/GLAllocation.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/GLAllocation.java
+@@ -17,29 +17,29 @@
+ @SideOnly(Side.CLIENT)
+ public class GLAllocation
+ {
+-    private static final Map field_74531_a = new HashMap();
+-    private static final List field_74530_b = new ArrayList();
++    private static final org.eclipse.collections.impl.map.mutable.primitive.IntIntHashMap field_74531_a = new org.eclipse.collections.impl.map.mutable.primitive.IntIntHashMap();//less size and boxing
++    private static final List field_74530_b = new ArrayList();
+     private static final String __OBFID = "CL_00000630";
+ 
+     public static synchronized int func_74526_a(int p_74526_0_)
+     {
+         int j = GL11.glGenLists(p_74526_0_);
+-        field_74531_a.put(Integer.valueOf(j), Integer.valueOf(p_74526_0_));
++        field_74531_a.put(j, p_74526_0_);
+         return j;
+     }
+ 
+     public static synchronized void func_74523_b(int p_74523_0_)
+     {
+-        GL11.glDeleteLists(p_74523_0_, ((Integer)field_74531_a.remove(Integer.valueOf(p_74523_0_))).intValue());
++        GL11.glDeleteLists(p_74523_0_, field_74531_a.get(p_74523_0_));field_74531_a.remove(p_74523_0_);
+     }
+ 
+     public static synchronized void func_74525_a()
+     {
+-        Iterator iterator = field_74531_a.entrySet().iterator();
++        org.eclipse.collections.api.iterator.IntIterator iterator = field_74531_a.keySet().intIterator();
+ 
+         while (iterator.hasNext())
+         {
+-            Entry entry = (Entry)iterator.next();
+-            GL11.glDeleteLists(((Integer)entry.getKey()).intValue(), ((Integer)entry.getValue()).intValue());
++            int key = iterator.next();
++            GL11.glDeleteLists(key, field_74531_a.get(key));
+         }
+ 
+         field_74531_a.clear();

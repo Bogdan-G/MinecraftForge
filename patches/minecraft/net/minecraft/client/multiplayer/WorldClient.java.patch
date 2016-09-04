@@ -36,3 +36,12 @@
          if (!this.field_73011_w.field_76576_e)
          {
              ;
+@@ -275,7 +287,7 @@
+     public void func_73029_E(int p_73029_1_, int p_73029_2_, int p_73029_3_)
+     {
+         byte b0 = 16;
+-        Random random = new Random();
++        Random random = new org.bogdang.modifications.random.XSTR();
+ 
+         for (int l = 0; l < 1000; ++l)
+         {

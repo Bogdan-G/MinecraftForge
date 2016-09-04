@@ -9,6 +9,15 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
+@@ -213,7 +215,7 @@
+     public int field_147304_c = 20;
+     private GuiScreen field_147307_j;
+     private boolean field_147308_k = false;
+-    private Random field_147306_l = new Random();
++    private Random field_147306_l = new org.bogdang.modifications.random.XSTR();
+     private static final String __OBFID = "CL_00000878";
+ 
+     public NetHandlerPlayClient(Minecraft p_i45061_1_, GuiScreen p_i45061_2_, NetworkManager p_i45061_3_)
 @@ -390,7 +392,8 @@
  
      public void func_147286_a(S11PacketSpawnExperienceOrb p_147286_1_)

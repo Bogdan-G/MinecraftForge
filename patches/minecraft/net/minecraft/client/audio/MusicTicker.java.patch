@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/audio/MusicTicker.java
++++ ../src-work/minecraft/net/minecraft/client/audio/MusicTicker.java
+@@ -11,7 +11,7 @@
+ @SideOnly(Side.CLIENT)
+ public class MusicTicker implements IUpdatePlayerListBox
+ {
+-    private final Random field_147679_a = new Random();
++    private final Random field_147679_a = new org.bogdang.modifications.random.XSTR();
+     private final Minecraft field_147677_b;
+     private ISound field_147678_c;
+     private int field_147676_d = 100;

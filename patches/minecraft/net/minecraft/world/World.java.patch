@@ -36,6 +36,15 @@
      public boolean field_72999_e;
      public List field_72996_f = new ArrayList();
      protected List field_72997_g = new ArrayList();
+@@ -72,7 +99,7 @@
+     public float field_73017_q;
+     public int field_73016_r;
+     public EnumDifficulty field_73013_u;
+-    public Random field_73012_v = new Random();
++    public Random field_73012_v = new org.bogdang.modifications.random.XSTR();//parse from FFoKC, speed-up random-gen, speed +30-46%
+     public final WorldProvider field_73011_w;
+     protected List field_73021_x = new ArrayList();
+     protected IChunkProvider field_73020_y;
 @@ -94,9 +121,17 @@
      private boolean field_147481_N;
      int[] field_72994_J;

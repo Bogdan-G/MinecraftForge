@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiEnchantment.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiEnchantment.java
+@@ -25,7 +25,7 @@
+     private static final ResourceLocation field_147078_C = new ResourceLocation("textures/gui/container/enchanting_table.png");
+     private static final ResourceLocation field_147070_D = new ResourceLocation("textures/entity/enchanting_table_book.png");
+     private static final ModelBook field_147072_E = new ModelBook();
+-    private Random field_147074_F = new Random();
++    private Random field_147074_F = new org.bogdang.modifications.random.XSTR();
+     private ContainerEnchantment field_147075_G;
+     public int field_147073_u;
+     public float field_147071_v;

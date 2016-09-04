@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/audio/SoundEventAccessorComposite.java
++++ ../src-work/minecraft/net/minecraft/client/audio/SoundEventAccessorComposite.java
+@@ -12,7 +12,7 @@
+public class SoundEventAccessorComposite implements ISoundEventAccessor
+{
+    private final List field_148736_a = Lists.newArrayList();
+-    private final Random field_148734_b = new Random();
++    private final Random field_148734_b = new org.bogdang.modifications.random.XSTR();
+    private final ResourceLocation field_148735_c;
+    private final SoundCategory field_148732_d;
+    private double field_148733_e;
