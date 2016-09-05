@@ -12,6 +12,15 @@
  public class BiomeDecorator
  {
      public World field_76815_a;
+@@ -89,7 +94,7 @@
+     {
+         if (this.currentWorld != null)
+         {
+-            throw new RuntimeException("Already decorating!!");
++            cpw.mods.fml.common.FMLLog.warning("Already decorating!!");//throw new RuntimeException("Already decorating!!"); //parse FFoKC
+         }
+         else
+         {
 @@ -105,26 +110,30 @@
  
      protected void func_150513_a(BiomeGenBase p_150513_1_)

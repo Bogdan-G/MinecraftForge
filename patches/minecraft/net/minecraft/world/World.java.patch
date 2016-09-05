@@ -151,6 +151,15 @@
      protected abstract IChunkProvider func_72970_h();
  
      protected void func_72963_a(WorldSettings p_72963_1_)
+@@ -284,7 +351,7 @@
+                 CrashReportCategory crashreportcategory = crashreport.func_85058_a("Requested block coordinates");
+                 crashreportcategory.func_71507_a("Found chunk", Boolean.valueOf(chunk == null));
+                 crashreportcategory.func_71507_a("Location", CrashReportCategory.func_85071_a(p_147439_1_, p_147439_2_, p_147439_3_));
+-                throw new ReportedException(crashreport);
++                FMLLog.log(org.apache.logging.log4j.Level.WARN, throwable, "Found initialization crash by Exception getting block type in world, stacktrace:");return Blocks.field_150350_a;//throw new ReportedException(crashreport); //parse FFoKC
+             }
+         }
+         else
 @@ -295,7 +362,8 @@
  
      public boolean func_147437_c(int p_147437_1_, int p_147437_2_, int p_147437_3_)
