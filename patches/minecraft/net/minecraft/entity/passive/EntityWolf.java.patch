@@ -14,7 +14,7 @@
      public boolean func_70877_b(ItemStack p_70877_1_)
      {
 -        return p_70877_1_ == null ? false : (!(p_70877_1_.func_77973_b() instanceof ItemFood) ? false : ((ItemFood)p_70877_1_.func_77973_b()).func_77845_h());
-+        return super.func_70877_b(p_70877_1_) || (p_70877_1_.func_77973_b() instanceof ItemFood && ((ItemFood) p_70877_1_.func_77973_b()).isWolfFood(p_70877_1_));
++        return super.func_70877_b(p_70877_1_) || (p_70877_1_ != null && p_70877_1_.func_77973_b() instanceof ItemFood && ((ItemFood) p_70877_1_.func_77973_b()).isWolfFood(p_70877_1_));
      }
  
      public int func_70641_bl()

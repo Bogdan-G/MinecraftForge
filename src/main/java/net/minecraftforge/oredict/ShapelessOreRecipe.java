@@ -90,7 +90,7 @@ public class ShapelessOreRecipe implements IRecipe
     @Override
     public boolean matches(InventoryCrafting var1, World world)
     {
-        /*Array*/List<Object> required = new org.eclipse.collections.impl.list.mutable.FastList();//ArrayList<Object>(input);
+        List<Object> required = new org.eclipse.collections.impl.list.mutable.FastList(input);
 
         int var1_getSizeInventory_sS=var1.getSizeInventory();
         for (int x = 0; x < var1_getSizeInventory_sS; x++)
