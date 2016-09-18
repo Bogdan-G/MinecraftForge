@@ -7,10 +7,12 @@ package net.minecraftforge.common.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.regex.Pattern;import java.util.Locale;
+import java.util.regex.Pattern;
+import java.util.Locale;
 
 import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
+import org.io.Gzip;
 
 public class Property
 {
@@ -42,16 +44,16 @@ public class Property
         }
     }
 
-    private String name;
-    private String value;
-    private String defaultValue;
+    private byte[] name;
+    private byte[] value;
+    private byte[] defaultValue;
     public String comment;
     private String[] values;
     private String[] defaultValues;
     private String[] validValues;
-    private String langKey;
-    private String minValue;
-    private String maxValue;
+    private byte[] langKey;
+    private byte[] minValue;
+    private byte[] maxValue;
 
     private Class<? extends IConfigEntry> configEntryClass = null;
     private Class<? extends IArrayEntry> arrayEntryClass = null;
@@ -100,19 +102,19 @@ public class Property
     Property(String name, String value, Type type, boolean read, String[] validValues, String langKey)
     {
         setName(name);
-        this.value = value;
+        this.value = Gzip.compress(value);
         this.values = new String[0];
         this.type  = type;
         wasRead    = read;
         isList     = false;
-        this.defaultValue = value;
+        this.defaultValue = Gzip.compress(value);
         this.defaultValues = new String[0];
         this.validValues = validValues;
         this.isListLengthFixed = false;
         this.maxListLength = -1;
-        this.minValue = String.valueOf(Integer.MIN_VALUE);
-        this.maxValue = String.valueOf(Integer.MAX_VALUE);
-        this.langKey = langKey;
+        this.minValue = Gzip.compress(String.valueOf(Integer.MIN_VALUE));
+        this.maxValue = Gzip.compress(String.valueOf(Integer.MAX_VALUE));
+        this.langKey = Gzip.compress(langKey);
         this.comment = "";
     }
 
@@ -143,18 +145,25 @@ public class Property
         this.values = Arrays.copyOf(values, values.length);
         wasRead     = read;
         isList      = true;
-        this.value = "";
-        this.defaultValue = "";
-        for (String s : values)
-            this.defaultValue += ", [" + s + "]";
-        this.defaultValue = this.defaultValue.replaceFirst(", ", "");
+        this.value = Gzip.compress("");
+        String temp = "";
+        StringBuilder tempSB = new StringBuilder(temp);
+        //this.defaultValue = "";
+        for (String s : values) {
+            //this.defaultValue += ", [" + s + "]";
+            tempSB.append(", [").append(s).append("]");
+         }
+        temp = String.valueOf(tempSB);
+        //this.defaultValue = this.defaultValue.replaceFirst(", ", "");
+        temp = temp.replaceFirst(", ", "");
+        this.defaultValue = Gzip.compress(temp);
         this.defaultValues = Arrays.copyOf(values, values.length);
         this.validValues = validValues;
         this.isListLengthFixed = false;
         this.maxListLength = -1;
-        this.minValue = String.valueOf(Integer.MIN_VALUE);
-        this.maxValue = String.valueOf(Integer.MAX_VALUE);
-        this.langKey = langKey;
+        this.minValue = Gzip.compress(String.valueOf(Integer.MIN_VALUE));
+        this.maxValue = Gzip.compress(String.valueOf(Integer.MAX_VALUE));
+        this.langKey = Gzip.compress(langKey);
         this.comment = "";
     }
 
@@ -222,15 +231,15 @@ public class Property
         }
 
         if (this.type == Type.BOOLEAN && this.isBooleanValue())
-            return Boolean.parseBoolean(value) == Boolean.parseBoolean(defaultValue);
+            return Boolean.parseBoolean(Gzip.decompress(value)) == Boolean.parseBoolean(Gzip.decompress(defaultValue));
 
         if (this.type == Type.INTEGER && this.isIntValue())
-            return Integer.parseInt(value) == Integer.parseInt(defaultValue);
+            return Integer.parseInt(Gzip.decompress(value)) == Integer.parseInt(Gzip.decompress(defaultValue));
 
         if (this.type == Type.DOUBLE && this.isDoubleValue())
-            return Double.parseDouble(value) == Double.parseDouble(defaultValue);
+            return Double.parseDouble(Gzip.decompress(value)) == Double.parseDouble(Gzip.decompress(defaultValue));
 
-        return value.equals(defaultValue);
+        return value.equals(Gzip.decompress(defaultValue));
     }
 
     /**
@@ -238,7 +247,7 @@ public class Property
      */
     public Property setToDefault()
     {
-        this.value = this.defaultValue;
+        this.value = this.defaultValue;//Gzip.decompress(this.defaultValue);
         this.values = Arrays.copyOf(this.defaultValues, this.defaultValues.length);
         return this;
     }
@@ -250,7 +259,7 @@ public class Property
      */
     public String getDefault()
     {
-        return defaultValue;
+        return Gzip.decompress(defaultValue);
     }
 
     /**
@@ -448,7 +457,7 @@ public class Property
      */
     public Property setLanguageKey(String langKey)
     {
-        this.langKey = langKey;
+        this.langKey = Gzip.compress(langKey);
         return this;
     }
 
@@ -459,7 +468,7 @@ public class Property
      */
     public String getLanguageKey()
     {
-        return this.langKey;
+        return Gzip.decompress(this.langKey);
     }
 
     /**
@@ -469,7 +478,7 @@ public class Property
      */
     public Property setDefaultValue(String defaultValue)
     {
-        this.defaultValue = defaultValue;
+        this.defaultValue = Gzip.compress(defaultValue);
         return this;
     }
 
@@ -480,10 +489,17 @@ public class Property
      */
     public Property setDefaultValues(String[] defaultValues)
     {
-        this.defaultValue = "";
-        for (String s : defaultValues)
-            this.defaultValue += ", [" + s + "]";
-        this.defaultValue = this.defaultValue.replaceFirst(", ", "");
+        //this.defaultValue = "";
+        String temp = "";
+        StringBuilder tempSB = new StringBuilder(temp);
+        for (String s : defaultValues) {
+            //this.defaultValue += ", [" + s + "]";
+            tempSB.append(", [").append(s).append("]");
+        }
+        temp = String.valueOf(tempSB);
+        temp = temp.replaceFirst(", ", "");
+        //this.defaultValue = this.defaultValue.replaceFirst(", ", "");
+        this.defaultValue = Gzip.compress(temp);
         this.defaultValues = Arrays.copyOf(defaultValues, defaultValues.length);
         return this;
     }
@@ -573,7 +589,7 @@ public class Property
      */
     public Property setMinValue(int minValue)
     {
-        this.minValue = Integer.toString(minValue);
+        this.minValue = Gzip.compress(Integer.toString(minValue));
         return this;
     }
 
@@ -584,7 +600,7 @@ public class Property
      */
     public Property setMaxValue(int maxValue)
     {
-        this.maxValue = Integer.toString(maxValue);
+        this.maxValue = Gzip.compress(Integer.toString(maxValue));
         return this;
     }
 
@@ -595,7 +611,7 @@ public class Property
      */
     public Property setMinValue(double minValue)
     {
-        this.minValue = Double.toString(minValue);
+        this.minValue = Gzip.compress(Double.toString(minValue));
         return this;
     }
 
@@ -606,7 +622,7 @@ public class Property
      */
     public Property setMaxValue(double maxValue)
     {
-        this.maxValue = Double.toString(maxValue);
+        this.maxValue = Gzip.compress(Double.toString(maxValue));
         return this;
     }
 
@@ -617,7 +633,7 @@ public class Property
      */
     public String getMinValue()
     {
-        return minValue;
+        return Gzip.decompress(minValue);
     }
 
     /**
@@ -627,7 +643,7 @@ public class Property
      */
     public String getMaxValue()
     {
-        return maxValue;
+        return Gzip.decompress(maxValue);
     }
 
     /**
@@ -637,7 +653,7 @@ public class Property
      */
     public String getString()
     {
-        return value;
+        return Gzip.decompress(value);
     }
 
     /**
@@ -672,11 +688,11 @@ public class Property
     {
         try
         {
-            return Integer.parseInt(value);
+            return Integer.parseInt(Gzip.decompress(value));
         }
         catch (NumberFormatException e)
         {
-            return Integer.parseInt(defaultValue);
+            return Integer.parseInt(Gzip.decompress(defaultValue));
         }
     }
 
@@ -692,7 +708,7 @@ public class Property
     {
         try
         {
-            return Integer.parseInt(value);
+            return Integer.parseInt(Gzip.decompress(value));
         }
         catch (NumberFormatException e)
         {
@@ -708,7 +724,7 @@ public class Property
     {
         try
         {
-            Integer.parseInt(value);
+            Integer.parseInt(Gzip.decompress(value));
             return true;
         }
         catch (NumberFormatException e)
@@ -729,7 +745,7 @@ public class Property
     {
         if (isBooleanValue())
         {
-            return Boolean.parseBoolean(value);
+            return Boolean.parseBoolean(Gzip.decompress(value));
         }
         else
         {
@@ -746,11 +762,11 @@ public class Property
     {
         if (isBooleanValue())
         {
-            return Boolean.parseBoolean(value);
+            return Boolean.parseBoolean(Gzip.decompress(value));
         }
         else
         {
-            return Boolean.parseBoolean(defaultValue);
+            return Boolean.parseBoolean(Gzip.decompress(defaultValue));
         }
     }
 
@@ -761,7 +777,7 @@ public class Property
      */
     public boolean isBooleanValue()
     {
-        return ("true".equals(value.toLowerCase(Locale.ENGLISH)) || "false".equals(value.toLowerCase(Locale.ENGLISH)));
+        return ("true".equals((Gzip.decompress(value)).toLowerCase(Locale.ENGLISH)) || "false".equals((Gzip.decompress(value)).toLowerCase(Locale.ENGLISH)));
     }
 
     /**
@@ -772,7 +788,7 @@ public class Property
     {
         try
         {
-            Double.parseDouble(value);
+            Double.parseDouble(Gzip.decompress(value));
             return true;
         }
         catch (NumberFormatException e)
@@ -793,7 +809,7 @@ public class Property
     {
         try
         {
-            return Double.parseDouble(value);
+            return Double.parseDouble(Gzip.decompress(value));
         }
         catch (NumberFormatException e)
         {
@@ -811,11 +827,11 @@ public class Property
     {
         try
         {
-            return Double.parseDouble(value);
+            return Double.parseDouble(Gzip.decompress(value));
         }
         catch (NumberFormatException e)
         {
-            return Double.parseDouble(defaultValue);
+            return Double.parseDouble(Gzip.decompress(defaultValue));
         }
     }
 
@@ -980,7 +996,7 @@ public class Property
      */
     public String getName()
     {
-        return name;
+        return Gzip.decompress(name);
     }
 
     /**
@@ -990,7 +1006,7 @@ public class Property
      */
     public void setName(String name)
     {
-        this.name = name;
+        this.name = Gzip.compress(name);
     }
 
     /**
@@ -1038,7 +1054,7 @@ public class Property
      */
     public Property setValue(String value)
     {
-        this.value = value;
+        this.value = Gzip.compress(value);
         changed = true;
         return this;
     }

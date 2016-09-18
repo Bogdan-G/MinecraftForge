@@ -335,8 +335,6 @@ public class OreDictionary
     {
         if (stack == null || stack.getItem() == null) return new int[0];
 
-        Set<Integer> set = new org.eclipse.collections.impl.set.mutable.UnifiedSet();//new HashSet<Integer>();
-
         // HACK: use the registry name's ID. It is unique and it knows about substitutions. Fallback to a -1 value (what Item.getIDForItem would have returned) in the case where the registry is not aware of the item yet
         // IT should be noted that -1 will fail the gate further down, if an entry already exists with value -1 for this name. This is what is broken and being warned about.
         // APPARENTLY it's quite common to do this. OreDictionary should be considered alongside Recipes - you can't make them properly until you've registered with the game.
@@ -351,7 +349,8 @@ public class OreDictionary
         {
             id = GameData.getItemRegistry().getId(registryName);
         }
-        int count = 0, r0_int = 0;
+        Set<Integer> set = new org.eclipse.collections.impl.set.mutable.UnifiedSet();//new HashSet<Integer>();
+        int count = 0, r0_int;
         List<Integer> ids = null;
         if (stackToId.get(id) != null) {
           ids=stackToId.get(id);

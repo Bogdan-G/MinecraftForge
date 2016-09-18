@@ -23,14 +23,15 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import org.io.Gzip;
 
 import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 
 public class ConfigCategory implements Map<String, Property>
 {
-    private String name;
-    private String comment;
-    private String languagekey;
+    private byte[] name;
+    private byte[] comment;
+    private byte[] languagekey;
     private /*Array*/List<ConfigCategory> children = new org.eclipse.collections.impl.list.mutable.FastList<ConfigCategory>();
     private Map<String, Property> properties = new org.eclipse.collections.impl.map.mutable.UnifiedMap<String, Property>();//TreeSortedMap
     private int propNumber = 0;
@@ -49,7 +50,7 @@ public class ConfigCategory implements Map<String, Property>
 
     public ConfigCategory(String name, ConfigCategory parent)
     {
-        this.name = name;
+        this.name = Gzip.compress(name);
         this.parent = parent;
         if (parent != null)
         {
@@ -63,7 +64,7 @@ public class ConfigCategory implements Map<String, Property>
         if (obj instanceof ConfigCategory)
         {
             ConfigCategory cat = (ConfigCategory)obj;
-            return name.equals(cat.name) && children.equals(cat.children);
+            return (Gzip.decompress(name)).equals(Gzip.decompress(cat.name)) && children.equals(cat.children);
         }
 
         return false;
@@ -71,12 +72,12 @@ public class ConfigCategory implements Map<String, Property>
 
     public String getName()
     {
-        return name;
+        return Gzip.decompress(name);
     }
 
     public String getQualifiedName()
     {
-        return getQualifiedName(name, parent);
+        return getQualifiedName(Gzip.decompress(name), parent);
     }
 
     public static String getQualifiedName(String name, ConfigCategory parent)
@@ -127,26 +128,26 @@ public class ConfigCategory implements Map<String, Property>
 
     public ConfigCategory setLanguageKey(String languagekey)
     {
-        this.languagekey = languagekey;
+        this.languagekey = Gzip.compress(languagekey);
         return this;
     }
 
     public String getLanguagekey()
     {
         if (this.languagekey != null)
-            return this.languagekey;
+            return Gzip.decompress(this.languagekey);
         else
             return getQualifiedName();
     }
 
     public void setComment(String comment)
     {
-        this.comment = comment;
+        this.comment = Gzip.compress(comment);
     }
 
     public String getComment()
     {
-        return this.comment;
+        return Gzip.decompress(this.comment);
     }
 
     /**
@@ -255,15 +256,17 @@ public class ConfigCategory implements Map<String, Property>
         String pad0 = getIndent(indent);
         String pad1 = getIndent(indent + 1);
         String pad2 = getIndent(indent + 2);
+        String temp = Gzip.decompress(name);
+        String temp2 = Gzip.decompress(comment);
 
-        if (comment != null && !comment.isEmpty())
+        if (temp2 != null && !temp2.isEmpty())
         {
             write(out, pad0, COMMENT_SEPARATOR);
-            write(out, pad0, "# ", name);
+            write(out, pad0, "# ", temp);
             write(out, pad0, "#--------------------------------------------------------------------------------------------------------#");
             Splitter splitter = Splitter.onPattern("\r?\n");
 
-            for (String line : splitter.split(comment))
+            for (String line : splitter.split(temp2))
             {
                 write(out, pad0, "# ", line);
             }
@@ -271,11 +274,11 @@ public class ConfigCategory implements Map<String, Property>
             write(out, pad0, COMMENT_SEPARATOR, NEW_LINE);
         }
 
-        String displayName = name;
+        String displayName = temp;
 
-        if (!allowedProperties.matchesAllOf(name))
+        if (!allowedProperties.matchesAllOf(temp))
         {
-            displayName = '"' + name + '"';
+            displayName = '"' + temp + '"';
         }
 
         write(out, pad0, displayName, " {");
@@ -285,8 +288,9 @@ public class ConfigCategory implements Map<String, Property>
         for (int x = 0; x < props.length; x++)
         {
             Property prop = props[x];
+            String temp2temp = prop.comment;
 
-            if (prop.comment != null && !prop.comment.isEmpty())
+            if (temp2temp != null && !temp2temp.isEmpty())
             {
                 if (x != 0)
                 {
@@ -294,7 +298,7 @@ public class ConfigCategory implements Map<String, Property>
                 }
 
                 Splitter splitter = Splitter.onPattern("\r?\n");
-                for (String commentLine : splitter.split(prop.comment))
+                for (String commentLine : splitter.split(temp2temp))
                 {
                     write(out, pad1, "# ", commentLine);
                 }

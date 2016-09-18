@@ -219,7 +219,7 @@ public class TechneModel extends ModelBase implements IModelCustom {
 
                     if (parts.containsKey(shapeName))
                     {
-                        throw new ModelFormatException("Model contained duplicate part name: '" + shapeName + "' node #" + i);
+                        FMLLog.warning("Model contained duplicate part name: '" + shapeName + "' node #" + i);//throw new ModelFormatException("Model contained duplicate part name: '" + shapeName + "' node #" + i);
                     }
 
                     parts.put(shapeName, cube);
