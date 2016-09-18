@@ -29,7 +29,7 @@
  
 +    private void deflate()
 +    {
-+        Deflater deflater = new Deflater(-1);
++        Deflater deflater = new Deflater(1);
          try
          {
 -            this.field_149278_f = extracted.field_150282_a;

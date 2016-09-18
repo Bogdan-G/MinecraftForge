@@ -1,19 +1,27 @@
 package org.io;
 
-import java.io.BufferedReader;
+/*import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
+import java.util.zip.GZIPOutputStream;*/
+
+import net.jpountz.lz4.*;
+import java.io.*;
 
 public class Gzip {
 	
+	private static final int MAX_BLOCK_SIZE = 32 * 2;//old:32 * 1024 * 1024;
+	private static final LZ4Compressor compressor = LZ4Factory.nativeInstance().fastCompressor();
+	private static final LZ4FastDecompressor decompressor = LZ4Factory.nativeInstance().fastDecompressor();
+	
 	public static byte[] compress(String data) {
 		if (data == null || data.length() == 0) return new byte[0];
-		ByteArrayOutputStream bos = null;
+		return LZ4compress(data);
+		/*ByteArrayOutputStream bos = null;
 		GZIPOutputStream gzip = null;
 		byte[] compressed = new byte[0];
 		try {
@@ -26,12 +34,13 @@ public class Gzip {
 			compressed = bos.toByteArray();
 			try{if (bos!=null) bos.close();}catch (IOException e){}
 		}
-		return compressed;
+		return compressed;*/
 	}
 	
 	public static String decompress(byte[] compressed) {
 		if (compressed == null || compressed.length == 0) return "";
-		ByteArrayInputStream bis = null;
+		return LZ4Uncompress(compressed);
+		/*ByteArrayInputStream bis = null;
 		GZIPInputStream gis = null;
 		BufferedReader br = null;
 		StringBuilder sb = null;
@@ -51,6 +60,37 @@ public class Gzip {
 			try{if (gis!=null) gis.close();}catch (IOException e){}
 			try{if (bis!=null) bis.close();}catch (IOException e){}
 		}
-		return String.valueOf(sb);
+		return String.valueOf(sb);*/
+	}
+
+	public static byte[] LZ4compress(String data) {
+    		byte[] compressed = new byte[0];
+    		try {
+        		ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length());
+        		LZ4BlockOutputStream out = new LZ4BlockOutputStream( bos, MAX_BLOCK_SIZE, compressor );
+        		out.write(data.getBytes());
+        		out.close();
+        		compressed = bos.toByteArray();
+        		bos.close();
+    		} catch (IOException e) {}
+    		return compressed;
+	}
+
+	public static String LZ4Uncompress(byte[] compressed) {
+    		StringBuilder sb = null;
+    		try {
+        		ByteArrayInputStream bis = new ByteArrayInputStream(compressed);
+        		LZ4BlockInputStream in = new LZ4BlockInputStream( bis, decompressor );
+        		BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+        		sb = new StringBuilder();
+        		String line;
+        		while((line = br.readLine()) != null){
+            			sb.append(line);
+        		}
+        		br.close();
+        		in.close();
+        		bis.close();
+   	 	} catch (IOException e) {}
+    		return String.valueOf(sb);
 	}
 }

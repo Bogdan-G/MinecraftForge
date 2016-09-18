@@ -50,7 +50,8 @@
 +            System.arraycopy(field_149260_f[x], 0, data, offset, field_149260_f[x].length);
 +            offset += field_149260_f[x].length;
 +        }
-         Deflater deflater = new Deflater(-1);
+-        Deflater deflater = new Deflater(-1);
++        Deflater deflater = new Deflater(1);
  
          try
          {
