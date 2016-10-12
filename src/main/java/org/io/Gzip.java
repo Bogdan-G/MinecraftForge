@@ -68,7 +68,7 @@ public class Gzip {
     		try {
         		ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length());
         		LZ4BlockOutputStream out = new LZ4BlockOutputStream( bos, MAX_BLOCK_SIZE, compressor );
-        		out.write(data.getBytes());
+        		out.write(data.getBytes("UTF-8"));
         		out.close();
         		compressed = bos.toByteArray();
         		bos.close();
@@ -83,7 +83,7 @@ public class Gzip {
         		LZ4BlockInputStream in = new LZ4BlockInputStream( bis, decompressor );
         		BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
         		sb = new StringBuilder();
-        		String line;
+        		String line = new String((new byte[0]), "UTF-8");
         		while((line = br.readLine()) != null){
             			sb.append(line);
         		}

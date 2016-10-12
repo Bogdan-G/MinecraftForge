@@ -847,7 +847,7 @@ public class Configuration
                     if (start.matches())
                     {
                         fileName = start.group(1);
-                        categories = new org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap<String, ConfigCategory>();
+                        categories = new org.eclipse.collections.impl.map.mutable.UnifiedMap<String, ConfigCategory>();
                         continue;
                     }
                     else if (end.matches())
