@@ -11,6 +11,24 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
+@@ -57,7 +61,7 @@
+     public boolean field_76642_o;
+     public int field_82912_p;
+     public long field_111204_q;
+-    private int field_76649_t;
++    private int field_76649_t;public final long chunkKey; // Forge
+     private static final String __OBFID = "CL_00000373";
+ 
+     public Chunk(World p_i1995_1_, int p_i1995_2_, int p_i1995_3_)
+@@ -71,7 +75,7 @@
+         this.field_76645_j = new List[16];
+         this.field_76637_e = p_i1995_1_;
+         this.field_76635_g = p_i1995_2_;
+-        this.field_76647_h = p_i1995_3_;
++        this.field_76647_h = p_i1995_3_;this.chunkKey = ChunkCoordIntPair.func_77272_a(p_i1995_2_, p_i1995_3_); // Forge
+         this.field_76634_f = new int[256];
+ 
+         for (int k = 0; k < this.field_76645_j.length; ++k)
 @@ -194,7 +198,7 @@
                      {
                          Block block = this.func_150810_a(j, l - 1, k);

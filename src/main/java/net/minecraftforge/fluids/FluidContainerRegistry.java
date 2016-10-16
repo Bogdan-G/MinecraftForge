@@ -49,8 +49,10 @@ public abstract class FluidContainerRegistry
             int code = 1;
             code = 31*code + container.getItem().hashCode();
             code = 31*code + container.getItemDamage();
-            if (stack != null)
+            if (stack != null) {
                 code = 31*code + stack.getFluid().hashCode();
+                if(stack.tag != null) code = 31*code + stack.tag.hashCode();
+            }
             return code;
         }
         @Override

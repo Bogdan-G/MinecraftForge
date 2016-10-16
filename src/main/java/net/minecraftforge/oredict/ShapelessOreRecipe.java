@@ -92,8 +92,8 @@ public class ShapelessOreRecipe implements IRecipe
     {
         List<Object> required = new org.eclipse.collections.impl.list.mutable.FastList(input);
 
-        int var1_getSizeInventory_sS=var1.getSizeInventory();
-        for (int x = 0; x < var1_getSizeInventory_sS; x++)
+        //int var1_getSizeInventory_sS=var1.getSizeInventory();
+        for (int x = 0; x < var1.getSizeInventory(); x++)
         {
             ItemStack slot = var1.getStackInSlot(x);
 

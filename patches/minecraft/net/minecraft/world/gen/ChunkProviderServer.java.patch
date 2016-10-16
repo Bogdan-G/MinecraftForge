@@ -13,11 +13,20 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
-@@ -39,6 +44,7 @@
-     public LongHashMap field_73244_f = new LongHashMap();
+@@ -36,7 +41,7 @@
+     public IChunkProvider field_73246_d;
+     public IChunkLoader field_73247_e;
+     public boolean field_73250_a = true;
+-    public LongHashMap field_73244_f = new LongHashMap();
++    public LongHashMap field_73244_f = new LongHashMap(){private static final long serialVersionUID = 1L;public Chunk lastChunkByPos = null;public Chunk func_76164_a(long key){if (lastChunkByPos != null && key == lastChunkByPos.chunkKey) {return lastChunkByPos;}return lastChunkByPos = (Chunk)super.func_76164_a(key);}public Chunk func_76159_d(long key){if (lastChunkByPos != null && key == lastChunkByPos.chunkKey) {lastChunkByPos = null;}return (Chunk)super.func_76159_d(key);}};
      public List field_73245_g = new ArrayList();
      public WorldServer field_73251_h;
-+    private Set<Long> loadingChunks = com.google.common.collect.Sets.newHashSet();
+     private static final String __OBFID = "CL_00001436";
+@@ -39,9 +44,10 @@
+     public LongHashMap field_73244_f = new LongHashMap(){private static final long serialVersionUID = 1L;public Chunk lastChunkByPos = null;public Chunk func_76164_a(long key){if (lastChunkByPos != null && key == lastChunkByPos.chunkKey) {return lastChunkByPos;}return lastChunkByPos = (Chunk)super.func_76164_a(key);}public Chunk func_76159_d(long key){if (lastChunkByPos != null && key == lastChunkByPos.chunkKey) {lastChunkByPos = null;}return (Chunk)super.func_76159_d(key);}};
+     public List field_73245_g = new ArrayList();
+     public WorldServer field_73251_h;
++    private Set<Long> loadingChunks = new org.eclipse.collections.impl.set.mutable.UnifiedSet<Long>();//parse FFoKC
      private static final String __OBFID = "CL_00001436";
  
      public ChunkProviderServer(WorldServer p_i1520_1_, IChunkLoader p_i1520_2_, IChunkProvider p_i1520_3_)

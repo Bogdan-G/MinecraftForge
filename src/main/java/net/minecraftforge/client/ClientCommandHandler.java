@@ -113,7 +113,7 @@ public class ClientCommandHandler extends CommandHandler
             Minecraft mc = FMLClientHandler.instance().getClient();
             if (mc.currentScreen instanceof GuiChat)
             {
-                @SuppressWarnings("unchecked")
+                //@//SuppressWarnings("unchecked")
                 List<String> commands = getPossibleCommands(mc.thePlayer, leftOfCursor);
                 if (commands != null && !commands.isEmpty())
                 {

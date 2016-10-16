@@ -862,9 +862,9 @@ public class Configuration
                     int nameStart = -1, nameEnd = -1;
                     boolean skip = false;
                     boolean quoted = false;
-                    boolean isFirstNonWhitespaceCharOnLine = true;int line_sS=line.length();
+                    boolean isFirstNonWhitespaceCharOnLine = true;//int line_sS=line.length();
 
-                    for (int i = 0; i < line_sS && !skip; ++i)
+                    for (int i = 0; i < line.length() && !skip; ++i)
                     {
                         if (Character.isLetterOrDigit(line.charAt(i)) || ALLOWED_CHARS.indexOf(line.charAt(i)) != -1 || (quoted && line.charAt(i) != '"'))
                         {
@@ -944,7 +944,7 @@ public class Configuration
                                     }
 
                                     Property prop = new Property(name, line.substring(i + 1), type, true);
-                                    i = line.length();line_sS=line.length();
+                                    i = line.length();//line_sS=line.length();
 
                                     currentCat.put(name, prop);
 
