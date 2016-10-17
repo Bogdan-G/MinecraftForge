@@ -18,7 +18,7 @@ public class ModSortingException extends RuntimeException
 {
     private static final long serialVersionUID = 1L;
 
-    public static class SortingExceptionData<T>
+    public class SortingExceptionData<T>
     {
         public SortingExceptionData(T node, Set<T> visitedNodes)
         {
@@ -39,7 +39,7 @@ public class ModSortingException extends RuntimeException
         }
     }
 
-    private transient SortingExceptionData<?> sortingExceptionData;
+    private SortingExceptionData<?> sortingExceptionData;
 
     public <T> ModSortingException(String string, T node, Set<T> visitedNodes)
     {

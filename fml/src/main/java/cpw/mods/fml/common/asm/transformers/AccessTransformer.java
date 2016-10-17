@@ -60,7 +60,7 @@ import cpw.mods.fml.relauncher.FMLRelaunchLog;
 public class AccessTransformer implements IClassTransformer
 {
     private static final boolean DEBUG = Boolean.parseBoolean(System.getProperty("fml.debugAccessTransformer", "false"));
-    static class Modifier
+    class Modifier
     {
         public String name = "";
         public String desc = "";
@@ -443,7 +443,7 @@ public class AccessTransformer implements IClassTransformer
 
                 String entryName = entry.getName();
 
-                if (entryName.endsWith(".class") && entryName.charAt(0) != '.'/*startsWith(".")*/)
+                if (entryName.endsWith(".class") && !entryName.startsWith("."))
                 {
                     ClassNode cls = new ClassNode();
                     ClassReader rdr = new ClassReader(entryData);

@@ -382,7 +382,7 @@ public class Delta {
             bb.mark();
             while (bb.hasRemaining()) {
                 int val = bb.get();
-                if (val > 32/* && val < 127*/)//FB:INT - INT_BAD_COMPARISON_WITH_SIGNED_BYTE
+                if (val > 32 && val < 127)//FB:INT - INT_BAD_COMPARISON_WITH_SIGNED_BYTE
                     sb.append(' ').append((char)val);
                 else
                     append(sb, val);

@@ -134,7 +134,7 @@ public class GuiEditArrayEntries extends GuiListExtended
     public void addNewEntry(int index)
     {
         if (configElement.isList() && configElement.getType() == ConfigGuiType.BOOLEAN)
-            listEntries.add(index, new BooleanEntry(this.owningGui, this, this.configElement, /*Boolean.valueOf*/(true)));
+            listEntries.add(index, new BooleanEntry(this.owningGui, this, this.configElement, Boolean.valueOf(true)));
         else if (configElement.isList() && configElement.getType() == ConfigGuiType.INTEGER)
             listEntries.add(index, new IntegerEntry(this.owningGui, this, this.configElement, 0));
         else if (configElement.isList() && configElement.getType() == ConfigGuiType.DOUBLE)
@@ -233,9 +233,9 @@ public class GuiEditArrayEntries extends GuiListExtended
             ArrayEntry entry = (ArrayEntry) ((GuiConfig) owningGui.parentScreen).entryList.getListEntry(owningGui.slotIndex);
 
             Object[] ao = new Object[listLength];
-            System.arraycopy(listEntries.toArray(), 0, ao, 0, listLength);
-            /*for (int i = 0; i < listLength; i++)
-                ao[i] = listEntries.get(i).getValue();*/
+            //System.arraycopy(listEntries.toArray(), 0, ao, 0, listLength);
+            for (int i = 0; i < listLength; i++)
+                ao[i] = listEntries.get(i).getValue();
 
             entry.setListFromChildScreen(ao);
         }
@@ -307,7 +307,7 @@ public class GuiEditArrayEntries extends GuiListExtended
                 String validChars = "0123456789";
                 String before = this.textFieldValue.getText();
                 if (validChars.contains(String.valueOf(eventChar)) ||
-                        (before.charAt(0) != '-'/*startsWith("-")*/ && this.textFieldValue.getCursorPosition() == 0 && eventChar == '-')
+                        (!before.startsWith("-") && this.textFieldValue.getCursorPosition() == 0 && eventChar == '-')
                         || (!before.contains(".") && eventChar == '.')
                         || eventKey == Keyboard.KEY_BACK || eventKey == Keyboard.KEY_DELETE || eventKey == Keyboard.KEY_LEFT || eventKey == Keyboard.KEY_RIGHT
                         || eventKey == Keyboard.KEY_HOME || eventKey == Keyboard.KEY_END)
@@ -364,7 +364,7 @@ public class GuiEditArrayEntries extends GuiListExtended
                 String validChars = "0123456789";
                 String before = this.textFieldValue.getText();
                 if (validChars.contains(String.valueOf(eventChar))
-                        || (before.charAt(0) != '-'/*startsWith("-")*/ && this.textFieldValue.getCursorPosition() == 0 && eventChar == '-')
+                        || (!before.startsWith("-") && this.textFieldValue.getCursorPosition() == 0 && eventChar == '-')
                         || eventKey == Keyboard.KEY_BACK || eventKey == Keyboard.KEY_DELETE
                         || eventKey == Keyboard.KEY_LEFT || eventKey == Keyboard.KEY_RIGHT || eventKey == Keyboard.KEY_HOME || eventKey == Keyboard.KEY_END)
                     this.textFieldValue.textboxKeyTyped((owningScreen.enabled ? eventChar : Keyboard.CHAR_NONE), eventKey);
@@ -531,7 +531,7 @@ public class GuiEditArrayEntries extends GuiListExtended
         @Override
         public Object getValue()
         {
-            return /*Boolean.valueOf*/(value);
+            return Boolean.valueOf(value);
         }
     }
 

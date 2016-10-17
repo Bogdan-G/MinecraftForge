@@ -41,12 +41,12 @@ public class ProxyInjector
             {
                 Class<?> proxyTarget = Class.forName(targ.getClassName(), true, mcl);
                 Field target = proxyTarget.getDeclaredField(targ.getObjectName());
-                /*if (target == null)
+                if (target == null)
                 {
                     // Impossible?
                     FMLLog.severe("Attempted to load a proxy type into %s.%s but the field was not found", targ.getClassName(), targ.getObjectName());
                     throw new LoaderException(String.format("Attempted to load a proxy type into %s.%s but the field was not found", targ.getClassName(), targ.getObjectName()));
-                }*/
+                }
                 target.setAccessible(true);
 
                 SidedProxy annotation = target.getAnnotation(SidedProxy.class);

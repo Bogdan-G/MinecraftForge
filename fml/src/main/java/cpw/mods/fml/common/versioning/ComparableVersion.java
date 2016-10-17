@@ -489,7 +489,7 @@ public class ComparableVersion
     @Override
     public boolean equals( Object o )
     {
-        return o != null && ( o.getClass() == ComparableVersion.class.getClass() ) && canonical.equals( ( (ComparableVersion) o ).canonical );
+        return ( o.getClass().equals(ComparableVersion.class) ) && canonical.equals( ( (ComparableVersion) o ).canonical );
     }
 
     @Override

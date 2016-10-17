@@ -33,7 +33,7 @@ import cpw.mods.fml.common.discovery.asm.ASMModParser;
 
 public class DirectoryDiscoverer implements ITypeDiscoverer
 {
-    private static class ClassFilter implements FileFilter
+    private class ClassFilter implements FileFilter
     {
         @Override
         public boolean accept(File file)

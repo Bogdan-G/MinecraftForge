@@ -72,7 +72,7 @@ public class ProTracker {
 	
 	private static int calculate_num_channels( byte[] module_header ) {
 		int num_channels;
-		switch( ( module_header[ 1082 ] << 8 ) | module_header[ 1083 ] & module_header[ 1083 ] ) {//FB:BIT - BIT_IOR_OF_SIGNED_BYTE
+		switch( ( module_header[ 1082 ] << 8 ) | module_header[ 1083 ] /*& module_header[ 1083 ] */) {//FB:BIT - BIT_IOR_OF_SIGNED_BYTE
 			case 0x4b2e: /* M.K. */
 			case 0x4b21: /* M!K! */
 			case 0x542e: /* N.T. */

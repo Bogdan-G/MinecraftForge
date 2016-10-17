@@ -23,7 +23,7 @@ public enum ContainerType
     JAR(JarDiscoverer.class),
     DIR(DirectoryDiscoverer.class);
 
-    private transient ITypeDiscoverer discoverer;
+    private ITypeDiscoverer discoverer;
 
     private ContainerType(Class<? extends ITypeDiscoverer> discovererClass)
     {

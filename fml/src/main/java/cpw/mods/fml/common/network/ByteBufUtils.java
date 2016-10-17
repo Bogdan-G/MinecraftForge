@@ -230,7 +230,7 @@ public class ByteBufUtils {
                 returnString.append('\t');
                 for (j = i - 16; j < i; j++)
                 {
-                    if (buffer.getByte(j) < 0x20/* || buffer.getByte(j) > 0x7F*/)//FB:INT - INT_BAD_COMPARISON_WITH_SIGNED_BYTE
+                    if (buffer.getByte(j) < 0x20 || buffer.getByte(j) > 0x7F)//FB:INT - INT_BAD_COMPARISON_WITH_SIGNED_BYTE
                         returnString.append('.');
                     else
                         returnString.append((char) buffer.getByte(j));
@@ -267,7 +267,7 @@ public class ByteBufUtils {
 
         for (; i >= 0 && j < i; j++)
         {
-            if (buffer.getByte(j) < 0x20/* || buffer.getByte(j) > 0x7F*/)
+            if (buffer.getByte(j) < 0x20 || buffer.getByte(j) > 0x7F)
                 returnString.append('.');
             else
                 returnString.append((char) buffer.getByte(j));

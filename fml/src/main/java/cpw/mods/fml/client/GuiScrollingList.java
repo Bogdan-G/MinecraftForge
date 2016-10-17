@@ -250,7 +250,7 @@ public abstract class GuiScrollingList
                     {
                         var16 = -1;
                     }
-                    else/* if (var16 < 0)*/
+                    else if (var16 < 0)
                     {
                         var16 = 1;
                     }

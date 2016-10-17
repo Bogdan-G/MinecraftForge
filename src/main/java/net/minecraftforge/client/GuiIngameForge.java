@@ -337,7 +337,7 @@ public class GuiIngameForge extends GuiIngame
         mc.mcProfiler.startSection("health");
         GL11.glEnable(GL11.GL_BLEND);
 
-        boolean highlight = ((mc.thePlayer.hurtResistantTime / 3) & 1) == 1;
+        boolean highlight = mc.thePlayer.hurtResistantTime / 3 % 2 == 1;
 
         if (mc.thePlayer.hurtResistantTime < 10)
         {

@@ -368,7 +368,7 @@ public class Loader
         return discoverer;
     }
 
-    private static class ModIdComparator implements Comparator<ModContainer>
+    private class ModIdComparator implements Comparator<ModContainer>
     {
         @Override
         public int compare(ModContainer o1, ModContainer o2)
@@ -635,10 +635,10 @@ public class Loader
         List<String> branding = FMLCommonHandler.instance().getBrandings(false);
 
         Joiner.on(' ').skipNulls().appendTo(ret, branding);
-        //if (modController != null)
-        //{
+        if (modController != null)
+        {
             modController.printModStates(ret);
-        //}
+        }
         return ret.toString();
     }
 

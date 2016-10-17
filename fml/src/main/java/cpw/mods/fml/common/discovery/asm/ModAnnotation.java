@@ -25,7 +25,7 @@ import cpw.mods.fml.common.discovery.asm.ASMModParser.AnnotationType;
 
 public class ModAnnotation
 {
-    public static class EnumHolder
+    public class EnumHolder
     {
         @SuppressWarnings("unused")
         private String desc;

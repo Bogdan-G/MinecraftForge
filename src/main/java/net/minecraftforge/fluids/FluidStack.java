@@ -229,7 +229,7 @@ public class FluidStack
     @Override
     public final boolean equals(Object o)
     {
-        if (o == null || !(o.getClass() == FluidStack.class.getClass()))
+        if (!(o.getClass().equals(FluidStack.class)))
         {
             return false;
         }

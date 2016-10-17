@@ -30,7 +30,7 @@
              Iterator iterator1;
              Enchantment enchantment;
  
-+             if (!ForgeHooks.onAnvilChange(this, itemstack, itemstack2, field_82852_f, field_82857_m, k2)) return;
++            if (!ForgeHooks.onAnvilChange(this, itemstack, itemstack2, field_82852_f, field_82857_m, k2)) return;
              if (itemstack2 != null)
              {
 +                if (!ForgeHooks.onAnvilChange(this, itemstack, itemstack2, field_82852_f, field_82857_m, k2)) return;

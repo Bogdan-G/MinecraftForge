@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 
 public class FMLModIdMappingEvent extends FMLEvent {
     public static enum RemapTarget { BLOCK, ITEM }
-    public static class ModRemapping
+    public class ModRemapping
     {
         public final int oldId;
         public final int newId;
