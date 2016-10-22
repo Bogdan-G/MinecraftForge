@@ -70,6 +70,7 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
     public static boolean disableVersionCheck = false;
     public static int defaultSpawnFuzz = 20;
     public static boolean defaultHasSpawnFuzz = true;
+    public static boolean infiniteWaterSource = true;
 
     private static Configuration config;
 
@@ -140,6 +141,12 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
         // If no tooltip language key is defined in your .lang file, the tooltip will default to the property comment field.
         prop.setLanguageKey("forge.configgui.disableVersionCheck");
         disableVersionCheck = prop.getBoolean(disableVersionCheck);
+        propOrder.add(prop.getName());
+        
+        prop = config.get(CATEGORY_GENERAL, "infiniteWaterSource", true);
+        prop.comment = "Vanilla water source behavior - is infinite";
+        prop.setLanguageKey("forge.configgui.infiniteWaterSource").setRequiresWorldRestart(true);
+        infiniteWaterSource = prop.getBoolean(infiniteWaterSource);
         propOrder.add(prop.getName());
 
         prop = config.get(Configuration.CATEGORY_GENERAL, "clumpingThreshold", 64,

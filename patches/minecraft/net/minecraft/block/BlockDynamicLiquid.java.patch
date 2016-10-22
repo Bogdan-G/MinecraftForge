@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/block/BlockDynamicLiquid.java
++++ ../src-work/minecraft/net/minecraft/block/BlockDynamicLiquid.java
+@@ -66,7 +66,7 @@
+                 }
+             }
+ 
+-            if (this.field_149815_a >= 2 && this.field_149764_J == Material.field_151586_h)
++            if (net.minecraftforge.common.ForgeModContainer.infiniteWaterSource && this.field_149815_a >= 2 && this.field_149764_J == Material.field_151586_h)
+             {
+                 if (p_149674_1_.func_147439_a(p_149674_2_, p_149674_3_ - 1, p_149674_4_).func_149688_o().func_76220_a())
+                 {
