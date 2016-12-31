@@ -35,6 +35,8 @@ import cpw.mods.fml.relauncher.Side;
 
 public class NetworkModHolder
 {
+    private static final boolean DEBUG_NMH = Boolean.parseBoolean(System.getProperty("fml.networkmodholderDebug", "false"));
+    
     public abstract class NetworkChecker {
         public abstract boolean check(Map<String,String> remoteVersions, Side side);
     }
@@ -186,7 +188,7 @@ public class NetworkModHolder
             }
             this.checker = new DefaultNetworkChecker();
         }
-        FMLLog.finer("Mod %s is using network checker : %s", container.getModId(), this.checker);
+        if (DEBUG_NMH) { FMLLog.finer("Mod %s is using network checker : %s", container.getModId(), this.checker);
         FMLLog.finer("Testing mod %s to verify it accepts its own version in a remote connection", container.getModId());
         boolean acceptsSelf = acceptVersion(container.getVersion());
         if (!acceptsSelf)
@@ -196,7 +198,7 @@ public class NetworkModHolder
         else
         {
             FMLLog.finer("The mod %s accepts its own version (%s)", container.getModId(), container.getVersion());
-        }
+        }}
     }
 
     public boolean acceptVersion(String version)

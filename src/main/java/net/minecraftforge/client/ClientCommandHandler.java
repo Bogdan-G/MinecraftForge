@@ -39,7 +39,7 @@ public class ClientCommandHandler extends CommandHandler
     {
         message = message.trim();
 
-        if (message.charAt(0) == '/')//message.startsWith("/")
+        if (message.startsWith("/"))
         {
             message = message.substring(1);
         }
@@ -113,22 +113,20 @@ public class ClientCommandHandler extends CommandHandler
             Minecraft mc = FMLClientHandler.instance().getClient();
             if (mc.currentScreen instanceof GuiChat)
             {
-                //@//SuppressWarnings("unchecked")
+                @SuppressWarnings("unchecked")
                 List<String> commands = getPossibleCommands(mc.thePlayer, leftOfCursor);
                 if (commands != null && !commands.isEmpty())
                 {
                     if (leftOfCursor.indexOf(' ') == -1)
                     {
-                        int commands_sS=commands.size();
-                        for (int i = 0; i < commands_sS; i++)
+                        for (int i = 0; i < commands.size(); i++)
                         {
                             commands.set(i, GRAY + "/" + commands.get(i) + RESET);
                         }
                     }
                     else
                     {
-                        int commands_sS=commands.size();
-                        for (int i = 0; i < commands_sS; i++)
+                        for (int i = 0; i < commands.size(); i++)
                         {
                             commands.set(i, GRAY + commands.get(i) + RESET);
                         }

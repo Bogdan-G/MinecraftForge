@@ -10,6 +10,7 @@ import static net.minecraftforge.common.config.Configuration.NEW_LINE;
 import static net.minecraftforge.common.config.Configuration.allowedProperties;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,11 +30,11 @@ import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 
 public class ConfigCategory implements Map<String, Property>
 {
-    private byte[] name;
-    private byte[] comment;
-    private byte[] languagekey;
-    private /*Array*/List<ConfigCategory> children = new org.eclipse.collections.impl.list.mutable.FastList<ConfigCategory>();
-    private Map<String, Property> properties = new org.eclipse.collections.impl.map.mutable.UnifiedMap<String, Property>();//TreeSortedMap
+    //private byte[] name;//1x idcc//move in cache disc
+    //private byte[] comment;//2x idcc
+    //private byte[] languagekey;//3x idcc
+    private ArrayList<ConfigCategory> children = new ArrayList<ConfigCategory>();
+    private Map<String, Property> properties = new TreeMap();//org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap();//org.eclipse.collections.impl.map.mutable.UnifiedMap<String, Property>();
     private int propNumber = 0;
     public final ConfigCategory parent;
     private boolean changed = false;
@@ -42,6 +43,8 @@ public class ConfigCategory implements Map<String, Property>
     private boolean requiresMcRestart = false;
     private Class<? extends IConfigEntry> customEntryClass = null;
     private List<String> propertyOrder = null;
+    public final String idcc;
+    public final short state_id2;
 
     public ConfigCategory(String name)
     {
@@ -50,7 +53,12 @@ public class ConfigCategory implements Map<String, Property>
 
     public ConfigCategory(String name, ConfigCategory parent)
     {
-        this.name = Gzip.compress(name);
+        long time = Math.abs(System.nanoTime()+(new org.bogdang.modifications.random.XSTR()).nextLong());
+        this.idcc = String.valueOf(time);
+        this.state_id2 = (short)(time % 5000);//time % 500 + 2000
+        /*this.name = */Gzip.compress(name, this.idcc+"-0", 0, this.state_id2);
+        //Gzip.compress("", this.idcc+"-1", 1, this.state_id2);//for IO exception
+        //Gzip.compress("", this.idcc+"-2", 2, this.state_id2);
         this.parent = parent;
         if (parent != null)
         {
@@ -64,7 +72,7 @@ public class ConfigCategory implements Map<String, Property>
         if (obj instanceof ConfigCategory)
         {
             ConfigCategory cat = (ConfigCategory)obj;
-            return (Gzip.decompress(name)).equals(Gzip.decompress(cat.name)) && children.equals(cat.children);
+            return (Gzip.decompress(/*name*/this.idcc+"-0", 0, this.state_id2)).equals(Gzip.decompress(/*cat.name*/cat.idcc+"-0", 0, this.state_id2)) && children.equals(cat.children);
         }
 
         return false;
@@ -72,12 +80,12 @@ public class ConfigCategory implements Map<String, Property>
 
     public String getName()
     {
-        return Gzip.decompress(name);
+        return Gzip.decompress(/*name*/this.idcc+"-0", 0, this.state_id2);
     }
 
     public String getQualifiedName()
     {
-        return getQualifiedName(Gzip.decompress(name), parent);
+        return getQualifiedName(Gzip.decompress(/*name*/this.idcc+"-0", 0, this.state_id2), parent);
     }
 
     public static String getQualifiedName(String name, ConfigCategory parent)
@@ -128,26 +136,28 @@ public class ConfigCategory implements Map<String, Property>
 
     public ConfigCategory setLanguageKey(String languagekey)
     {
-        this.languagekey = Gzip.compress(languagekey);
+        /*this.languagekey = */Gzip.compress(languagekey, this.idcc+"-2", 2, this.state_id2);
         return this;
     }
 
     public String getLanguagekey()
     {
-        if (this.languagekey != null)
-            return Gzip.decompress(this.languagekey);
+        if (/*this.languagekey != null*/new File("."+File.separator+"configcache"+File.separator+"config.data"+2).exists())
+            return Gzip.decompress(/*this.languagekey*/this.idcc+"-2", 2, this.state_id2);
         else
             return getQualifiedName();
     }
 
     public void setComment(String comment)
     {
-        this.comment = Gzip.compress(comment);
+        //this.comment = Gzip.compress(comment);
+        Gzip.compress(comment, this.idcc+"-1", 1, this.state_id2);
     }
 
     public String getComment()
     {
-        return Gzip.decompress(this.comment);
+        //return Gzip.decompress(this.comment);
+        return Gzip.decompress(this.idcc+"-1", 1, this.state_id2);
     }
 
     /**
@@ -256,8 +266,9 @@ public class ConfigCategory implements Map<String, Property>
         String pad0 = getIndent(indent);
         String pad1 = getIndent(indent + 1);
         String pad2 = getIndent(indent + 2);
-        String temp = Gzip.decompress(name);
-        String temp2 = Gzip.decompress(comment);
+        String temp = Gzip.decompress(/*name*/this.idcc+"-0", 0, this.state_id2);
+        String temp2 = Gzip.decompress(this.idcc+"-1", 1, this.state_id2);//null;
+        //try { temp2 = Gzip.decompress(/*comment*/this.idcc+"-1", 1, true); } catch (IndexOutOfBoundsException e) { }
 
         if (temp2 != null && !temp2.isEmpty())
         {

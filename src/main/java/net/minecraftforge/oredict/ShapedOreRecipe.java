@@ -192,16 +192,13 @@ public class ShapedOreRecipe implements IRecipe
     /*@*//*SuppressWarnings("unchecked")*/
     private boolean checkMatch(InventoryCrafting inv, int startX, int startY, boolean mirror)
     {
-        Object target = null;
-        int subX = 0;int subY = 0;
         for (int x = 0; x < MAX_CRAFT_GRID_WIDTH; x++)
         {
-            subX = x - startX;
             for (int y = 0; y < MAX_CRAFT_GRID_HEIGHT; y++)
             {
-                //int subX = x - startX;
-                subY = y - startY;
-                if (target != null) target = null;
+                int subX = x - startX;
+                int subY = y - startY;
+                Object target = null;
 
                 if (subX >= 0 && subY >= 0 && subX < width && subY < height)
                 {

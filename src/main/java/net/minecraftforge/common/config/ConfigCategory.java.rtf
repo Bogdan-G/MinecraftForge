@@ -1,0 +1,440 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0\fcharset204 Roboto;}}
+{\colortbl;\red0\green36\blue0;\red234\green236\blue236;\red100\green0\blue0;\red128\green128\blue0;\red217\green0\blue0;\red0\green130\blue130;\red204\green97\blue55;\red0\green18\blue175;\red146\green3\blue241;}
+\f0\fs20\b0\i0\ulnone\cf1\highlight2\chcbpat2 \cf3 /\cf1 \cf3 *\cf1 \cf3 *\cf1\par
+ \cf3 *\cf1  This software is provided under the terms of the Minecraft Forge Public\par
+ \cf3 *\cf1  License v1\cf3 .\cf1 0\cf3 .\cf1\par
+ \cf3 *\cf1 \cf3 /\cf1\par
+\par
+package net\cf3 .\cf1 minecraftforge\cf3 .\cf1 common\cf3 .\cf1 config\cf3 ;\cf1\par
+\par
+import \cf4 static\cf1  net\cf3 .\cf1 minecraftforge\cf3 .\cf1 common\cf3 .\cf1 config\cf3 .\cf1 Configuration\cf3 .\cf1 COMMENT_SEPARATOR\cf3 ;\cf1\par
+import \cf4 static\cf1  net\cf3 .\cf1 minecraftforge\cf3 .\cf1 common\cf3 .\cf1 config\cf3 .\cf1 Configuration\cf3 .\cf1 NEW_LINE\cf3 ;\cf1\par
+import \cf4 static\cf1  net\cf3 .\cf1 minecraftforge\cf3 .\cf1 common\cf3 .\cf1 config\cf3 .\cf1 Configuration\cf3 .\cf1 allowedProperties\cf3 ;\cf1\par
+\par
+import java\cf3 .\cf1 io\cf3 .\cf1 BufferedWriter\cf3 ;\cf1\par
+import java\cf3 .\cf1 io\cf3 .\cf1 File\cf3 ;\cf1\par
+import java\cf3 .\cf1 io\cf3 .\cf1 IOException\cf3 ;\cf1\par
+import java\cf3 .\cf1 util\cf3 .\cf1 ArrayList\cf3 ;\cf1\par
+import java\cf3 .\cf1 util\cf3 .\cf1 Collection\cf3 ;\cf1\par
+import java\cf3 .\cf1 util\cf3 .\cf1 LinkedHashSet\cf3 ;\cf1\par
+import java\cf3 .\cf1 util\cf3 .\cf1 List\cf3 ;\cf1\par
+import java\cf3 .\cf1 util\cf3 .\cf1 Map\cf3 ;\cf1\par
+import java\cf3 .\cf1 util\cf3 .\cf1 Set\cf3 ;\cf1\par
+import java\cf3 .\cf1 util\cf3 .\cf1 TreeMap\cf3 ;\cf1\par
+\par
+import com\cf3 .\cf1 google\cf3 .\cf1 common\cf3 .\cf1 base\cf3 .\cf1 Splitter\cf3 ;\cf1\par
+import com\cf3 .\cf1 google\cf3 .\cf1 common\cf3 .\cf1 collect\cf3 .\cf1 ImmutableList\cf3 ;\cf1\par
+import com\cf3 .\cf1 google\cf3 .\cf1 common\cf3 .\cf1 collect\cf3 .\cf1 ImmutableMap\cf3 ;\cf1\par
+import com\cf3 .\cf1 google\cf3 .\cf1 common\cf3 .\cf1 collect\cf3 .\cf1 ImmutableSet\cf3 ;\cf1\par
+import org\cf3 .\cf1 io\cf3 .\cf1 Gzip\cf3 ;\cf1\par
+\par
+import cpw\cf3 .\cf1 mods\cf3 .\cf1 fml\cf3 .\cf1 client\cf3 .\cf1 config\cf3 .\cf1 GuiConfigEntries\cf3 .\cf1 IConfigEntry\cf3 ;\cf1\par
+\par
+\cf4 public\cf1  \cf4 class\cf1  ConfigCategory implements Map\cf3 <\cf1 String\cf3 ,\cf1  Property\cf3 >\cf1\par
+\cf3 \{\cf1\par
+    \b0\i\cf5 //private byte[] name;//1x idcc//move in cache disc\cf1\b0\i0\par
+    \b0\i\cf5 //private byte[] comment;//2x idcc\cf1\b0\i0\par
+    \b0\i\cf5 //private byte[] languagekey;//3x idcc\cf1\b0\i0\par
+    \cf4 private\cf1  \b0\i\cf5 /*Array*/\cf1\b0\i0 List\cf3 <\cf1 ConfigCategory\cf3 >\cf1  children \cf3 =\cf1  \cf4 new\cf1  org\cf3 .\cf1 eclipse\cf3 .\cf1 collections\cf3 .\cf1 impl\cf3 .\cf1 list\cf3 .\cf1 \cf4 mutable\cf1 \cf3 .\cf1 FastList\cf3 <\cf1 ConfigCategory\cf3 >\cf1 \cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+    \cf4 private\cf1  Map\cf3 <\cf1 String\cf3 ,\cf1  Property\cf3 >\cf1  properties \cf3 =\cf1  \cf4 new\cf1  org\cf3 .\cf1 eclipse\cf3 .\cf1 collections\cf3 .\cf1 impl\cf3 .\cf1 map\cf3 .\cf1 sorted\cf3 .\cf1 \cf4 mutable\cf1 \cf3 .\cf1 TreeSortedMap\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1 \b0\i\cf5 //org.eclipse.collections.impl.map.mutable.UnifiedMap<String, Property>();//TreeSortedMap\cf1\b0\i0\par
+    \cf4 private\cf1  \cf7 int\cf1  propNumber \cf3 =\cf1  0\cf3 ;\cf1\par
+    \cf4 public\cf1  final ConfigCategory parent\cf3 ;\cf1\par
+    \cf4 private\cf1  boolean changed \cf3 =\cf1  false\cf3 ;\cf1\par
+    \cf4 private\cf1  boolean requiresWorldRestart \cf3 =\cf1  false\cf3 ;\cf1\par
+    \cf4 private\cf1  boolean showInGui \cf3 =\cf1  true\cf3 ;\cf1\par
+    \cf4 private\cf1  boolean requiresMcRestart \cf3 =\cf1  false\cf3 ;\cf1\par
+    \cf4 private\cf1  Class\cf3 <\cf1 \cf3 ?\cf1  extends IConfigEntry\cf3 >\cf1  customEntryClass \cf3 =\cf1  null\cf3 ;\cf1\par
+    \cf4 private\cf1  List\cf3 <\cf1 String\cf3 >\cf1  propertyOrder \cf3 =\cf1  null\cf3 ;\cf1\par
+    \cf4 public\cf1  final String idcc\cf3 ;\cf1\par
+\par
+    \cf4 public\cf1  ConfigCategory\cf6 (\cf1 String name\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf4 this\cf1 \cf6 (\cf1 name\cf3 ,\cf1  null\cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  ConfigCategory\cf6 (\cf1 String name\cf3 ,\cf1  ConfigCategory parent\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf4 this\cf1 \cf3 .\cf1 idcc \cf3 =\cf1  String\cf3 .\cf1 valueOf\cf6 (\cf1 System\cf3 .\cf1 currentTimeMillis\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+        \b0\i\cf5 /*this.name = */\cf1\b0\i0 Gzip\cf3 .\cf1 compress\cf6 (\cf1 name\cf3 ,\cf1  \cf4 this\cf1 \cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-0"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+        Gzip\cf3 .\cf1 compress\cf6 (\cf1 \b0\i\cf8 ""\cf1\b0\i0 \cf3 ,\cf1  \cf4 this\cf1 \cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-1"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1 \b0\i\cf5 //for IO exception\cf1\b0\i0\par
+        Gzip\cf3 .\cf1 compress\cf6 (\cf1 \b0\i\cf8 ""\cf1\b0\i0 \cf3 ,\cf1  \cf4 this\cf1 \cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-2"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+        \cf4 this\cf1 \cf3 .\cf1 parent \cf3 =\cf1  parent\cf3 ;\cf1\par
+        \cf9 if\cf1  \cf6 (\cf1 parent \cf3 !\cf1 \cf3 =\cf1  null\cf6 )\cf1\par
+        \cf3 \{\cf1\par
+            parent\cf3 .\cf1 children\cf3 .\cf1 add\cf6 (\cf1 \cf4 this\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+        \cf3 \}\cf1\par
+    \cf3 \}\cf1\par
+\par
+    @Override\par
+    \cf4 public\cf1  boolean equals\cf6 (\cf1 Object obj\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 if\cf1  \cf6 (\cf1 obj instanceof ConfigCategory\cf6 )\cf1\par
+        \cf3 \{\cf1\par
+            ConfigCategory cat \cf3 =\cf1  \cf6 (\cf1 ConfigCategory\cf6 )\cf1 obj\cf3 ;\cf1\par
+            \cf9 return\cf1  \cf6 (\cf1 Gzip\cf3 .\cf1 decompress\cf6 (\cf1 \b0\i\cf5 /*name*/\cf1\b0\i0 this\cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-0"\cf1\b0\i0 \cf6 )\cf1 \cf6 )\cf1 \cf3 .\cf1 equals\cf6 (\cf1 Gzip\cf3 .\cf1 decompress\cf6 (\cf1 \b0\i\cf5 /*cat.name*/\cf1\b0\i0 cat\cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-0"\cf1\b0\i0 \cf6 )\cf1 \cf6 )\cf1  \cf3 &\cf1 \cf3 &\cf1  children\cf3 .\cf1 equals\cf6 (\cf1 cat\cf3 .\cf1 children\cf6 )\cf1 \cf3 ;\cf1\par
+        \cf3 \}\cf1\par
+\par
+        \cf9 return\cf1  false\cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  String getName\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  Gzip\cf3 .\cf1 decompress\cf6 (\cf1 \b0\i\cf5 /*name*/\cf1\b0\i0 this\cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-0"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  String getQualifiedName\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  getQualifiedName\cf6 (\cf1 Gzip\cf3 .\cf1 decompress\cf6 (\cf1 \b0\i\cf5 /*name*/\cf1\b0\i0 this\cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-0"\cf1\b0\i0 \cf6 )\cf1 \cf3 ,\cf1  parent\cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  \cf4 static\cf1  String getQualifiedName\cf6 (\cf1 String name\cf3 ,\cf1  ConfigCategory parent\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  \cf6 (\cf1 parent \cf3 =\cf1 \cf3 =\cf1  null \cf3 ?\cf1  name \cf3 :\cf1  parent\cf3 .\cf1 getQualifiedName\cf6 (\cf1 \cf6 )\cf1  \cf3 +\cf1  Configuration\cf3 .\cf1 CATEGORY_SPLITTER \cf3 +\cf1  name\cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  ConfigCategory getFirstParent\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  \cf6 (\cf1 parent \cf3 =\cf1 \cf3 =\cf1  null \cf3 ?\cf1  \cf4 this\cf1  \cf3 :\cf1  parent\cf3 .\cf1 getFirstParent\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  boolean isChild\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  parent \cf3 !\cf1 \cf3 =\cf1  null\cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  Map\cf3 <\cf1 String\cf3 ,\cf1  Property\cf3 >\cf1  getValues\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  ImmutableMap\cf3 .\cf1 copyOf\cf6 (\cf1 properties\cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  List\cf3 <\cf1 Property\cf3 >\cf1  getOrderedValues\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 if\cf1  \cf6 (\cf1 \cf4 this\cf1 \cf3 .\cf1 propertyOrder \cf3 !\cf1 \cf3 =\cf1  null\cf6 )\cf1\par
+        \cf3 \{\cf1\par
+            ArrayList\cf3 <\cf1 Property\cf3 >\cf1  set \cf3 =\cf1  \cf4 new\cf1  ArrayList\cf3 <\cf1 Property\cf3 >\cf1 \cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+            \cf9 for\cf1  \cf6 (\cf1 String key \cf3 :\cf1  \cf4 this\cf1 \cf3 .\cf1 propertyOrder\cf6 )\cf1\par
+                \cf9 if\cf1  \cf6 (\cf1 properties\cf3 .\cf1 containsKey\cf6 (\cf1 key\cf6 )\cf1 \cf6 )\cf1\par
+                    set\cf3 .\cf1 add\cf6 (\cf1 properties\cf3 .\cf1 get\cf6 (\cf1 key\cf6 )\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+\par
+            \cf9 return\cf1  ImmutableList\cf3 .\cf1 copyOf\cf6 (\cf1 set\cf6 )\cf1 \cf3 ;\cf1\par
+        \cf3 \}\cf1\par
+        \cf9 else\cf1\par
+            \cf9 return\cf1  ImmutableList\cf3 .\cf1 copyOf\cf6 (\cf1 properties\cf3 .\cf1 values\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  ConfigCategory setConfigEntryClass\cf6 (\cf1 Class\cf3 <\cf1 \cf3 ?\cf1  extends IConfigEntry\cf3 >\cf1  clazz\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf4 this\cf1 \cf3 .\cf1 customEntryClass \cf3 =\cf1  clazz\cf3 ;\cf1\par
+        \cf9 return\cf1  \cf4 this\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  Class\cf3 <\cf1 \cf3 ?\cf1  extends IConfigEntry\cf3 >\cf1  getConfigEntryClass\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  \cf4 this\cf1 \cf3 .\cf1 customEntryClass\cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  ConfigCategory setLanguageKey\cf6 (\cf1 String languagekey\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \b0\i\cf5 /*this.languagekey = */\cf1\b0\i0 Gzip\cf3 .\cf1 compress\cf6 (\cf1 languagekey\cf3 ,\cf1  \cf4 this\cf1 \cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-2"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+        \cf9 return\cf1  \cf4 this\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  String getLanguagekey\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 if\cf1  \cf6 (\cf1 \b0\i\cf5 /*this.languagekey != null*/\cf1\b0\i0 new File\cf6 (\cf1 \b0\i\cf8 "."\cf1\b0\i0 \cf3 +\cf1 File\cf3 .\cf1 separator\cf3 +\cf1 \b0\i\cf8 "configcache"\cf1\b0\i0 \cf3 +\cf1 File\cf3 .\cf1 separator\cf3 +\cf1 \cf4 this\cf1 \cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-2"\cf1\b0\i0 \cf6 )\cf1 \cf3 .\cf1 exists\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1\par
+            \cf9 return\cf1  Gzip\cf3 .\cf1 decompress\cf6 (\cf1 \b0\i\cf5 /*this.languagekey*/\cf1\b0\i0 this\cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-2"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+        \cf9 else\cf1\par
+            \cf9 return\cf1  getQualifiedName\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  \cf7 void\cf1  setComment\cf6 (\cf1 String comment\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \b0\i\cf5 //this.comment = Gzip.compress(comment);\cf1\b0\i0\par
+        Gzip\cf3 .\cf1 compress\cf6 (\cf1 comment\cf3 ,\cf1  \cf4 this\cf1 \cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-1"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  String getComment\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \b0\i\cf5 //return Gzip.decompress(this.comment);\cf1\b0\i0\par
+        \cf9 return\cf1  Gzip\cf3 .\cf1 decompress\cf6 (\cf1 \cf4 this\cf1 \cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-1"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf3 /\cf1 \cf3 *\cf1 \cf3 *\cf1\par
+     \cf3 *\cf1  Sets the flag \cf9 for\cf1  whether or not \cf4 this\cf1  category can be edited \cf9 while\cf1  a world is running\cf3 .\cf1  Care should be taken to ensure\par
+     \cf3 *\cf1  that only properties that are truly dynamic can be changed from the in\cf3 -\cf1 game options menu\cf3 .\cf1  Only set \cf4 this\cf1  flag to\par
+     \cf3 *\cf1  true \cf9 if\cf1  all child properties\cf3 /\cf1 categories are unable to be modified \cf9 while\cf1  a world is running\cf3 .\cf1\par
+     \cf3 *\cf1 \cf3 /\cf1\par
+    \cf4 public\cf1  ConfigCategory setRequiresWorldRestart\cf6 (\cf1 boolean requiresWorldRestart\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf4 this\cf1 \cf3 .\cf1 requiresWorldRestart \cf3 =\cf1  requiresWorldRestart\cf3 ;\cf1\par
+        \cf9 return\cf1  \cf4 this\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf3 /\cf1 \cf3 *\cf1 \cf3 *\cf1\par
+     \cf3 *\cf1  Returns whether or not \cf4 this\cf1  category is able to be edited \cf9 while\cf1  a world is running \cf4 using\cf1  the in\cf3 -\cf1 game Mod Options screen\par
+     \cf3 *\cf1  as well as the Mods list screen\cf3 ,\cf1  or only from the Mods list screen\cf3 .\cf1\par
+     \cf3 *\cf1 \cf3 /\cf1\par
+    \cf4 public\cf1  boolean requiresWorldRestart\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  \cf4 this\cf1 \cf3 .\cf1 requiresWorldRestart\cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf3 /\cf1 \cf3 *\cf1 \cf3 *\cf1\par
+     \cf3 *\cf1  Sets whether or not \cf4 this\cf1  ConfigCategory should be allowed to show on config GUIs\cf3 .\cf1\par
+     \cf3 *\cf1  Defaults to true\cf3 .\cf1\par
+     \cf3 *\cf1 \cf3 /\cf1\par
+    \cf4 public\cf1  ConfigCategory setShowInGui\cf6 (\cf1 boolean showInGui\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf4 this\cf1 \cf3 .\cf1 showInGui \cf3 =\cf1  showInGui\cf3 ;\cf1\par
+        \cf9 return\cf1  \cf4 this\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf3 /\cf1 \cf3 *\cf1 \cf3 *\cf1\par
+     \cf3 *\cf1  Gets whether or not \cf4 this\cf1  ConfigCategory should be allowed to show on config GUIs\cf3 .\cf1\par
+     \cf3 *\cf1  Defaults to true unless set to false\cf3 .\cf1\par
+     \cf3 *\cf1 \cf3 /\cf1\par
+    \cf4 public\cf1  boolean showInGui\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  showInGui\cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf3 /\cf1 \cf3 *\cf1 \cf3 *\cf1\par
+     \cf3 *\cf1  Sets whether or not \cf4 this\cf1  ConfigCategory requires Minecraft to be restarted when changed\cf3 .\cf1\par
+     \cf3 *\cf1  Defaults to false\cf3 .\cf1  Only set \cf4 this\cf1  flag to true \cf9 if\cf1  ALL child properties\cf3 /\cf1 categories require\par
+     \cf3 *\cf1  Minecraft to be restarted when changed\cf3 .\cf1  Setting \cf4 this\cf1  flag will also prevent modification\par
+     \cf3 *\cf1  of the child properties\cf3 /\cf1 categories \cf9 while\cf1  a world is running\cf3 .\cf1\par
+     \cf3 *\cf1 \cf3 /\cf1\par
+    \cf4 public\cf1  ConfigCategory setRequiresMcRestart\cf6 (\cf1 boolean requiresMcRestart\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf4 this\cf1 \cf3 .\cf1 requiresMcRestart \cf3 =\cf1  \cf4 this\cf1 \cf3 .\cf1 requiresWorldRestart \cf3 =\cf1  requiresMcRestart\cf3 ;\cf1\par
+        \cf9 return\cf1  \cf4 this\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf3 /\cf1 \cf3 *\cf1 \cf3 *\cf1\par
+     \cf3 *\cf1  Gets whether or not \cf4 this\cf1  ConfigCategory requires Minecraft to be restarted when changed\cf3 .\cf1\par
+     \cf3 *\cf1  Defaults to false unless set to true\cf3 .\cf1\par
+     \cf3 *\cf1 \cf3 /\cf1\par
+    \cf4 public\cf1  boolean requiresMcRestart\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  \cf4 this\cf1 \cf3 .\cf1 requiresMcRestart\cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  ConfigCategory setPropertyOrder\cf6 (\cf1 List\cf3 <\cf1 String\cf3 >\cf1  propertyOrder\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf4 this\cf1 \cf3 .\cf1 propertyOrder \cf3 =\cf1  propertyOrder\cf3 ;\cf1\par
+        \cf9 for\cf1  \cf6 (\cf1 String s \cf3 :\cf1  properties\cf3 .\cf1 keySet\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1\par
+            \cf9 if\cf1  \cf6 (\cf1 \cf3 !\cf1 propertyOrder\cf3 .\cf1 contains\cf6 (\cf1 s\cf6 )\cf1 \cf6 )\cf1\par
+                propertyOrder\cf3 .\cf1 add\cf6 (\cf1 s\cf6 )\cf1 \cf3 ;\cf1\par
+        \cf9 return\cf1  \cf4 this\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  List\cf3 <\cf1 String\cf3 >\cf1  getPropertyOrder\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 if\cf1  \cf6 (\cf1 \cf4 this\cf1 \cf3 .\cf1 propertyOrder \cf3 !\cf1 \cf3 =\cf1  null\cf6 )\cf1\par
+            \cf9 return\cf1  ImmutableList\cf3 .\cf1 copyOf\cf6 (\cf1 \cf4 this\cf1 \cf3 .\cf1 propertyOrder\cf6 )\cf1 \cf3 ;\cf1\par
+        \cf9 else\cf1\par
+            \cf9 return\cf1  ImmutableList\cf3 .\cf1 copyOf\cf6 (\cf1 properties\cf3 .\cf1 keySet\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  boolean containsKey\cf6 (\cf1 String key\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  properties\cf3 .\cf1 containsKey\cf6 (\cf1 key\cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  Property get\cf6 (\cf1 String key\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  properties\cf3 .\cf1 get\cf6 (\cf1 key\cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 private\cf1  \cf7 void\cf1  write\cf6 (\cf1 BufferedWriter out\cf3 ,\cf1  String\cf3 .\cf1 \cf3 .\cf1 \cf3 .\cf1  data\cf6 )\cf1  throws IOException\par
+    \cf3 \{\cf1\par
+        write\cf6 (\cf1 out\cf3 ,\cf1  true\cf3 ,\cf1  data\cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 private\cf1  \cf7 void\cf1  write\cf6 (\cf1 BufferedWriter out\cf3 ,\cf1  boolean new_line\cf3 ,\cf1  String\cf3 .\cf1 \cf3 .\cf1 \cf3 .\cf1  data\cf6 )\cf1  throws IOException\par
+    \cf3 \{\cf1\par
+        \cf9 for\cf1  \cf6 (\cf1 \cf7 int\cf1  x \cf3 =\cf1  0\cf3 ;\cf1  x \cf3 <\cf1  data\cf3 .\cf1 length\cf3 ;\cf1  x\cf3 +\cf1 \cf3 +\cf1 \cf6 )\cf1\par
+        \cf3 \{\cf1\par
+            out\cf3 .\cf1 write\cf6 (\cf1 data\cf3 [\cf1 x\cf3 ]\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+        \cf3 \}\cf1\par
+        \cf9 if\cf1  \cf6 (\cf1 new_line\cf6 )\cf1  out\cf3 .\cf1 write\cf6 (\cf1 NEW_LINE\cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  \cf7 void\cf1  write\cf6 (\cf1 BufferedWriter out\cf3 ,\cf1  \cf7 int\cf1  indent\cf6 )\cf1  throws IOException\par
+    \cf3 \{\cf1\par
+        String pad0 \cf3 =\cf1  getIndent\cf6 (\cf1 indent\cf6 )\cf1 \cf3 ;\cf1\par
+        String pad1 \cf3 =\cf1  getIndent\cf6 (\cf1 indent \cf3 +\cf1  1\cf6 )\cf1 \cf3 ;\cf1\par
+        String pad2 \cf3 =\cf1  getIndent\cf6 (\cf1 indent \cf3 +\cf1  2\cf6 )\cf1 \cf3 ;\cf1\par
+        String temp \cf3 =\cf1  Gzip\cf3 .\cf1 decompress\cf6 (\cf1 \b0\i\cf5 /*name*/\cf1\b0\i0 this\cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-0"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+        String temp2 \cf3 =\cf1  Gzip\cf3 .\cf1 decompress\cf6 (\cf1 \cf4 this\cf1 \cf3 .\cf1 idcc\cf3 +\cf1 \b0\i\cf8 "-1"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1 \b0\i\cf5 //null;\cf1\b0\i0\par
+        \b0\i\cf5 //try \{ temp2 = Gzip.decompress(/*comment*/this.idcc+"-1", true); \} catch (IndexOutOfBoundsException e) \{ \}\cf1\b0\i0\par
+\par
+        \cf9 if\cf1  \cf6 (\cf1 temp2 \cf3 !\cf1 \cf3 =\cf1  null \cf3 &\cf1 \cf3 &\cf1  \cf3 !\cf1 temp2\cf3 .\cf1 isEmpty\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1\par
+        \cf3 \{\cf1\par
+            write\cf6 (\cf1 out\cf3 ,\cf1  pad0\cf3 ,\cf1  COMMENT_SEPARATOR\cf6 )\cf1 \cf3 ;\cf1\par
+            write\cf6 (\cf1 out\cf3 ,\cf1  pad0\cf3 ,\cf1  \b0\i\cf8 "# "\cf1\b0\i0 \cf3 ,\cf1  temp\cf6 )\cf1 \cf3 ;\cf1\par
+            write\cf6 (\cf1 out\cf3 ,\cf1  pad0\cf3 ,\cf1  \b0\i\cf8 "#--------------------------------------------------------------------------------------------------------#"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+            Splitter splitter \cf3 =\cf1  Splitter\cf3 .\cf1 onPattern\cf6 (\cf1 \b0\i\cf8 "\\r?\\n"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+\par
+            \cf9 for\cf1  \cf6 (\cf1 String line \cf3 :\cf1  splitter\cf3 .\cf1 split\cf6 (\cf1 temp2\cf6 )\cf1 \cf6 )\cf1\par
+            \cf3 \{\cf1\par
+                write\cf6 (\cf1 out\cf3 ,\cf1  pad0\cf3 ,\cf1  \b0\i\cf8 "# "\cf1\b0\i0 \cf3 ,\cf1  line\cf6 )\cf1 \cf3 ;\cf1\par
+            \cf3 \}\cf1\par
+\par
+            write\cf6 (\cf1 out\cf3 ,\cf1  pad0\cf3 ,\cf1  COMMENT_SEPARATOR\cf3 ,\cf1  NEW_LINE\cf6 )\cf1 \cf3 ;\cf1\par
+        \cf3 \}\cf1\par
+\par
+        String displayName \cf3 =\cf1  temp\cf3 ;\cf1\par
+\par
+        \cf9 if\cf1  \cf6 (\cf1 \cf3 !\cf1 allowedProperties\cf3 .\cf1 matchesAllOf\cf6 (\cf1 temp\cf6 )\cf1 \cf6 )\cf1\par
+        \cf3 \{\cf1\par
+            displayName \cf3 =\cf1  \b0\i\cf8 '"'\cf1\b0\i0  \cf3 +\cf1  temp \cf3 +\cf1  \b0\i\cf8 '"'\cf1\b0\i0 \cf3 ;\cf1\par
+        \cf3 \}\cf1\par
+\par
+        write\cf6 (\cf1 out\cf3 ,\cf1  pad0\cf3 ,\cf1  displayName\cf3 ,\cf1  \b0\i\cf8 " \{"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+\par
+        Property\cf3 [\cf1 \cf3 ]\cf1  props \cf3 =\cf1  getOrderedValues\cf6 (\cf1 \cf6 )\cf1 \cf3 .\cf1 toArray\cf6 (\cf1 \cf4 new\cf1  Property\cf3 [\cf1 \cf3 ]\cf1  \cf3 \{\cf1 \cf3 \}\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+\par
+        \cf9 for\cf1  \cf6 (\cf1 \cf7 int\cf1  x \cf3 =\cf1  0\cf3 ;\cf1  x \cf3 <\cf1  props\cf3 .\cf1 length\cf3 ;\cf1  x\cf3 +\cf1 \cf3 +\cf1 \cf6 )\cf1\par
+        \cf3 \{\cf1\par
+            Property prop \cf3 =\cf1  props\cf3 [\cf1 x\cf3 ]\cf1 \cf3 ;\cf1\par
+            String temp2temp \cf3 =\cf1  prop\cf3 .\cf1 comment\cf3 ;\cf1\par
+\par
+            \cf9 if\cf1  \cf6 (\cf1 temp2temp \cf3 !\cf1 \cf3 =\cf1  null \cf3 &\cf1 \cf3 &\cf1  \cf3 !\cf1 temp2temp\cf3 .\cf1 isEmpty\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1\par
+            \cf3 \{\cf1\par
+                \cf9 if\cf1  \cf6 (\cf1 x \cf3 !\cf1 \cf3 =\cf1  0\cf6 )\cf1\par
+                \cf3 \{\cf1\par
+                    out\cf3 .\cf1 newLine\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+                \cf3 \}\cf1\par
+\par
+                Splitter splitter \cf3 =\cf1  Splitter\cf3 .\cf1 onPattern\cf6 (\cf1 \b0\i\cf8 "\\r?\\n"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+                \cf9 for\cf1  \cf6 (\cf1 String commentLine \cf3 :\cf1  splitter\cf3 .\cf1 split\cf6 (\cf1 temp2temp\cf6 )\cf1 \cf6 )\cf1\par
+                \cf3 \{\cf1\par
+                    write\cf6 (\cf1 out\cf3 ,\cf1  pad1\cf3 ,\cf1  \b0\i\cf8 "# "\cf1\b0\i0 \cf3 ,\cf1  commentLine\cf6 )\cf1 \cf3 ;\cf1\par
+                \cf3 \}\cf1\par
+            \cf3 \}\cf1\par
+\par
+            String propName \cf3 =\cf1  prop\cf3 .\cf1 getName\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+\par
+            \cf9 if\cf1  \cf6 (\cf1 \cf3 !\cf1 allowedProperties\cf3 .\cf1 matchesAllOf\cf6 (\cf1 propName\cf6 )\cf1 \cf6 )\cf1\par
+            \cf3 \{\cf1\par
+                propName \cf3 =\cf1  \b0\i\cf8 '"'\cf1\b0\i0  \cf3 +\cf1  propName \cf3 +\cf1  \b0\i\cf8 '"'\cf1\b0\i0 \cf3 ;\cf1\par
+            \cf3 \}\cf1\par
+\par
+            \cf9 if\cf1  \cf6 (\cf1 prop\cf3 .\cf1 isList\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1\par
+            \cf3 \{\cf1\par
+                \cf7 char\cf1  type \cf3 =\cf1  prop\cf3 .\cf1 getType\cf6 (\cf1 \cf6 )\cf1 \cf3 .\cf1 getID\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+\par
+                write\cf6 (\cf1 out\cf3 ,\cf1  pad1\cf3 ,\cf1  String\cf3 .\cf1 valueOf\cf6 (\cf1 type\cf6 )\cf1 \cf3 ,\cf1  \b0\i\cf8 ":"\cf1\b0\i0 \cf3 ,\cf1  propName\cf3 ,\cf1  \b0\i\cf8 " <"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+\par
+                \cf9 for\cf1  \cf6 (\cf1 String line \cf3 :\cf1  prop\cf3 .\cf1 getStringList\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1\par
+                \cf3 \{\cf1\par
+                    write\cf6 (\cf1 out\cf3 ,\cf1  pad2\cf3 ,\cf1  line\cf6 )\cf1 \cf3 ;\cf1\par
+                \cf3 \}\cf1\par
+\par
+                write\cf6 (\cf1 out\cf3 ,\cf1  pad1\cf3 ,\cf1  \b0\i\cf8 " >"\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+            \cf3 \}\cf1\par
+            \cf9 else\cf1  \cf9 if\cf1  \cf6 (\cf1 prop\cf3 .\cf1 getType\cf6 (\cf1 \cf6 )\cf1  \cf3 =\cf1 \cf3 =\cf1  null\cf6 )\cf1\par
+            \cf3 \{\cf1\par
+                write\cf6 (\cf1 out\cf3 ,\cf1  pad1\cf3 ,\cf1  propName\cf3 ,\cf1  \b0\i\cf8 "="\cf1\b0\i0 \cf3 ,\cf1  prop\cf3 .\cf1 getString\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+            \cf3 \}\cf1\par
+            \cf9 else\cf1\par
+            \cf3 \{\cf1\par
+                \cf7 char\cf1  type \cf3 =\cf1  prop\cf3 .\cf1 getType\cf6 (\cf1 \cf6 )\cf1 \cf3 .\cf1 getID\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+                write\cf6 (\cf1 out\cf3 ,\cf1  pad1\cf3 ,\cf1  String\cf3 .\cf1 valueOf\cf6 (\cf1 type\cf6 )\cf1 \cf3 ,\cf1  \b0\i\cf8 ":"\cf1\b0\i0 \cf3 ,\cf1  propName\cf3 ,\cf1  \b0\i\cf8 "="\cf1\b0\i0 \cf3 ,\cf1  prop\cf3 .\cf1 getString\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+            \cf3 \}\cf1\par
+        \cf3 \}\cf1\par
+\par
+        \cf9 if\cf1  \cf6 (\cf1 children\cf3 .\cf1 size\cf6 (\cf1 \cf6 )\cf1  \cf3 >\cf1  0\cf6 )\cf1\par
+            out\cf3 .\cf1 newLine\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+\par
+        \cf9 for\cf1  \cf6 (\cf1 ConfigCategory child \cf3 :\cf1  children\cf6 )\cf1\par
+        \cf3 \{\cf1\par
+            child\cf3 .\cf1 write\cf6 (\cf1 out\cf3 ,\cf1  indent \cf3 +\cf1  1\cf6 )\cf1 \cf3 ;\cf1\par
+        \cf3 \}\cf1\par
+\par
+        write\cf6 (\cf1 out\cf3 ,\cf1  pad0\cf3 ,\cf1  \b0\i\cf8 "\}"\cf1\b0\i0 \cf3 ,\cf1  NEW_LINE\cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 private\cf1  String getIndent\cf6 (\cf1 \cf7 int\cf1  indent\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        StringBuilder buf \cf3 =\cf1  \cf4 new\cf1  StringBuilder\cf6 (\cf1 \b0\i\cf8 ""\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+        \cf9 for\cf1  \cf6 (\cf1 \cf7 int\cf1  x \cf3 =\cf1  0\cf3 ;\cf1  x \cf3 <\cf1  indent\cf3 ;\cf1  x\cf3 +\cf1 \cf3 +\cf1 \cf6 )\cf1\par
+        \cf3 \{\cf1\par
+            buf\cf3 .\cf1 append\cf6 (\cf1 \b0\i\cf8 "    "\cf1\b0\i0 \cf6 )\cf1 \cf3 ;\cf1\par
+        \cf3 \}\cf1\par
+        \cf9 return\cf1  buf\cf3 .\cf1 toString\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  boolean hasChanged\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 if\cf1  \cf6 (\cf1 changed\cf6 )\cf1  \cf9 return\cf1  true\cf3 ;\cf1\par
+        \cf9 for\cf1  \cf6 (\cf1 Property prop \cf3 :\cf1  properties\cf3 .\cf1 values\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1\par
+        \cf3 \{\cf1\par
+            \cf9 if\cf1  \cf6 (\cf1 prop\cf3 .\cf1 hasChanged\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1  \cf9 return\cf1  true\cf3 ;\cf1\par
+        \cf3 \}\cf1\par
+        \cf9 return\cf1  false\cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf7 void\cf1  resetChangedState\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        changed \cf3 =\cf1  false\cf3 ;\cf1\par
+        \cf9 for\cf1  \cf6 (\cf1 Property prop \cf3 :\cf1  properties\cf3 .\cf1 values\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1\par
+        \cf3 \{\cf1\par
+            prop\cf3 .\cf1 resetChangedState\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+        \cf3 \}\cf1\par
+    \cf3 \}\cf1\par
+\par
+\par
+    \b0\i\cf5 //Map bouncer functions for compatibility with older mods, to be removed once all mods stop using it.\cf1\b0\i0\par
+    @Override \cf4 public\cf1  \cf7 int\cf1  size\cf6 (\cf1 \cf6 )\cf1 \cf3 \{\cf1  \cf9 return\cf1  properties\cf3 .\cf1 size\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1  \cf3 \}\cf1\par
+    @Override \cf4 public\cf1  boolean isEmpty\cf6 (\cf1 \cf6 )\cf1  \cf3 \{\cf1  \cf9 return\cf1  properties\cf3 .\cf1 isEmpty\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1  \cf3 \}\cf1\par
+    @Override \cf4 public\cf1  boolean containsKey\cf6 (\cf1 Object key\cf6 )\cf1  \cf3 \{\cf1  \cf9 return\cf1  properties\cf3 .\cf1 containsKey\cf6 (\cf1 key\cf6 )\cf1 \cf3 ;\cf1  \cf3 \}\cf1\par
+    @Override \cf4 public\cf1  boolean containsValue\cf6 (\cf1 Object value\cf6 )\cf1 \cf3 \{\cf1  \cf9 return\cf1  properties\cf3 .\cf1 containsValue\cf6 (\cf1 value\cf6 )\cf1 \cf3 ;\cf1  \cf3 \}\cf1\par
+    @Override \cf4 public\cf1  Property get\cf6 (\cf1 Object key\cf6 )\cf1  \cf3 \{\cf1  \cf9 return\cf1  properties\cf3 .\cf1 get\cf6 (\cf1 key\cf6 )\cf1 \cf3 ;\cf1  \cf3 \}\cf1\par
+    @Override \cf4 public\cf1  Property put\cf6 (\cf1 String key\cf3 ,\cf1  Property value\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        changed \cf3 =\cf1  true\cf3 ;\cf1\par
+        \cf9 if\cf1  \cf6 (\cf1 \cf4 this\cf1 \cf3 .\cf1 propertyOrder \cf3 !\cf1 \cf3 =\cf1  null \cf3 &\cf1 \cf3 &\cf1  \cf3 !\cf1 \cf4 this\cf1 \cf3 .\cf1 propertyOrder\cf3 .\cf1 contains\cf6 (\cf1 key\cf6 )\cf1 \cf6 )\cf1\par
+            \cf4 this\cf1 \cf3 .\cf1 propertyOrder\cf3 .\cf1 add\cf6 (\cf1 key\cf6 )\cf1 \cf3 ;\cf1\par
+        \cf9 return\cf1  properties\cf3 .\cf1 put\cf6 (\cf1 key\cf3 ,\cf1  value\cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+    @Override \cf4 public\cf1  Property remove\cf6 (\cf1 Object key\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        changed \cf3 =\cf1  true\cf3 ;\cf1\par
+        \cf9 return\cf1  properties\cf3 .\cf1 remove\cf6 (\cf1 key\cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+    @Override \cf4 public\cf1  \cf7 void\cf1  putAll\cf6 (\cf1 Map\cf3 <\cf1 \cf3 ?\cf1  extends String\cf3 ,\cf1  \cf3 ?\cf1  extends Property\cf3 >\cf1  m\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        changed \cf3 =\cf1  true\cf3 ;\cf1\par
+        \cf9 if\cf1  \cf6 (\cf1 \cf4 this\cf1 \cf3 .\cf1 propertyOrder \cf3 !\cf1 \cf3 =\cf1  null\cf6 )\cf1\par
+            \cf9 for\cf1  \cf6 (\cf1 String key \cf3 :\cf1  m\cf3 .\cf1 keySet\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1\par
+                \cf9 if\cf1  \cf6 (\cf1 \cf3 !\cf1 \cf4 this\cf1 \cf3 .\cf1 propertyOrder\cf3 .\cf1 contains\cf6 (\cf1 key\cf6 )\cf1 \cf6 )\cf1\par
+                    \cf4 this\cf1 \cf3 .\cf1 propertyOrder\cf3 .\cf1 add\cf6 (\cf1 key\cf6 )\cf1 \cf3 ;\cf1\par
+        properties\cf3 .\cf1 putAll\cf6 (\cf1 m\cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+    @Override \cf4 public\cf1  \cf7 void\cf1  clear\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        changed \cf3 =\cf1  true\cf3 ;\cf1\par
+        properties\cf3 .\cf1 clear\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+    @Override \cf4 public\cf1  Set\cf3 <\cf1 String\cf3 >\cf1  keySet\cf6 (\cf1 \cf6 )\cf1  \cf3 \{\cf1  \cf9 return\cf1  properties\cf3 .\cf1 keySet\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1  \cf3 \}\cf1\par
+    @Override \cf4 public\cf1  Collection\cf3 <\cf1 Property\cf3 >\cf1  values\cf6 (\cf1 \cf6 )\cf1  \cf3 \{\cf1  \cf9 return\cf1  properties\cf3 .\cf1 values\cf6 (\cf1 \cf6 )\cf1 \cf3 ;\cf1  \cf3 \}\cf1\par
+\par
+    @Override \b0\i\cf5 //Immutable copy, changes will NOT be reflected in this category\cf1\b0\i0\par
+    \cf4 public\cf1  Set\cf3 <\cf1 java\cf3 .\cf1 util\cf3 .\cf1 Map\cf3 .\cf1 Entry\cf3 <\cf1 String\cf3 ,\cf1  Property\cf3 >\cf1 \cf3 >\cf1  entrySet\cf6 (\cf1 \cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 return\cf1  ImmutableSet\cf3 .\cf1 copyOf\cf6 (\cf1 properties\cf3 .\cf1 entrySet\cf6 (\cf1 \cf6 )\cf1 \cf6 )\cf1 \cf3 ;\cf1\par
+    \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  Set\cf3 <\cf1 ConfigCategory\cf3 >\cf1  getChildren\cf6 (\cf1 \cf6 )\cf1 \cf3 \{\cf1  \cf9 return\cf1  ImmutableSet\cf3 .\cf1 copyOf\cf6 (\cf1 children\cf6 )\cf1 \cf3 ;\cf1  \cf3 \}\cf1\par
+\par
+    \cf4 public\cf1  \cf7 void\cf1  removeChild\cf6 (\cf1 ConfigCategory child\cf6 )\cf1\par
+    \cf3 \{\cf1\par
+        \cf9 if\cf1  \cf6 (\cf1 children\cf3 .\cf1 contains\cf6 (\cf1 child\cf6 )\cf1 \cf6 )\cf1\par
+        \cf3 \{\cf1\par
+            children\cf3 .\cf1 remove\cf6 (\cf1 child\cf6 )\cf1 \cf3 ;\cf1\par
+            changed \cf3 =\cf1  true\cf3 ;\cf1\par
+        \cf3 \}\cf1\par
+    \cf3 \}\cf1\par
+\cf3 \}\cf1 }

@@ -21,6 +21,7 @@ import cpw.mods.fml.common.ModContainer;
 public class FMLFolderResourcePack extends FolderResourcePack implements FMLContainerHolder {
 
     private ModContainer container;
+    private static final boolean DEBUG_FFRP = Boolean.parseBoolean(System.getProperty("fml.fmlfolderresourcepackDebug", "false"));
 
     public FMLFolderResourcePack(ModContainer container)
     {
@@ -49,7 +50,7 @@ public class FMLFolderResourcePack extends FolderResourcePack implements FMLCont
         {
             if ("pack.mcmeta".equals(resourceName))
             {
-                FMLLog.log(container.getName(), Level.DEBUG, "Mod %s is missing a pack.mcmeta file, substituting a dummy one", container.getName());
+                if (DEBUG_FFRP) FMLLog.log(container.getName(), Level.DEBUG, "Mod %s is missing a pack.mcmeta file, substituting a dummy one", container.getName());
                 return new ByteArrayInputStream(("{\n" +
                         " \"pack\": {\n"+
                         "   \"description\": \"dummy FML pack for "+container.getName()+"\",\n"+

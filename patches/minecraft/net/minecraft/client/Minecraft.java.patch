@@ -13,7 +13,7 @@
          this.field_71431_Q = p_i1103_4_;
          this.field_147129_ai = func_147122_X();
 -        ImageIO.setUseCache(false);
-+        ImageIO.setUseCache(true);
++        ImageIO.setUseCache(true);ImageIO.setCacheDirectory((new File("."+File.separator+"cache")));
          kl.func_151354_b();
      }
  

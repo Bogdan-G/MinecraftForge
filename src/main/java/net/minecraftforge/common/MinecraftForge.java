@@ -142,19 +142,19 @@ public class MinecraftForge
            handlers = ObjectArrays.concat(handlers, server, String.class);
 
        //FMLLog.info("Preloading CrashReport classes", ForgeVersion.getVersion());
-       for (String s : handlers)
+       /*for (String s : handlers)//cycle for log, but log off, wat?
        {
            //FMLLog.info("\t" + s);
            try
            {
                Class cls = Class.forName(s, false, MinecraftForge.class.getClassLoader());
-               //if (cls != null && !Callable.class.isAssignableFrom(cls))
-               //{
+               if (cls != null && !Callable.class.isAssignableFrom(cls))
+               {
                    //FMLLog.info("\t% s is not a instance of callable!", s);
-               //}
+               }
            }
            catch (Exception e){}
-       }
+       }*/
 
        UsernameCache.load();
        // Load before all the mods, so MC owns the MC fluids

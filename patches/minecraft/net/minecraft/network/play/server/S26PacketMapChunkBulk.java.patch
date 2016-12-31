@@ -51,7 +51,7 @@
 +            offset += field_149260_f[x].length;
 +        }
 -        Deflater deflater = new Deflater(-1);
-+        Deflater deflater = new Deflater(1);
++        Deflater deflater = new Deflater(0);
  
          try
          {

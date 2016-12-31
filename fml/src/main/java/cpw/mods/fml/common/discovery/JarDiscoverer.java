@@ -30,11 +30,13 @@ import cpw.mods.fml.common.discovery.asm.ASMModParser;
 
 public class JarDiscoverer implements ITypeDiscoverer
 {
+    private static final boolean DEBUG_JD = Boolean.parseBoolean(System.getProperty("fml.jardiscovererDebug", "false"));
+    
     @Override
     public List<ModContainer> discover(ModCandidate candidate, ASMDataTable table)
     {
         List<ModContainer> foundMods = Lists.newArrayList();
-        FMLLog.fine("Examining file %s for potential mods", candidate.getModContainer().getName());
+        if (DEBUG_JD) FMLLog.fine("Examining file %s for potential mods", candidate.getModContainer().getName());
         JarFile jar = null;
         try
         {
@@ -49,12 +51,12 @@ public class JarDiscoverer implements ITypeDiscoverer
             MetadataCollection mc = null;
             if (modInfo != null)
             {
-                FMLLog.finer("Located mcmod.info file in file %s", candidate.getModContainer().getName());
+                if (DEBUG_JD) FMLLog.finer("Located mcmod.info file in file %s", candidate.getModContainer().getName());
                 mc = MetadataCollection.from(jar.getInputStream(modInfo), candidate.getModContainer().getName());
             }
             else
             {
-                FMLLog.fine("The mod container %s appears to be missing an mcmod.info file", candidate.getModContainer().getName());
+                if (DEBUG_JD) FMLLog.fine("The mod container %s appears to be missing an mcmod.info file", candidate.getModContainer().getName());
                 mc = MetadataCollection.from(null, "");
             }
             for (ZipEntry ze : Collections.list(jar.entries()))

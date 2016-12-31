@@ -26,6 +26,7 @@ public class ModAPIManager {
     private ModAPITransformer transformer;
     private ASMDataTable dataTable;
     private Map<String,APIContainer> apiContainers;
+    private static final boolean DEBUG_MAM = Boolean.parseBoolean(System.getProperty("fml.modapimanagerDebug", "false"));
 
     private static class APIContainer extends DummyModContainer {
         private List<ArtifactVersion> referredMods;
@@ -158,7 +159,7 @@ public class ModAPIManager {
                 {
                     continue;
                 }
-                FMLLog.fine("Found API %s (owned by %s providing %s) embedded in %s",apiPackage, apiOwner, providedAPI, embeddedIn);
+                if (DEBUG_MAM) FMLLog.fine("Found API %s (owned by %s providing %s) embedded in %s",apiPackage, apiOwner, providedAPI, embeddedIn);
                 if (!embeddedIn.equals(apiOwner))
                 {
                     container.addAPIReference(embeddedIn);
@@ -176,7 +177,7 @@ public class ModAPIManager {
                     List<String> candidateIds = Lists.transform(candidate.getContainedMods(), new ModIdFunction());
                     if (!candidateIds.contains(container.ownerMod.getLabel()) && !container.currentReferents.containsAll(candidateIds))
                     {
-                        FMLLog.info("Found mod(s) %s containing declared API package %s (owned by %s) without associated API reference",candidateIds, pkg, container.ownerMod);
+                        if (DEBUG_MAM) FMLLog.info("Found mod(s) %s containing declared API package %s (owned by %s) without associated API reference",candidateIds, pkg, container.ownerMod);
                         container.addAPIReferences(candidateIds);
                     }
                 }
@@ -193,14 +194,14 @@ public class ModAPIManager {
                         container.markSelfReferenced();
                         break;
                     }
-                    FMLLog.finer("Removing upstream parent %s from %s", parent.ownerMod.getLabel(), container);
+                    if (DEBUG_MAM) FMLLog.finer("Removing upstream parent %s from %s", parent.ownerMod.getLabel(), container);
                     container.currentReferents.remove(parent.ownerMod.getLabel());
                     container.referredMods.remove(parent.ownerMod);
                     owner = parent.ownerMod;
                 }
                 while (apiContainers.containsKey(owner.getLabel()));
             }
-            FMLLog.fine("Creating API container dummy for API %s: owner: %s, dependents: %s", container.providedAPI, container.ownerMod, container.referredMods);
+            if (DEBUG_MAM) FMLLog.fine("Creating API container dummy for API %s: owner: %s, dependents: %s", container.providedAPI, container.ownerMod, container.referredMods);
         }
     }
 

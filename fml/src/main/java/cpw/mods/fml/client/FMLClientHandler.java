@@ -494,7 +494,7 @@ public class FMLClientHandler implements IFMLSidedHandler
 
                 client.loadingScreen.resetProgresAndWorkingMessage("");
 
-                //Thread.sleep(50);
+                Thread.sleep(50);
             }
 
             client.loadingScreen.resetProgresAndWorkingMessage(""); // make sure the blank screen is being drawn at the end

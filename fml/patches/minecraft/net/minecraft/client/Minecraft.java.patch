@@ -56,7 +56,7 @@
          this.field_110451_am.func_110542_a(this.field_71446_o);
          this.field_152350_aA = new SkinManager(this.field_71446_o, new File(this.field_110446_Y, "skins"), this.field_152355_az);
 -        this.func_71357_I();
-+        cpw.mods.fml.client.SplashProgress.drawVanillaScreen();
++        this.func_71357_I();//cpw.mods.fml.client.SplashProgress.drawVanillaScreen();
          this.field_147127_av = new SoundHandler(this.field_110451_am, this.field_71474_y);
          this.field_110451_am.func_110542_a(this.field_147127_av);
          this.field_147126_aw = new MusicTicker(this);
@@ -115,7 +115,7 @@
          }
  
 -        this.field_71446_o.func_147645_c(this.field_152354_ay);
-+        cpw.mods.fml.client.SplashProgress.clearVanillaResources(field_71446_o, field_152354_ay);
++        this.field_71446_o.func_147645_c(this.field_152354_ay);//cpw.mods.fml.client.SplashProgress.clearVanillaResources(field_71446_o, field_152354_ay);
          this.field_152354_ay = null;
          this.field_71461_s = new LoadingScreenRenderer(this);
  

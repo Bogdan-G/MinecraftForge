@@ -63,8 +63,8 @@ public class Configuration
 
     File file;
 
-    private Map<String, ConfigCategory> categories = new org.eclipse.collections.impl.map.mutable.UnifiedMap<String, ConfigCategory>();
-    private Map<String, Configuration> children = new org.eclipse.collections.impl.map.mutable.UnifiedMap<String, Configuration>();
+    private Map<String, ConfigCategory> categories = new TreeMap<String, ConfigCategory>();//org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap();//org.eclipse.collections.impl.map.mutable.UnifiedMap<String, ConfigCategory>();
+    private Map<String, Configuration> children = new TreeMap<String, Configuration>();//org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap();//org.eclipse.collections.impl.map.mutable.UnifiedMap<String, Configuration>();
 
     private boolean caseSensitiveCustomCategories;
     public String defaultEncoding = DEFAULT_ENCODING;
@@ -847,7 +847,7 @@ public class Configuration
                     if (start.matches())
                     {
                         fileName = start.group(1);
-                        categories = new org.eclipse.collections.impl.map.mutable.UnifiedMap<String, ConfigCategory>();
+                        categories = new TreeMap<String, ConfigCategory>();//org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap();//org.eclipse.collections.impl.map.mutable.UnifiedMap<String, ConfigCategory>();
                         continue;
                     }
                     else if (end.matches())
@@ -862,7 +862,7 @@ public class Configuration
                     int nameStart = -1, nameEnd = -1;
                     boolean skip = false;
                     boolean quoted = false;
-                    boolean isFirstNonWhitespaceCharOnLine = true;//int line_sS=line.length();
+                    boolean isFirstNonWhitespaceCharOnLine = true;
 
                     for (int i = 0; i < line.length() && !skip; ++i)
                     {
@@ -944,7 +944,7 @@ public class Configuration
                                     }
 
                                     Property prop = new Property(name, line.substring(i + 1), type, true);
-                                    i = line.length();//line_sS=line.length();
+                                    i = line.length();
 
                                     currentCat.put(name, prop);
 

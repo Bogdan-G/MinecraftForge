@@ -14,7 +14,7 @@ package cpw.mods.fml.common.discovery;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
+import java.io.FileInputStream;import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -33,6 +33,8 @@ import cpw.mods.fml.common.discovery.asm.ASMModParser;
 
 public class DirectoryDiscoverer implements ITypeDiscoverer
 {
+    private static final boolean DEBUG_DD = Boolean.parseBoolean(System.getProperty("fml.directorydiscovererDebug", "false"));
+    
     private class ClassFilter implements FileFilter
     {
         @Override
@@ -49,7 +51,7 @@ public class DirectoryDiscoverer implements ITypeDiscoverer
     {
         this.table = table;
         List<ModContainer> found = Lists.newArrayList();
-        FMLLog.fine("Examining directory %s for potential mods", candidate.getModContainer().getName());
+        if (DEBUG_DD) FMLLog.fine("Examining directory %s for potential mods", candidate.getModContainer().getName());
         exploreFileSystem("", candidate.getModContainer(), found, candidate, null);
         for (ModContainer mc : found)
         {
@@ -65,15 +67,16 @@ public class DirectoryDiscoverer implements ITypeDiscoverer
             File metadata = new File(modDir, "mcmod.info");
             try
             {
-                FileInputStream fis = new FileInputStream(metadata);
-                mc = MetadataCollection.from(fis,modDir.getName());
-                fis.close();
-                FMLLog.fine("Found an mcmod.info file in directory %s", modDir.getName());
+                try (FileInputStream fis = new FileInputStream(metadata)) {
+                try (BufferedInputStream bis  = new BufferedInputStream(fis)) {
+                mc = MetadataCollection.from(bis,modDir.getName());
+                }}//fis.close();
+                if (DEBUG_DD) FMLLog.fine("Found an mcmod.info file in directory %s", modDir.getName());
             }
             catch (Exception e)
             {
                 mc = MetadataCollection.from(null,"");
-                FMLLog.fine("No mcmod.info file found in directory %s", modDir.getName());
+                if (DEBUG_DD) FMLLog.fine("No mcmod.info file found in directory %s", modDir.getName());
             }
         }
 
@@ -85,7 +88,8 @@ public class DirectoryDiscoverer implements ITypeDiscoverer
         {
             if (file.isDirectory())
             {
-                FMLLog.finer("Recursing into package %s", path + file.getName());
+                if (file.getName().equalsIgnoreCase("voxelMap")) { if (DEBUG_DD) {FMLLog.finer("Skip cache VoxelMap directory: %s", path + file.getName());}continue; }//skip search in cache VoxelMap mod
+                if (DEBUG_DD) FMLLog.finer("Recursing into package %s", path + file.getName());
                 exploreFileSystem(path + file.getName() + ".", file, harvestedMods, candidate, mc);
                 continue;
             }
@@ -96,9 +100,10 @@ public class DirectoryDiscoverer implements ITypeDiscoverer
                 ASMModParser modParser = null;
                 try
                 {
-                    FileInputStream fis = new FileInputStream(file);
-                    modParser = new ASMModParser(fis);
-                    fis.close();
+                    try (FileInputStream fis = new FileInputStream(file)) {
+                    try (BufferedInputStream bis  = new BufferedInputStream(fis)) {
+                    modParser = new ASMModParser(bis);
+                    }}//fis.close();
                     candidate.addClassEntry(path+file.getName());
                 }
                 catch (LoaderException e)

@@ -223,7 +223,7 @@ public class LoadController
             {
                 modStates.put(modId, ModState.ERRORED);
             }
-        }} catch(Throwable e) {FMLLog.warning(String.valueOf(e));}
+        }} catch(Throwable e) {FMLLog.log(org.apache.logging.log4j.Level.WARN, e, "Throwable: %s", "");}
     }
 
     public ImmutableBiMap<ModContainer, Object> buildModObjectList()

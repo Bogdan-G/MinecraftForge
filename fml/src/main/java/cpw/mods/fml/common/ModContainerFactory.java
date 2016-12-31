@@ -32,6 +32,7 @@ public class ModContainerFactory
     public static Map<Type, Constructor<? extends ModContainer>> modTypes = Maps.newHashMap();
     private static final Pattern modClass = Pattern.compile(".*(\\.|)(mod\\_[^\\s$]+)$");
     private static ModContainerFactory INSTANCE = new ModContainerFactory();
+    private static final boolean DEBUG_MCF = Boolean.parseBoolean(System.getProperty("fml.modcontainerfactoryDebug", "false"));
     
     private ModContainerFactory() {
         // We always know about Mod type
@@ -74,7 +75,7 @@ public class ModContainerFactory
         {
             if (modTypes.containsKey(ann.getASMType()))
             {
-                FMLLog.fine("Identified a mod of type %s (%s) - loading", ann.getASMType(), className);
+                if (DEBUG_MCF) FMLLog.fine("Identified a mod of type %s (%s) - loading", ann.getASMType(), className);
                 try {
                     return modTypes.get(ann.getASMType()).newInstance(className, container, ann.getValues());
                 } catch (Exception e) {

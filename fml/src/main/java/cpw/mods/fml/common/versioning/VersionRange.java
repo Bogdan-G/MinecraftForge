@@ -163,7 +163,7 @@ public class VersionRange
 
             process = process.substring( index + 1 ).trim();
 
-            if ( process.length() > 0 && process.charAt(0) == ','/*startsWith( "," )*/ )
+            if ( process.length() > 0 && process.startsWith( "," ) )
             {
                 process = process.substring( 1 ).trim();
             }
@@ -189,7 +189,7 @@ public class VersionRange
     private static Restriction parseRestriction( String spec )
         throws InvalidVersionSpecificationException
     {
-        boolean lowerBoundInclusive = (spec.charAt(0) == '[')/*startsWith( "[" )*/;
+        boolean lowerBoundInclusive = spec.startsWith( "[" );
         boolean upperBoundInclusive = spec.endsWith( "]" );
 
         String process = spec.substring( 1, spec.length() - 1 ).trim();
@@ -538,8 +538,8 @@ public class VersionRange
         if ( this == obj )
         {
             return true;
-        }//warning: , instanceof -> getClass().equals()
-        if ( !( obj.getClass().equals(VersionRange.class) ) )
+        }//warning: , instanceof -> getClass().equals()//off
+        if ( !( obj instanceof VersionRange ) )
         {
             return false;
         }

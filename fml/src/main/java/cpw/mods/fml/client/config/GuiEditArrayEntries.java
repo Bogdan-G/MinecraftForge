@@ -244,36 +244,36 @@ public class GuiEditArrayEntries extends GuiListExtended
             if (configElement.isList() && configElement.getType() == ConfigGuiType.BOOLEAN)
             {
                 Boolean[] abol = new Boolean[listLength];
-                System.arraycopy(listEntries.toArray(), 0, abol, 0, listLength);
-                /*for (int i = 0; i < listLength; i++)
-                    abol[i] = Boolean.valueOf(listEntries.get(i).getValue().toString());*/
+                //System.arraycopy(listEntries.toArray(), 0, abol, 0, listLength);
+                for (int i = 0; i < listLength; i++)
+                    abol[i] = Boolean.valueOf(listEntries.get(i).getValue().toString());
 
                 configElement.set(abol);
             }
             else if (configElement.isList() && configElement.getType() == ConfigGuiType.INTEGER)
             {
                 Integer[] ai = new Integer[listLength];
-                System.arraycopy(listEntries.toArray(), 0, ai, 0, listLength);
-                /*for (int i = 0; i < listLength; i++)
-                    ai[i] = Integer.valueOf(listEntries.get(i).getValue().toString());*/
+                //System.arraycopy(listEntries.toArray(), 0, ai, 0, listLength);
+                for (int i = 0; i < listLength; i++)
+                    ai[i] = Integer.valueOf(listEntries.get(i).getValue().toString());
 
                 configElement.set(ai);
             }
             else if (configElement.isList() && configElement.getType() == ConfigGuiType.DOUBLE)
             {
                 Double[] ad = new Double[listLength];
-                System.arraycopy(listEntries.toArray(), 0, ad, 0, listLength);
-                /*for (int i = 0; i < listLength; i++)
-                    ad[i] = Double.valueOf(listEntries.get(i).getValue().toString());*/
+                //System.arraycopy(listEntries.toArray(), 0, ad, 0, listLength);
+                for (int i = 0; i < listLength; i++)
+                    ad[i] = Double.valueOf(listEntries.get(i).getValue().toString());
 
                 configElement.set(ad);
             }
             else if (configElement.isList())
             {
                 String[] as = new String[listLength];
-                System.arraycopy(listEntries.toArray(), 0, as, 0, listLength);
-                /*for (int i = 0; i < listLength; i++)
-                    as[i] = listEntries.get(i).getValue().toString();*/
+                //System.arraycopy(listEntries.toArray(), 0, as, 0, listLength);
+                for (int i = 0; i < listLength; i++)
+                    as[i] = listEntries.get(i).getValue().toString();
 
                 configElement.set(as);
             }

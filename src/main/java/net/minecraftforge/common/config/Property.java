@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.Locale;
+import java.util.*;
 
 import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
@@ -44,16 +45,16 @@ public class Property
         }
     }
 
-    private byte[] name;
-    private byte[] value;
-    private byte[] defaultValue;
+    private BitSet name;//1x idcc_p//move in cache disc//3
+    private BitSet value;//2x idcc_p//4
+    private BitSet defaultValue;//3x idcc_p//5
     public String comment;
     private String[] values;
     private String[] defaultValues;
     private String[] validValues;
-    private byte[] langKey;
-    private byte[] minValue;
-    private byte[] maxValue;
+    private BitSet langKey;//4x idcc_p//6
+    private BitSet minValue;//5x idcc_p//7
+    private BitSet maxValue;//6x idcc_p//8
 
     private Class<? extends IConfigEntry> configEntryClass = null;
     private Class<? extends IArrayEntry> arrayEntryClass = null;
@@ -68,6 +69,8 @@ public class Property
     private int maxListLength = -1;
     private final Type type;
     private boolean changed = false;
+    //public final String idcc_p;
+    //public final short state_id;
 
     public Property(String name, String value, Type type)
     {
@@ -101,13 +104,16 @@ public class Property
 
     Property(String name, String value, Type type, boolean read, String[] validValues, String langKey)
     {
+        //long time = System.currentTimeMillis();
+        //this.idcc_p = /*java.util.UUID.randomUUID().toString()*/String.valueOf(time);
+        //this.state_id = (short)(time % 2000);
         setName(name);
-        this.value = Gzip.compress(value);
+        this.value = value.length()==0 ? (new BitSet(0)) : Gzip.compress(value);
         this.values = new String[0];
         this.type  = type;
         wasRead    = read;
         isList     = false;
-        this.defaultValue = Gzip.compress(value);
+        this.defaultValue = value.length()==0 ? (new BitSet(0)) : Gzip.compress(value);
         this.defaultValues = new String[0];
         this.validValues = validValues;
         this.isListLengthFixed = false;
@@ -140,22 +146,27 @@ public class Property
 
     Property(String name, String[] values, Type type, boolean read, String[] validValues, String langKey)
     {
+        long time = System.currentTimeMillis();
+        //this.idcc_p = String.valueOf(time);
+        //this.state_id = (short)(time % 2000);
         setName(name);
         this.type   = type;
         this.values = Arrays.copyOf(values, values.length);
         wasRead     = read;
         isList      = true;
-        this.value = Gzip.compress("");
-        String temp = "";
+        this.value = new BitSet(0);
+        String temp = new String("");
         StringBuilder tempSB = new StringBuilder(temp);
         //this.defaultValue = "";
+        boolean first = true;//dont use regex replaceFirst
         for (String s : values) {
             //this.defaultValue += ", [" + s + "]";
+            if (first) { tempSB.append("[").append(s).append("]"); first = false; continue; }
             tempSB.append(", [").append(s).append("]");
          }
         temp = String.valueOf(tempSB);
         //this.defaultValue = this.defaultValue.replaceFirst(", ", "");
-        temp = temp.replaceFirst(", ", "");
+        //temp = temp.replaceFirst(", ", "");
         this.defaultValue = Gzip.compress(temp);
         this.defaultValues = Arrays.copyOf(values, values.length);
         this.validValues = validValues;
@@ -239,7 +250,8 @@ public class Property
         if (this.type == Type.DOUBLE && this.isDoubleValue())
             return Double.parseDouble(Gzip.decompress(value)) == Double.parseDouble(Gzip.decompress(defaultValue));
 
-        return value.equals(Gzip.decompress(defaultValue));
+        //return /*value*/Gzip.decompress(value).equals(Gzip.decompress(defaultValue));
+        return (Gzip.decompress(value)).equals(Gzip.decompress(defaultValue));
     }
 
     /**
@@ -248,6 +260,9 @@ public class Property
     public Property setToDefault()
     {
         this.value = this.defaultValue;//Gzip.decompress(this.defaultValue);
+        //this.value=Gzip.decompress(this.idcc_p+"2-6", 5, this.state_id);
+        //String dv = Gzip.decompress(this.idcc_p+"2-6", 5, this.state_id);
+        //Gzip.compress(dv, this.idcc_p+"1-6", 4, this.state_id);
         this.values = Arrays.copyOf(this.defaultValues, this.defaultValues.length);
         return this;
     }
@@ -455,9 +470,9 @@ public class Property
      *
      * @param langKey a string language key such as myawesomemod.config.myPropName
      */
-    public Property setLanguageKey(String langKey)
+    public Property setLanguageKey(String langKey1)
     {
-        this.langKey = Gzip.compress(langKey);
+        this.langKey = Gzip.compress(langKey1);
         return this;
     }
 
@@ -476,9 +491,9 @@ public class Property
      *
      * @param defaultValue a String value
      */
-    public Property setDefaultValue(String defaultValue)
+    public Property setDefaultValue(String defaultValue1)
     {
-        this.defaultValue = Gzip.compress(defaultValue);
+        this.defaultValue = Gzip.compress(defaultValue1);
         return this;
     }
 
@@ -487,17 +502,19 @@ public class Property
      *
      * @param defaultValues an array of String values
      */
-    public Property setDefaultValues(String[] defaultValues)
+    public Property setDefaultValues(String[] defaultValues1)
     {
         //this.defaultValue = "";
-        String temp = "";
+        String temp = new String("");
         StringBuilder tempSB = new StringBuilder(temp);
-        for (String s : defaultValues) {
+        boolean first = true;
+        for (String s : defaultValues1) {
             //this.defaultValue += ", [" + s + "]";
+            if (first) { tempSB.append("[").append(s).append("]"); first=false; continue; }
             tempSB.append(", [").append(s).append("]");
         }
         temp = String.valueOf(tempSB);
-        temp = temp.replaceFirst(", ", "");
+        //temp = temp.replaceFirst(", ", "");
         //this.defaultValue = this.defaultValue.replaceFirst(", ", "");
         this.defaultValue = Gzip.compress(temp);
         this.defaultValues = Arrays.copyOf(defaultValues, defaultValues.length);
@@ -509,9 +526,9 @@ public class Property
      *
      * @param defaultValue an int value
      */
-    public Property setDefaultValue(int defaultValue)
+    public Property setDefaultValue(int defaultValue1)
     {
-        setDefaultValue(Integer.toString(defaultValue));
+        setDefaultValue(Integer.toString(defaultValue1));
         return this;
     }
 
@@ -520,11 +537,11 @@ public class Property
      *
      * @param defaultValues an array of int values
      */
-    public Property setDefaultValues(int[] defaultValues)
+    public Property setDefaultValues(int[] defaultValues1)
     {
-        String[] temp = new String[defaultValues.length];
-        for (int i = 0; i < defaultValues.length; i++)
-            temp[i] = Integer.toString(defaultValues[i]);
+        String[] temp = new String[defaultValues1.length];
+        for (int i = 0; i < defaultValues1.length; i++)
+            temp[i] = Integer.toString(defaultValues1[i]);
 
         setDefaultValues(temp);
         return this;
@@ -535,9 +552,9 @@ public class Property
      *
      * @param defaultValue a double value
      */
-    public Property setDefaultValue(double defaultValue)
+    public Property setDefaultValue(double defaultValue1)
     {
-        setDefaultValue(Double.toString(defaultValue));
+        setDefaultValue(Double.toString(defaultValue1));
         return this;
     }
 
@@ -546,11 +563,11 @@ public class Property
      *
      * @param defaultValues an array of double values
      */
-    public Property setDefaultValues(double[] defaultValues)
+    public Property setDefaultValues(double[] defaultValues1)
     {
-        String[] temp = new String[defaultValues.length];
-        for (int i = 0; i < defaultValues.length; i++)
-            temp[i] = Double.toString(defaultValues[i]);
+        String[] temp = new String[defaultValues1.length];
+        for (int i = 0; i < defaultValues1.length; i++)
+            temp[i] = Double.toString(defaultValues1[i]);
 
         setDefaultValues(temp);
         return this;
@@ -561,9 +578,9 @@ public class Property
      *
      * @param defaultValue a boolean value
      */
-    public Property setDefaultValue(boolean defaultValue)
+    public Property setDefaultValue(boolean defaultValue1)
     {
-        setDefaultValue(Boolean.toString(defaultValue));
+        setDefaultValue(Boolean.toString(defaultValue1));
         return this;
     }
 
@@ -572,11 +589,11 @@ public class Property
      *
      * @param defaultValues an array of boolean values
      */
-    public Property setDefaultValues(boolean[] defaultValues)
+    public Property setDefaultValues(boolean[] defaultValues1)
     {
-        String[] temp = new String[defaultValues.length];
-        for (int i = 0; i < defaultValues.length; i++)
-            temp[i] = Boolean.toString(defaultValues[i]);
+        String[] temp = new String[defaultValues1.length];
+        for (int i = 0; i < defaultValues1.length; i++)
+            temp[i] = Boolean.toString(defaultValues1[i]);
 
         setDefaultValues(temp);
         return this;
@@ -587,9 +604,9 @@ public class Property
      *
      * @param minValue an int value
      */
-    public Property setMinValue(int minValue)
+    public Property setMinValue(int minValue1)
     {
-        this.minValue = Gzip.compress(Integer.toString(minValue));
+        this.minValue = Gzip.compress(Integer.toString(minValue1));
         return this;
     }
 
@@ -598,9 +615,9 @@ public class Property
      *
      * @param maxValue an int value
      */
-    public Property setMaxValue(int maxValue)
+    public Property setMaxValue(int maxValue1)
     {
-        this.maxValue = Gzip.compress(Integer.toString(maxValue));
+        this.maxValue = Gzip.compress(Integer.toString(maxValue1));
         return this;
     }
 
@@ -609,9 +626,9 @@ public class Property
      *
      * @param minValue a double value
      */
-    public Property setMinValue(double minValue)
+    public Property setMinValue(double minValue1)
     {
-        this.minValue = Gzip.compress(Double.toString(minValue));
+        this.minValue = Gzip.compress(Double.toString(minValue1));
         return this;
     }
 
@@ -620,9 +637,9 @@ public class Property
      *
      * @param maxValue a double value
      */
-    public Property setMaxValue(double maxValue)
+    public Property setMaxValue(double maxValue1)
     {
-        this.maxValue = Gzip.compress(Double.toString(maxValue));
+        this.maxValue = Gzip.compress(Double.toString(maxValue1));
         return this;
     }
 
@@ -633,7 +650,7 @@ public class Property
      */
     public String getMinValue()
     {
-        return Gzip.decompress(minValue);
+        return Gzip.decompress(this.minValue);
     }
 
     /**
@@ -643,7 +660,7 @@ public class Property
      */
     public String getMaxValue()
     {
-        return Gzip.decompress(maxValue);
+        return Gzip.decompress(this.maxValue);
     }
 
     /**
@@ -653,7 +670,8 @@ public class Property
      */
     public String getString()
     {
-        return Gzip.decompress(value);
+        BitSet copy = this.value;
+        return Gzip.decompress(copy);
     }
 
     /**
@@ -662,9 +680,9 @@ public class Property
      *
      * @param validValues a String array of valid values
      */
-    public Property setValidValues(String[] validValues)
+    public Property setValidValues(String[] validValues1)
     {
-        this.validValues = validValues;
+        this.validValues = validValues1;
         return this;
     }
 
@@ -688,11 +706,11 @@ public class Property
     {
         try
         {
-            return Integer.parseInt(Gzip.decompress(value));
+            return Integer.parseInt(Gzip.decompress(this.value));
         }
         catch (NumberFormatException e)
         {
-            return Integer.parseInt(Gzip.decompress(defaultValue));
+            return Integer.parseInt(Gzip.decompress(this.defaultValue));
         }
     }
 
@@ -708,7 +726,7 @@ public class Property
     {
         try
         {
-            return Integer.parseInt(Gzip.decompress(value));
+            return Integer.parseInt(Gzip.decompress(this.value));
         }
         catch (NumberFormatException e)
         {
@@ -724,7 +742,7 @@ public class Property
     {
         try
         {
-            Integer.parseInt(Gzip.decompress(value));
+            Integer.parseInt(Gzip.decompress(this.value));
             return true;
         }
         catch (NumberFormatException e)
@@ -745,7 +763,7 @@ public class Property
     {
         if (isBooleanValue())
         {
-            return Boolean.parseBoolean(Gzip.decompress(value));
+            return Boolean.parseBoolean(Gzip.decompress(this.value));
         }
         else
         {
@@ -762,11 +780,11 @@ public class Property
     {
         if (isBooleanValue())
         {
-            return Boolean.parseBoolean(Gzip.decompress(value));
+            return Boolean.parseBoolean(Gzip.decompress(this.value));
         }
         else
         {
-            return Boolean.parseBoolean(Gzip.decompress(defaultValue));
+            return Boolean.parseBoolean(Gzip.decompress(this.defaultValue));
         }
     }
 
@@ -777,7 +795,7 @@ public class Property
      */
     public boolean isBooleanValue()
     {
-        return ("true".equals((Gzip.decompress(value)).toLowerCase(Locale.ENGLISH)) || "false".equals((Gzip.decompress(value)).toLowerCase(Locale.ENGLISH)));
+        return ("true".equals((Gzip.decompress(this.value)).toLowerCase(Locale.ENGLISH)) || "false".equals((Gzip.decompress(this.value)).toLowerCase(Locale.ENGLISH)));
     }
 
     /**
@@ -788,7 +806,7 @@ public class Property
     {
         try
         {
-            Double.parseDouble(Gzip.decompress(value));
+            Double.parseDouble(Gzip.decompress(this.value));
             return true;
         }
         catch (NumberFormatException e)
@@ -809,7 +827,7 @@ public class Property
     {
         try
         {
-            return Double.parseDouble(Gzip.decompress(value));
+            return Double.parseDouble(Gzip.decompress(this.value));
         }
         catch (NumberFormatException e)
         {
@@ -827,11 +845,11 @@ public class Property
     {
         try
         {
-            return Double.parseDouble(Gzip.decompress(value));
+            return Double.parseDouble(Gzip.decompress(this.value));
         }
         catch (NumberFormatException e)
         {
-            return Double.parseDouble(Gzip.decompress(defaultValue));
+            return Double.parseDouble(Gzip.decompress(this.defaultValue));
         }
     }
 
@@ -850,19 +868,18 @@ public class Property
     {
         /*ArrayList<Integer>*/org.eclipse.collections.impl.list.mutable.primitive.IntArrayList nums = new org.eclipse.collections.impl.list.mutable.primitive.IntArrayList/*<Integer>*/();
 
-        for (String value : values)
+        for (String value_it : values)
         {
             try
             {
-                nums.add(Integer.parseInt(value));
+                nums.add(Integer.parseInt(value_it));
             }
             catch (NumberFormatException e){}
         }
 
-        int nums_sS=nums.size();
-        int[] primitives = new int[nums_sS];
+        int[] primitives = new int[nums.size()];
 
-        for (int i = 0; i < nums_sS; i++)
+        for (int i = 0; i < nums.size(); i++)
         {
             primitives[i] = nums.get(i);
         }
@@ -877,11 +894,11 @@ public class Property
     public boolean isIntList()
     {
         if (isList && type == Type.INTEGER)
-            for (String value : values)
+            for (String value_it : values)
             {
                 try
                 {
-                    Integer.parseInt(value);
+                    Integer.parseInt(value_it);
                 }
                 catch (NumberFormatException e)
                 {
@@ -900,19 +917,18 @@ public class Property
     public boolean[] getBooleanList()
     {
         /*ArrayList<Boolean>*/org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList tmp = new org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList/*<Boolean>*/();
-        for (String value : values)
+        for (String value_it : values)
         {
             try
             {
-                tmp.add(Boolean.parseBoolean(value));
+                tmp.add(Boolean.parseBoolean(value_it));
             }
             catch (NumberFormatException e){}
         }
 
-        int temp_sS=tmp.size();
-        boolean[] primitives = new boolean[temp_sS];
+        boolean[] primitives = new boolean[tmp.size()];
 
-        for (int i = 0; i < temp_sS; i++)
+        for (int i = 0; i < tmp.size(); i++)
         {
             primitives[i] = tmp.get(i);
         }
@@ -927,9 +943,9 @@ public class Property
     public boolean isBooleanList()
     {
         if (isList && type == Type.BOOLEAN)
-            for (String value : values)
+            for (String value_it : values)
             {
-                if (!"true".equalsIgnoreCase(value) && !"false".equalsIgnoreCase(value))
+                if (!"true".equalsIgnoreCase(value_it) && !"false".equalsIgnoreCase(value_it))
                 {
                     return false;
                 }
@@ -947,19 +963,18 @@ public class Property
     public double[] getDoubleList()
     {
         /*ArrayList<Double>*/org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList tmp = new org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList/*<Double>*/();
-        for (String value : values)
+        for (String value_it : values)
         {
             try
             {
-                tmp.add(Double.parseDouble(value));
+                tmp.add(Double.parseDouble(value_it));
             }
             catch (NumberFormatException e) {}
         }
 
-        int temp_sS=tmp.size();
-        double[] primitives = new double[temp_sS];
+        double[] primitives = new double[tmp.size()];
 
-        for (int i = 0; i < temp_sS; i++)
+        for (int i = 0; i < tmp.size(); i++)
         {
             primitives[i] = tmp.get(i);
         }
@@ -974,11 +989,11 @@ public class Property
     public boolean isDoubleList()
     {
         if (isList && type == Type.DOUBLE)
-            for (String value : values)
+            for (String value_it : values)
             {
                 try
                 {
-                    Double.parseDouble(value);
+                    Double.parseDouble(value_it);
                 }
                 catch (NumberFormatException e)
                 {
@@ -996,7 +1011,7 @@ public class Property
      */
     public String getName()
     {
-        return Gzip.decompress(name);
+        return Gzip.decompress(this.name);
     }
 
     /**
@@ -1004,9 +1019,9 @@ public class Property
      *
      * @param name a name
      */
-    public void setName(String name)
+    public void setName(String name1)
     {
-        this.name = Gzip.compress(name);
+        this.name = Gzip.compress(name1);
     }
 
     /**
@@ -1052,111 +1067,111 @@ public class Property
     /**
      * Sets the value of this Property to the provided String value.
      */
-    public Property setValue(String value)
+    public Property setValue(String value1)
     {
-        this.value = Gzip.compress(value);
+        this.value = Gzip.compress(value1);
         changed = true;
         return this;
     }
 
-    public void set(String value)
+    public void set(String value1)
     {
-        this.setValue(value);
+        this.setValue(value1);
     }
 
     /**
      * Sets the values of this Property to the provided String[] values.
      */
-    public Property setValues(String[] values)
+    public Property setValues(String[] values1)
     {
-        this.values = Arrays.copyOf(values, values.length);
+        this.values = Arrays.copyOf(values1, values1.length);
         changed = true;
         return this;
     }
 
-    public void set(String[] values)
+    public void set(String[] values1)
     {
-        this.setValues(values);
+        this.setValues(values1);
     }
 
     /**
      * Sets the value of this Property to the provided int value.
      */
-    public Property setValue(int value)
+    public Property setValue(int value1)
     {
-        setValue(Integer.toString(value));
+        setValue(Integer.toString(value1));
         return this;
     }
 
     /**
      * Sets the value of this Property to the provided boolean value.
      */
-    public Property setValue(boolean value)
+    public Property setValue(boolean value1)
     {
-        setValue(Boolean.toString(value));
+        setValue(Boolean.toString(value1));
         return this;
     }
 
     /**
      * Sets the value of this Property to the provided double value.
      */
-    public Property setValue(double value)
+    public Property setValue(double value1)
     {
-        setValue(Double.toString(value));
+        setValue(Double.toString(value1));
         return this;
     }
 
     /**
      * Sets the values of this Property to the provided boolean[] values.
      */
-    public Property setValues(boolean[] values)
+    public Property setValues(boolean[] values1)
     {
-        this.values = new String[values.length];
-        for (int i = 0; i < values.length; i++)
-            this.values[i] = String.valueOf(values[i]);
+        this.values = new String[values1.length];
+        for (int i = 0; i < values1.length; i++)
+            this.values[i] = String.valueOf(values1[i]);
         changed = true;
         return this;
     }
 
-    public void set(boolean[] values)
+    public void set(boolean[] values1)
     {
-        this.setValues(values);
+        this.setValues(values1);
     }
 
     /**
      * Sets the values of this Property to the provided int[] values.
      */
-    public Property setValues(int[] values)
+    public Property setValues(int[] values1)
     {
-        this.values = new String[values.length];
-        for (int i = 0; i < values.length; i++)
-            this.values[i] = String.valueOf(values[i]);
+        this.values = new String[values1.length];
+        for (int i = 0; i < values1.length; i++)
+            this.values[i] = String.valueOf(values1[i]);
         changed = true;
         return this;
     }
 
-    public void set(int[] values)
+    public void set(int[] values1)
     {
-        this.setValues(values);
+        this.setValues(values1);
     }
 
     /**
      * Sets the values of this Property to the provided double[] values.
      */
-    public Property setValues(double[] values)
+    public Property setValues(double[] values1)
     {
-        this.values = new String[values.length];
-        for (int i = 0; i < values.length; i++)
-            this.values[i] = String.valueOf(values[i]);
+        this.values = new String[values1.length];
+        for (int i = 0; i < values1.length; i++)
+            this.values[i] = String.valueOf(values1[i]);
         changed = true;
         return this;
     }
 
-    public void set(double[] values)
+    public void set(double[] values1)
     {
-        this.setValues(values);
+        this.setValues(values1);
     }
-    public void set(int     value){ set(Integer.toString(value)); }
-    public void set(boolean value){ set(Boolean.toString(value)); }
-    public void set(double  value){ set(Double.toString(value));  }
+    public void set(int     value1){ set(Integer.toString(value1)); }
+    public void set(boolean value1){ set(Boolean.toString(value1)); }
+    public void set(double  value1){ set(Double.toString(value1));  }
 }

@@ -224,25 +224,25 @@ public class ConfigElement<T> implements IConfigElement<T>
             if (type == Property.Type.BOOLEAN)
             {
                 Boolean[] ba = new Boolean[aVal.length];
-                System.arraycopy(aVal, 0, ba, 0, aVal.length);
-                /*for(int i = 0; i < aVal.length; i++)
-                    ba[i] = Boolean.valueOf(aVal[i]);*/
+                //System.arraycopy(aVal, 0, ba, 0, aVal.length);
+                for(int i = 0; i < aVal.length; i++)
+                    ba[i] = Boolean.valueOf(aVal[i]);
                 return ba;
             }
             else if (type == Property.Type.DOUBLE)
             {
                 Double[] da = new Double[aVal.length];
-                System.arraycopy(aVal, 0, da, 0, aVal.length);
-                /*for(int i = 0; i < aVal.length; i++)
-                    da[i] = Double.valueOf(aVal[i].toString());*/
+                //System.arraycopy(aVal, 0, da, 0, aVal.length);
+                for(int i = 0; i < aVal.length; i++)
+                    da[i] = Double.valueOf(aVal[i].toString());
                 return da;
             }
             else if (type == Property.Type.INTEGER)
             {
                 Integer[] ia = new Integer[aVal.length];
-                System.arraycopy(aVal, 0, ia, 0, aVal.length);
-                /*for(int i = 0; i < aVal.length; i++)
-                    ia[i] = Integer.valueOf(aVal[i].toString());*/
+                //System.arraycopy(aVal, 0, ia, 0, aVal.length);
+                for(int i = 0; i < aVal.length; i++)
+                    ia[i] = Integer.valueOf(aVal[i].toString());
                 return ia;
             }
             else
@@ -272,25 +272,25 @@ public class ConfigElement<T> implements IConfigElement<T>
             if (type == Property.Type.BOOLEAN)
             {
                 Boolean[] ba = new Boolean[aVal.length];
-                System.arraycopy(aVal, 0, ba, 0, aVal.length);
-                /*for(int i = 0; i < aVal.length; i++)
-                    ba[i] = Boolean.valueOf(aVal[i]);*/
+                //System.arraycopy(aVal, 0, ba, 0, aVal.length);
+                for(int i = 0; i < aVal.length; i++)
+                    ba[i] = Boolean.valueOf(aVal[i]);
                 return ba;
             }
             else if (type == Property.Type.DOUBLE)
             {
                 Double[] da = new Double[aVal.length];
-                System.arraycopy(aVal, 0, da, 0, aVal.length);
-                /*for(int i = 0; i < aVal.length; i++)
-                    da[i] = Double.valueOf(aVal[i].toString());*/
+                //System.arraycopy(aVal, 0, da, 0, aVal.length);
+                for(int i = 0; i < aVal.length; i++)
+                    da[i] = Double.valueOf(aVal[i].toString());
                 return da;
             }
             else if (type == Property.Type.INTEGER)
             {
                 Integer[] ia = new Integer[aVal.length];
-                System.arraycopy(aVal, 0, ia, 0, aVal.length);
-                /*for(int i = 0; i < aVal.length; i++)
-                    ia[i] = Integer.valueOf(aVal[i].toString());*/
+                //System.arraycopy(aVal, 0, ia, 0, aVal.length);
+                for(int i = 0; i < aVal.length; i++)
+                    ia[i] = Integer.valueOf(aVal[i].toString());
                 return ia;
             }
             else
@@ -323,33 +323,33 @@ public class ConfigElement<T> implements IConfigElement<T>
             if (type == Property.Type.BOOLEAN)
             {
                 boolean[] ba = new boolean[aVal.length];
-                System.arraycopy(aVal, 0, ba, 0, aVal.length);
-                /*for(int i = 0; i < aVal.length; i++)
-                    ba[i] = Boolean.valueOf(aVal[i].toString());*/
+                //System.arraycopy(aVal, 0, ba, 0, aVal.length);
+                for(int i = 0; i < aVal.length; i++)
+                    ba[i] = Boolean.valueOf(aVal[i].toString());
                 prop.set(ba);
             }
             else if (type == Property.Type.DOUBLE)
             {
                 double[] da = new double[aVal.length];
-                System.arraycopy(aVal, 0, da, 0, aVal.length);
-                /*for(int i = 0; i < aVal.length; i++)
-                    da[i] = Double.valueOf(aVal[i].toString());*/
+                //System.arraycopy(aVal, 0, da, 0, aVal.length);
+                for(int i = 0; i < aVal.length; i++)
+                    da[i] = Double.valueOf(aVal[i].toString());
                 prop.set(da);
             }
             else if (type == Property.Type.INTEGER)
             {
                 int[] ia = new int[aVal.length];
-                System.arraycopy(aVal, 0, ia, 0, aVal.length);
-                /*for(int i = 0; i < aVal.length; i++)
-                    ia[i] = Integer.valueOf(aVal[i].toString());*/
+                //System.arraycopy(aVal, 0, ia, 0, aVal.length);
+                for(int i = 0; i < aVal.length; i++)
+                    ia[i] = Integer.valueOf(aVal[i].toString());
                 prop.set(ia);
             }
             else
             {
                 String[] is = new String[aVal.length];
-                System.arraycopy(aVal, 0, is, 0, aVal.length);
-                /*for(int i = 0; i < aVal.length; i++)
-                    is[i] = aVal[i].toString();*/
+                //System.arraycopy(aVal, 0, is, 0, aVal.length);
+                for(int i = 0; i < aVal.length; i++)
+                    is[i] = aVal[i].toString();
                 prop.set(is);
             }
         }

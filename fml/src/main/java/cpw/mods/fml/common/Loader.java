@@ -15,7 +15,7 @@ package cpw.mods.fml.common;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileWriter;import java.io.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -163,11 +163,12 @@ public class Loader
     private MCPDummyContainer mcp;
 
     private static File minecraftDir;
-    private static List<String> injectedContainers;
+    private static List<byte[]> injectedContainers;
     private ImmutableMap<String, String> fmlBrandingProperties;
     private File forcedModFile;
     private ModDiscoverer discoverer;
     private ProgressBar progressBar;
+    private static final boolean DEBUG_L = Boolean.parseBoolean(System.getProperty("fml.loaderDebug", "false"));
 
     public static Loader instance()
     {
@@ -189,7 +190,10 @@ public class Loader
         mccversion = (String) data[4];
         mcpversion = (String) data[5];
         minecraftDir = (File) data[6];
-        injectedContainers = (List<String>)data[7];
+        List<String> templiststr = (List<String>)data[7];
+        List<byte[]> templistbyte = new ArrayList();
+        try{for (int i=0;i<templiststr.size();i++) templistbyte.add(templiststr.get(i).getBytes("UTF-8"));}catch(java.io.IOException e){}
+        injectedContainers = templistbyte;//(List<String>)data[7];
     }
 
     private Loader()
@@ -212,7 +216,7 @@ public class Loader
      */
     private void sortModList()
     {
-        FMLLog.finer("Verifying mod requirements are satisfied");
+        if (DEBUG_L) FMLLog.finer("Verifying mod requirements are satisfied");
         try
         {
             BiMap<String, ArtifactVersion> modVersions = HashBiMap.create();
@@ -261,14 +265,14 @@ public class Loader
                 }
             }
 
-            FMLLog.finer("All mod requirements are satisfied");
+            if (DEBUG_L) FMLLog.finer("All mod requirements are satisfied");
 
             reverseDependencies = Multimaps.invertFrom(reqList, ArrayListMultimap.<String,String>create());
             ModSorter sorter = new ModSorter(getActiveModList(), namedMods);
 
             try
             {
-                FMLLog.finer("Sorting mods into an ordered list");
+                if (DEBUG_L) FMLLog.finer("Sorting mods into an ordered list");
                 List<ModContainer> sortedMods = sorter.sort();
                 // Reset active list to the sorted list
                 modController.getActiveModList().clear();
@@ -277,7 +281,7 @@ public class Loader
                 mods.removeAll(sortedMods);
                 sortedMods.addAll(mods);
                 mods = sortedMods;
-                FMLLog.finer("Mod sorting completed successfully");
+                if (DEBUG_L) FMLLog.finer("Mod sorting completed successfully");
             }
             catch (ModSortingException sortException)
             {
@@ -329,10 +333,12 @@ public class Loader
      */
     private ModDiscoverer identifyMods()
     {
-        FMLLog.fine("Building injected Mod Containers %s", injectedContainers);
+        List<String> templiststr = new ArrayList();
+        try{for (int i=0;i<injectedContainers.size();i++) templiststr.add((new String(injectedContainers.get(i), "UTF-8")));}catch(java.io.IOException e){}
+        FMLLog.fine("Building injected Mod Containers %s", templiststr);
         // Add in the MCP mod container
         mods.add(new InjectedModContainer(mcp,new File("minecraft.jar")));
-        for (String cont : injectedContainers)
+        for (String cont : templiststr)
         {
             ModContainer mc;
             try
@@ -523,7 +529,7 @@ public class Loader
             }
         });
 
-        FMLLog.fine("Mod signature data");
+        if (DEBUG_L) { FMLLog.fine("Mod signature data");
         FMLLog.fine(" \tValid Signatures:");
         for (ModContainer mod : getActiveModList())
         {
@@ -539,7 +545,7 @@ public class Loader
         if (getActiveModList().isEmpty())
         {
             FMLLog.fine("No user mod signature data found");
-        }
+        }}
         progressBar.step("Initializing mods Phase 1");
         modController.transition(LoaderState.PREINITIALIZATION, false);
     }
@@ -563,22 +569,22 @@ public class Loader
     private void disableRequestedMods()
     {
         String forcedModList = System.getProperty("fml.modStates", "");
-        FMLLog.finer("Received a system property request \'%s\'",forcedModList);
+        if (DEBUG_L) FMLLog.finer("Received a system property request \'%s\'",forcedModList);
         Map<String, String> sysPropertyStateList = Splitter.on(CharMatcher.anyOf(";:"))
                 .omitEmptyStrings().trimResults().withKeyValueSeparator("=")
                 .split(forcedModList);
-        FMLLog.finer("System property request managing the state of %d mods", sysPropertyStateList.size());
+        if (DEBUG_L) FMLLog.finer("System property request managing the state of %d mods", sysPropertyStateList.size());
         Map<String, String> modStates = Maps.newHashMap();
 
         forcedModFile = new File(canonicalConfigDir, "fmlModState.properties");
         Properties forcedModListProperties = new Properties();
         if (forcedModFile.exists() && forcedModFile.isFile())
         {
-            FMLLog.finer("Found a mod state file %s", forcedModFile.getName());
+           if (DEBUG_L)  FMLLog.finer("Found a mod state file %s", forcedModFile.getName());
             try
             {
-                FileReader temp3_f = new FileReader(forcedModFile);forcedModListProperties.load(temp3_f);
-                FMLLog.finer("Loaded states for %d mods from file", forcedModListProperties.size());try{temp3_f.close();}catch (Exception e) {}
+                FileReader temp3_f = new FileReader(forcedModFile);BufferedReader br_3_f = new BufferedReader(temp3_f);forcedModListProperties.load(br_3_f);
+                if (DEBUG_L) FMLLog.finer("Loaded states for %d mods from file", forcedModListProperties.size());try{br_3_f.close();temp3_f.close();}catch (Exception e) {}
             }
             catch (Exception e)
             {
@@ -587,7 +593,7 @@ public class Loader
         }
         modStates.putAll(Maps.fromProperties(forcedModListProperties));
         modStates.putAll(sysPropertyStateList);
-        FMLLog.fine("After merging, found state information for %d mods", modStates.size());
+        if (DEBUG_L) FMLLog.fine("After merging, found state information for %d mods", modStates.size());
 
         Map<String, Boolean> isEnabled = Maps.transformValues(modStates, new Function<String, Boolean>()
         {
@@ -602,7 +608,7 @@ public class Loader
         {
             if (namedMods.containsKey(entry.getKey()))
             {
-                FMLLog.info("Setting mod %s to enabled state %b", entry.getKey(), entry.getValue());
+                if (DEBUG_L) FMLLog.info("Setting mod %s to enabled state %b", entry.getKey(), entry.getValue());
                 namedMods.get(entry.getKey()).setEnabledState(entry.getValue());
             }
         }
@@ -672,7 +678,7 @@ public class Loader
             }
             String instruction = depparts.get(0);
             String target = depparts.get(1);
-            boolean targetIsAll = (target.charAt(0) == '*')/*startsWith("*")*/;
+            boolean targetIsAll = target.startsWith("*");
 
             // Cannot have an "all" relationship with anything except pure *
             if (targetIsAll && target.length() > 1)
@@ -878,7 +884,7 @@ public class Loader
                 loaded.load(streamMFA);
                 streamMFA.close(); 
               } catch(IOException e) { 
-                cpw.mods.fml.common.FMLLog.warning(String.valueOf(e)); 
+                FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "IOException, stacktrace: %s", (Throwable)e);
                 } }
             fmlBrandingProperties = Maps.fromProperties(loaded);
         }
@@ -927,7 +933,7 @@ public class Loader
             return ImmutableList.of();
         }
 
-        FMLLog.fine("There are %d mappings missing - attempting a mod remap", missing.size());
+        if (DEBUG_L) FMLLog.fine("There are %d mappings missing - attempting a mod remap", missing.size());
         ArrayListMultimap<String, MissingMapping> missingMappings = ArrayListMultimap.create();
 
         for (Map.Entry<String, Integer> mapping : missing.entrySet())
@@ -1009,10 +1015,10 @@ public class Loader
 
         try
         {
-            Properties props = new Properties();FileReader temp1_f = new FileReader(forcedModFile);
-            props.load(temp1_f);
-            props.put(modId, "false");FileWriter temp2_f = new FileWriter(forcedModFile);
-            props.store(temp2_f, null);try{temp1_f.close();temp2_f.close();}catch (Exception e) {}
+            Properties props = new Properties();FileReader temp1_f = new FileReader(forcedModFile);BufferedReader br_1_f = new BufferedReader(temp1_f);
+            props.load(br_1_f);
+            props.put(modId, "false");FileWriter temp2_f = new FileWriter(forcedModFile);BufferedWriter bw_2_f = new BufferedWriter(temp2_f);
+            props.store(bw_2_f, null);try{br_1_f.close();bw_2_f.close();temp1_f.close();temp2_f.close();}catch (Exception e) {}
         }
         catch (Exception e)
         {
@@ -1041,7 +1047,7 @@ public class Loader
         JsonElement injectedDeps;
         try
         {
-            FileReader temp5_f = new FileReader(injectedDepFile);injectedDeps = parser.parse(temp5_f);
+            FileReader temp5_f = new FileReader(injectedDepFile);BufferedReader br_5_f = new BufferedReader(temp5_f);injectedDeps = parser.parse(br_5_f);
             for (JsonElement el : injectedDeps.getAsJsonArray())
             {
                 JsonObject jo = el.getAsJsonObject();
@@ -1060,7 +1066,7 @@ public class Loader
                         throw new RuntimeException("Unable to parse type");
                     }
                 }
-            }try{temp5_f.close();}catch (Exception e) {}
+            }try{br_5_f.close();temp5_f.close();}catch (Exception e) {}
         } catch (Exception e)
         {
             FMLLog.getLogger().log(Level.ERROR, "Unable to parse {} - skipping", injectedDepFile);

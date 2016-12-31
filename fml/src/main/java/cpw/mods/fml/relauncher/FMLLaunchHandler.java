@@ -79,11 +79,41 @@ public class FMLLaunchHandler
     {
         FMLInjectionData.build(minecraftHome, classLoader);
         FMLRelaunchLog.minecraftHome = minecraftHome;
+        File dir_cache = new File("."+File.separator+"cache");
+        if (dir_cache.exists()) {
+            File[] files_in_cache = dir_cache.listFiles();
+            for(int i=0; i < files_in_cache.length; i++) { files_in_cache[i].delete(); }
+            //dir_cache.delete();
+        }
+        dir_cache.mkdir();
+        File cache = new File("."+File.separator+"cache"+File.separator+"ce");
+        if (!cache.exists()) { try{cache.createNewFile();}catch(java.io.IOException e){} }
+        cache = new File("."+File.separator+"cache"+File.separator+"ce0");
+        if (!cache.exists()) { try{cache.createNewFile();}catch(java.io.IOException e){} }
+        cache = new File("."+File.separator+"cache"+File.separator+"ce1");
+        if (!cache.exists()) { try{cache.createNewFile();}catch(java.io.IOException e){} }
+        cache = new File("."+File.separator+"cache"+File.separator+"ce2");
+        if (!cache.exists()) { try{cache.createNewFile();}catch(java.io.IOException e){} }
+        cache = new File("."+File.separator+"cache"+File.separator+"ce3");
+        if (!cache.exists()) { try{cache.createNewFile();}catch(java.io.IOException e){} }
+        cache = new File("."+File.separator+"cache"+File.separator+"ce4");
+        if (!cache.exists()) { try{cache.createNewFile();}catch(java.io.IOException e){} }
+        cache = new File("."+File.separator+"cache"+File.separator+"ce5");
+        if (!cache.exists()) { try{cache.createNewFile();}catch(java.io.IOException e){} }
+        cache = new File("."+File.separator+"cache"+File.separator+"ce6");
+        if (!cache.exists()) { try{cache.createNewFile();}catch(java.io.IOException e){} }
+        cache = new File("."+File.separator+"cache"+File.separator+"ce7");
+        if (!cache.exists()) { try{cache.createNewFile();}catch(java.io.IOException e){} }
+        cache = new File("."+File.separator+"cache"+File.separator+"ce8");
+        if (!cache.exists()) { try{cache.createNewFile();}catch(java.io.IOException e){} }
+        cache = new File("."+File.separator+"cache"+File.separator+"ce9");
+        if (!cache.exists()) { try{cache.createNewFile();}catch(java.io.IOException e){} }
         FMLRelaunchLog.info("Forge Mod Loader version %s.%s.%s.%s for Minecraft %s loading", FMLInjectionData.major, FMLInjectionData.minor,
                 FMLInjectionData.rev, FMLInjectionData.build, FMLInjectionData.mccversion, FMLInjectionData.mcpversion);
         FMLRelaunchLog.info("Java is %s, version %s, running on %s:%s:%s, installed at %s", System.getProperty("java.vm.name"), System.getProperty("java.version"), System.getProperty("os.name"), System.getProperty("os.arch"), System.getProperty("os.version"), System.getProperty("java.home"));
         FMLRelaunchLog.fine("Java classpath at launch is %s", System.getProperty("java.class.path"));
         FMLRelaunchLog.fine("Java library path at launch is %s", System.getProperty("java.library.path"));
+        FMLRelaunchLog.fine("Minecraft Forge Fork name-file version forge-1.7.10-10.13.5.0-1.7.10-sw22-10");
 
         try
         {

@@ -251,7 +251,8 @@ public class CoreModManager {
                 FMLRelaunchLog.severe("Problem file : %s", f.getName());
             }
         }
-        FileFilter derpdirfilter = new FileFilter() {
+        //off code
+        /*FileFilter derpdirfilter = new FileFilter() {
             @Override
             public boolean accept(File pathname)
             {
@@ -286,7 +287,7 @@ public class CoreModManager {
                 // NOOP - hopefully
             }
             throw re;
-        }
+        }*/
         File[] coreModList = coreMods.listFiles(ff);
         File versionedModDir = new File(coreMods, FMLInjectionData.mccversion);
         if (versionedModDir.isDirectory())
@@ -607,11 +608,11 @@ public class CoreModManager {
                 Integer second = null;//Revert: warning: o1/o2, instanceof -> getClass().equals()
                 if (o1 instanceof FMLInjectionAndSortingTweaker)
                 {
-                    first = -2147483648;//Integer.MIN_VALUE
+                    first = Integer.MIN_VALUE;
                 }
                 if (o2 instanceof FMLInjectionAndSortingTweaker)
                 {
-                    second = -2147483648;//Integer.MIN_VALUE
+                    second = Integer.MIN_VALUE;
                 }
 
                 if (o1 instanceof FMLPluginWrapper)

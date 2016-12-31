@@ -85,6 +85,7 @@ public class FMLModContainer implements ModContainer
     private ListMultimap<Class<? extends FMLEvent>,Method> eventMethods;
     private Map<String, String> customModProperties;
     private ModCandidate candidate;
+    private static final boolean DEBUG_FMC = Boolean.parseBoolean(System.getProperty("fml.fmlmodcontainerDebug", "false"));
 
     public FMLModContainer(String className, ModCandidate container, Map<String,Object> modDescriptor)
     {
@@ -171,15 +172,15 @@ public class FMLModContainer implements ModContainer
             modMetadata.requiredMods = requirements;
             modMetadata.dependencies = dependencies;
             modMetadata.dependants = dependants;
-            FMLLog.log(getModId(), Level.TRACE, "Parsed dependency info : %s %s %s", requirements, dependencies, dependants);
+            if (DEBUG_FMC) FMLLog.log(getModId(), Level.TRACE, "Parsed dependency info : %s %s %s", requirements, dependencies, dependants);
         }
         else
         {
-            FMLLog.log(getModId(), Level.TRACE, "Using mcmod dependency info : %s %s %s", modMetadata.requiredMods, modMetadata.dependencies, modMetadata.dependants);
+            if (DEBUG_FMC) FMLLog.log(getModId(), Level.TRACE, "Using mcmod dependency info : %s %s %s", modMetadata.requiredMods, modMetadata.dependencies, modMetadata.dependants);
         }
         if (Strings.isNullOrEmpty(modMetadata.name))
         {
-            FMLLog.log(getModId(), Level.INFO,"Mod %s is missing the required element 'name'. Substituting %s", getModId(), getModId());
+            if (DEBUG_FMC) FMLLog.log(getModId(), Level.INFO,"Mod %s is missing the required element 'name'. Substituting %s", getModId(), getModId());
             modMetadata.name = getModId();
         }
         internalVersion = (String) descriptor.get("version");
@@ -189,18 +190,18 @@ public class FMLModContainer implements ModContainer
             if (versionProps != null)
             {
                 internalVersion = versionProps.getProperty(getModId()+".version");
-                FMLLog.log(getModId(), Level.DEBUG, "Found version %s for mod %s in version.properties, using", internalVersion, getModId());
+                if (DEBUG_FMC) FMLLog.log(getModId(), Level.DEBUG, "Found version %s for mod %s in version.properties, using", internalVersion, getModId());
             }
 
         }
         if (Strings.isNullOrEmpty(internalVersion) && !Strings.isNullOrEmpty(modMetadata.version))
         {
-            FMLLog.log(getModId(), Level.WARN, "Mod %s is missing the required element 'version' and a version.properties file could not be found. Falling back to metadata version %s", getModId(), modMetadata.version);
+            if (DEBUG_FMC) FMLLog.log(getModId(), Level.WARN, "Mod %s is missing the required element 'version' and a version.properties file could not be found. Falling back to metadata version %s", getModId(), modMetadata.version);
             internalVersion = modMetadata.version;
         }
         if (Strings.isNullOrEmpty(internalVersion))
         {
-            FMLLog.log(getModId(), Level.WARN, "Mod %s is missing the required element 'version' and no fallback can be found. Substituting '1.0'.", getModId());
+            if (DEBUG_FMC) FMLLog.log(getModId(), Level.WARN, "Mod %s is missing the required element 'version' and no fallback can be found. Substituting '1.0'.", getModId());
             modMetadata.version = internalVersion = "1.0";
         }
 
@@ -219,7 +220,7 @@ public class FMLModContainer implements ModContainer
     {
         try
         {
-            FMLLog.log(getModId(), Level.DEBUG,"Attempting to load the file version.properties from %s to locate a version number for %s", getSource().getName(), getModId());
+            if (DEBUG_FMC) FMLLog.log(getModId(), Level.DEBUG,"Attempting to load the file version.properties from %s to locate a version number for %s", getSource().getName(), getModId());
             Properties version = null;
             if (getSource().isFile())
             {
@@ -469,7 +470,7 @@ public class FMLModContainer implements ModContainer
                     {
                         warnLevel = Level.TRACE;
                     }
-                    FMLLog.log(getModId(), warnLevel, "The mod %s is expecting signature %s for source %s, however there is no signature matching that description", getModId(), expectedFingerprint, source.getName());
+                    if (DEBUG_FMC) FMLLog.log(getModId(), warnLevel, "The mod %s is expecting signature %s for source %s, however there is no signature matching that description", getModId(), expectedFingerprint, source.getName());
                 }
                 else
                 {

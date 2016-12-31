@@ -6,7 +6,7 @@ import static org.lwjgl.opengl.GL12.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileWriter;import java.io.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -77,7 +77,7 @@ public class SplashProgress
 
     private static Properties config;
 
-    private static boolean enabled;
+    private static boolean enabled = false;// Default off, class not fully safe and deprecated, need remove class?
     private static boolean rotate;
     private static int logoOffset;
     private static int backgroundColor;
@@ -111,13 +111,14 @@ public class SplashProgress
 
     public static void start()
     {
+        if(!enabled) return;
         File configFile = new File(Minecraft.getMinecraft().mcDataDir, "config/splash.properties");
-        FileReader r = null;
+        FileReader r = null;BufferedReader br_r = null;
         config = new Properties();
         try
         {
-            r = new FileReader(configFile);
-            config.load(r);
+            r = new FileReader(configFile);br_r = new BufferedReader(r);
+            config.load(br_r);
         }
         catch(IOException e)
         {
@@ -125,7 +126,7 @@ public class SplashProgress
         }
         finally
         {
-            IOUtils.closeQuietly(r);
+            IOUtils.closeQuietly(br_r);IOUtils.closeQuietly(r);
         }
 
         // Enable if we have the flag, and there's either no optifine, or optifine has added a key to the blackboard ("optifine.ForgeSplashCompatible")
@@ -145,11 +146,11 @@ public class SplashProgress
 
         File miscPackFile = new File(Minecraft.getMinecraft().mcDataDir, getString("resourcePackPath", "resources"));
 
-        FileWriter w = null;
+        FileWriter w = null;BufferedWriter bw_w = null;
         try
         {
-            w = new FileWriter(configFile);
-            config.store(w, "Splash screen properties");
+            w = new FileWriter(configFile);bw_w = new BufferedWriter(w);
+            config.store(bw_w, "Splash screen properties");
         }
         catch(IOException e)
         {
@@ -157,7 +158,7 @@ public class SplashProgress
         }
         finally
         {
-            IOUtils.closeQuietly(w);
+            IOUtils.closeQuietly(bw_w);IOUtils.closeQuietly(w);
         }
 
         miscPack = createResourcePack(miscPackFile);
@@ -544,11 +545,11 @@ public class SplashProgress
         enabled = false;
         config.setProperty("enabled", "false");
 
-        FileWriter w = null;
+        FileWriter w = null;BufferedWriter bw_w = null;
         try
         {
-            w = new FileWriter(configFile);
-            config.store(w, "Splash screen properties");
+            w = new FileWriter(configFile);bw_w = new BufferedWriter(w);
+            config.store(bw_w, "Splash screen properties");
         }
         catch(IOException e)
         {
@@ -557,7 +558,7 @@ public class SplashProgress
         }
         finally
         {
-            IOUtils.closeQuietly(w);
+            IOUtils.closeQuietly(bw_w);IOUtils.closeQuietly(w);
         }
         return true;
     }
@@ -610,11 +611,11 @@ public class SplashProgress
                 while((size / width) * (size / height) < frames) size *= 2;
                 this.size = size;
                 glEnable(GL_TEXTURE_2D);
-                synchronized(SplashProgress.class)
-                {
+                //synchronized(SplashProgress.class)
+                //{
                     name = glGenTextures();
                     glBindTexture(GL_TEXTURE_2D, name);
-                }
+                //}
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, (IntBuffer)null);
