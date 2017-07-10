@@ -33,7 +33,7 @@ import cpw.mods.fml.common.discovery.asm.ASMModParser;
 
 public class DirectoryDiscoverer implements ITypeDiscoverer
 {
-    private static final boolean DEBUG_DD = Boolean.parseBoolean(System.getProperty("fml.directorydiscovererDebug", "false"));
+    private static final boolean DEBUG_DD = Boolean.parseBoolean(System.getProperty("fml.debugDirectoryDiscoverer", "false"));
     
     private class ClassFilter implements FileFilter
     {

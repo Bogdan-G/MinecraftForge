@@ -35,7 +35,7 @@ import cpw.mods.fml.relauncher.Side;
 
 public class NetworkModHolder
 {
-    private static final boolean DEBUG_NMH = Boolean.parseBoolean(System.getProperty("fml.networkmodholderDebug", "false"));
+    private static final boolean DEBUG_NMH = Boolean.parseBoolean(System.getProperty("fml.debugNetworkModHolder", "false"));
     
     public abstract class NetworkChecker {
         public abstract boolean check(Map<String,String> remoteVersions, Side side);

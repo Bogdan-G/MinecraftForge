@@ -8,7 +8,7 @@ package net.minecraftforge.fluids;
  * @author King Lemming, cpw (ILiquidTank)
  * 
  */
-public interface IFluidTank
+public interface IFluidTank extends java.io.Serializable
 {
     /**
      * @return FluidStack representing the fluid in the tank, null if the tank is empty.

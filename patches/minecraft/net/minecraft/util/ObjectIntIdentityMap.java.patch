@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/util/ObjectIntIdentityMap.java
++++ ../src-work/minecraft/net/minecraft/util/ObjectIntIdentityMap.java
+@@ -7,7 +7,7 @@
+ import java.util.Iterator;
+ import java.util.List;
+ 
+-public class ObjectIntIdentityMap implements IObjectIntIterable
++public class ObjectIntIdentityMap implements IObjectIntIterable, java.io.Serializable
+ {
+     protected IdentityHashMap field_148749_a = new IdentityHashMap(512);
+     protected List field_148748_b = Lists.newArrayList();

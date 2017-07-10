@@ -1,13 +1,26 @@
 --- ../src-base/minecraft/net/minecraft/item/ItemStack.java
 +++ ../src-work/minecraft/net/minecraft/item/ItemStack.java
-@@ -33,6 +33,7 @@
+@@ -33,16 +33,17 @@
  import net.minecraft.util.IIcon;
  import net.minecraft.util.StatCollector;
  import net.minecraft.world.World;
 +import net.minecraftforge.event.ForgeEventFactory;
  
- public final class ItemStack
+-public final class ItemStack
++public final class ItemStack implements java.io.Serializable
  {
+-    public static final DecimalFormat field_111284_a = new DecimalFormat("#.###");
++    public static final DecimalFormat field_111284_a = new DecimalFormat("#.###");private static final long serialVersionUID = 5552658394524465555L;
+     public int field_77994_a;
+     public int field_77992_b;
+     private Item field_151002_e;
+     public NBTTagCompound field_77990_d;
+     int field_77991_e;
+-    private EntityItemFrame field_82843_f;
++    private EntityItemFrame field_82843_f;
+     private static final String __OBFID = "CL_00000043";
+ 
+     private cpw.mods.fml.common.registry.RegistryDelegate<Item> delegate;
 @@ -124,6 +125,7 @@
  
      public boolean func_77943_a(EntityPlayer p_77943_1_, World p_77943_2_, int p_77943_3_, int p_77943_4_, int p_77943_5_, int p_77943_6_, float p_77943_7_, float p_77943_8_, float p_77943_9_)

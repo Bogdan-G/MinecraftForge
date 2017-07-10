@@ -4,7 +4,7 @@
  import com.google.common.collect.Lists;
  import cpw.mods.fml.relauncher.Side;
  import cpw.mods.fml.relauncher.SideOnly;
-+import java.io.File;
++import java.io.File;import org.bogdang.modifications.random.TLR;
  import java.util.ArrayList;
  import java.util.HashSet;
  import java.util.Iterator;
@@ -84,12 +84,21 @@
      }
  
      public boolean func_73056_e()
+@@ -283,7 +302,7 @@
+         super.func_147456_g();
+         int i = 0;
+         int j = 0;
+-        Iterator iterator = this.field_72993_I.iterator();
++        Iterator iterator = this.field_72993_I.iterator();Random random = TLR.current();
+ 
+         while (iterator.hasNext())
+         {
 @@ -301,7 +320,7 @@
              int k1;
              int l1;
  
 -            if (this.field_73012_v.nextInt(100000) == 0 && this.func_72896_J() && this.func_72911_I())
-+            if (field_73011_w.canDoLightning(chunk) && this.field_73012_v.nextInt(100000) == 0 && this.func_72896_J() && this.func_72911_I())
++            if (field_73011_w.canDoLightning(chunk) && random.nextInt(100000) == 0 && this.func_72896_J() && this.func_72911_I())
              {
                  this.field_73005_l = this.field_73005_l * 3 + 1013904223;
                  i1 = this.field_73005_l >> 2;
@@ -98,7 +107,7 @@
              this.field_72984_F.func_76318_c("iceandsnow");
  
 -            if (this.field_73012_v.nextInt(16) == 0)
-+            if (field_73011_w.canDoRainSnowIce(chunk) && this.field_73012_v.nextInt(16) == 0)
++            if (field_73011_w.canDoRainSnowIce(chunk) && random.nextInt(16) == 0)
              {
                  this.field_73005_l = this.field_73005_l * 3 + 1013904223;
                  i1 = this.field_73005_l >> 2;

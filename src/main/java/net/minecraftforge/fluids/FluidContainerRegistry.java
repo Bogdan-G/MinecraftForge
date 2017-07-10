@@ -25,12 +25,12 @@ import net.minecraftforge.common.MinecraftForge;
  * @author King Lemming
  *
  */
-public abstract class FluidContainerRegistry
+public abstract class FluidContainerRegistry implements java.io.Serializable
 {
     // Holder object that implements HashCode for an ItemStack,
     // the local maps are not guaranteed to have the same internal generic structure,
     // but the external interface for checking ItemStacks will still exist.
-    private static class ContainerKey
+    private static class ContainerKey implements java.io.Serializable
     {
         ItemStack container;
         FluidStack stack;

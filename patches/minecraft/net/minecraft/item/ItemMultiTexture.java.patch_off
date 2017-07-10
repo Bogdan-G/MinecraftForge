@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/item/ItemMultiTexture.java
++++ ../src-work/minecraft/net/minecraft/item/ItemMultiTexture.java
+@@ -5,7 +5,7 @@
+ import net.minecraft.block.Block;
+ import net.minecraft.util.IIcon;
+ 
+-public class ItemMultiTexture extends ItemBlock
++public class ItemMultiTexture extends ItemBlock implements java.io.Serializable
+ {
+     protected final Block field_150941_b;
+     protected final String[] field_150942_c;

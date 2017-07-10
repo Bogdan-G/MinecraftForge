@@ -30,7 +30,7 @@ import cpw.mods.fml.common.discovery.asm.ASMModParser;
 
 public class JarDiscoverer implements ITypeDiscoverer
 {
-    private static final boolean DEBUG_JD = Boolean.parseBoolean(System.getProperty("fml.jardiscovererDebug", "false"));
+    private static final boolean DEBUG_JD = Boolean.parseBoolean(System.getProperty("fml.debugJarDiscoverer", "false"));
     
     @Override
     public List<ModContainer> discover(ModCandidate candidate, ASMDataTable table)

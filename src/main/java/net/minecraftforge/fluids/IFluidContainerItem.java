@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
  * @author King Lemming
  * 
  */
-public interface IFluidContainerItem
+public interface IFluidContainerItem extends java.io.Serializable
 {
     /**
      * 

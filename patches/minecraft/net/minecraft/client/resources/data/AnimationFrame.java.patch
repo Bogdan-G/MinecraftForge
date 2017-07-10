@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/resources/data/AnimationFrame.java
++++ ../src-work/minecraft/net/minecraft/client/resources/data/AnimationFrame.java
+@@ -4,7 +4,7 @@
+ import cpw.mods.fml.relauncher.SideOnly;
+ 
+ @SideOnly(Side.CLIENT)
+-public class AnimationFrame
++public class AnimationFrame implements java.io.Serializable
+ {
+     private final int field_110499_a;
+     private final int field_110498_b;

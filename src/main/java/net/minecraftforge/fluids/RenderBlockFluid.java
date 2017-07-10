@@ -16,7 +16,7 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
  * @author King Lemming
  * 
  */
-public class RenderBlockFluid implements ISimpleBlockRenderingHandler
+public class RenderBlockFluid implements ISimpleBlockRenderingHandler, java.io.Serializable
 {
     public static RenderBlockFluid instance = new RenderBlockFluid();
 

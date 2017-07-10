@@ -1,5 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/client/Minecraft.java
 +++ ../src-work/minecraft/net/minecraft/client/Minecraft.java
+@@ -180,7 +180,7 @@
+     private static final Logger field_147123_G = LogManager.getLogger();
+     private static final ResourceLocation field_110444_H = new ResourceLocation("textures/gui/title/mojang.png");
+     public static final boolean field_142025_a = Util.func_110647_a() == Util.EnumOS.OSX;
+-    public static byte[] field_71444_a = new byte[10485760];
++    public static byte[] field_71444_a = Boolean.parseBoolean(System.getProperty("mc.memoryReserve", "true")) ? new byte[10485760] : new byte[0];
+     private static final List field_110445_I = Lists.newArrayList(new DisplayMode[] {new DisplayMode(2560, 1600), new DisplayMode(2880, 1800)});
+     private final File field_130070_K;
+     private final Multimap field_152356_J;
 @@ -276,7 +276,6 @@
          this.func_71389_H();
          this.field_71449_j = p_i1103_1_;
@@ -65,6 +74,15 @@
          if (p_147108_1_ instanceof GuiMainMenu)
          {
              this.field_71474_y.field_74330_P = false;
+@@ -1062,7 +1067,7 @@
+ 
+         this.field_71424_I.func_76319_b();
+ 
+-        if (this.func_147107_h())
++        if (Boolean.parseBoolean(System.getProperty("mc.DisplaySyncInClientThread", "true")) && this.func_147107_h())
+         {
+             Display.sync(this.func_90020_K());
+         }
 @@ -1353,7 +1358,7 @@
  
                      if (this.field_71439_g.func_82246_f(i, j, k))

@@ -3,7 +3,7 @@ package net.minecraftforge.common;
 import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
 
-public interface IPlantable
+public interface IPlantable extends java.io.Serializable
 {
     public EnumPlantType getPlantType(IBlockAccess world, int x, int y, int z);
     public Block getPlant(IBlockAccess world, int x, int y, int z);

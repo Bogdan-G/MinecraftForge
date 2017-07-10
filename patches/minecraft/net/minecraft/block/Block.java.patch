@@ -51,8 +51,11 @@
 +import net.minecraftforge.event.ForgeEventFactory;
 +import static net.minecraftforge.common.util.ForgeDirection.*;
  
- public class Block
+-public class Block
++public class Block implements java.io.Serializable
  {
+     public static final RegistryNamespaced field_149771_c = GameData.getBlockRegistry();
+     private CreativeTabs field_149772_a;
 @@ -112,7 +133,8 @@
  
      public static Block func_149729_e(int p_149729_0_)
@@ -205,14 +208,14 @@
      }
  
      protected ItemStack func_149644_j(int p_149644_1_)
-@@ -1116,6 +1155,1104 @@
+@@ -1116,7 +1155,1105 @@
          return null;
      }
  
 +    /* ======================================== FORGE START =====================================*/
 +    //For ForgeInternal use Only!
-+    protected ThreadLocal<EntityPlayer> harvesters = new ThreadLocal();
-+    private ThreadLocal<Integer> silk_check_meta = new ThreadLocal();
++    protected transient ThreadLocal<EntityPlayer> harvesters = new ThreadLocal();
++    private transient ThreadLocal<Integer> silk_check_meta = new ThreadLocal();
 +    /**
 +     * Get a light value for the block at the specified coordinates, normal ranges are between 0 and 15
 +     *
@@ -1283,11 +1286,11 @@
 +
 +
 +    // For Inernal use only to capture droped items inside getDrops
-+    protected ThreadLocal<Boolean> captureDrops = new ThreadLocal<Boolean>()
++    protected transient ThreadLocal<Boolean> captureDrops = new ThreadLocal<Boolean>()
 +    {
 +        @Override protected Boolean initialValue() { return false; }
 +    };
-+    protected ThreadLocal<List<ItemStack>> capturedDrops = new ThreadLocal<List<ItemStack>>()
++    protected transient ThreadLocal<List<ItemStack>> capturedDrops = new ThreadLocal<List<ItemStack>>()
 +    {
 +        @Override protected List<ItemStack> initialValue() { return new ArrayList<ItemStack>(); }
 +    };
@@ -1307,6 +1310,8 @@
 +    }
 +    /* ========================================= FORGE END ======================================*/
 +
-     public static class SoundType
+-    public static class SoundType
++    public static class SoundType implements java.io.Serializable
          {
              public final String field_150501_a;
+             public final float field_150499_b;

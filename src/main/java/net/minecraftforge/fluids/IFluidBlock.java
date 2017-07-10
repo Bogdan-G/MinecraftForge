@@ -10,7 +10,7 @@ import net.minecraft.world.World;
  * @author King Lemming
  * 
  */
-public interface IFluidBlock
+public interface IFluidBlock extends java.io.Serializable
 {
     /**
      * Returns the Fluid associated with this Block.

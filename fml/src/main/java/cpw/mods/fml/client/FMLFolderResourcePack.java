@@ -21,7 +21,7 @@ import cpw.mods.fml.common.ModContainer;
 public class FMLFolderResourcePack extends FolderResourcePack implements FMLContainerHolder {
 
     private ModContainer container;
-    private static final boolean DEBUG_FFRP = Boolean.parseBoolean(System.getProperty("fml.fmlfolderresourcepackDebug", "false"));
+    private static final boolean DEBUG_FFRP = Boolean.parseBoolean(System.getProperty("fml.debugFolderResourcePack", "false"));
 
     public FMLFolderResourcePack(ModContainer container)
     {

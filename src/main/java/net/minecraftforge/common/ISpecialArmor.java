@@ -21,7 +21,7 @@ import net.minecraft.item.ItemStack;
  *
  * @see ItemArmor
  */
-public interface ISpecialArmor
+public interface ISpecialArmor extends java.io.Serializable
 {
     /**
      * Retrieves the modifiers to be used when calculating armor damage.

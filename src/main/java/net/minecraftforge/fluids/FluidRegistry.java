@@ -3,6 +3,7 @@ package net.minecraftforge.fluids;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.*;
 
 import org.apache.logging.log4j.Level;
 
@@ -15,8 +16,8 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+//import com.google.common.collect.BiMap;
+//import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -28,25 +29,29 @@ import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.registry.RegistryDelegate;
 
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
+
 /**
  * Handles Fluid registrations. Fluids MUST be registered in order to function.
  *
  * @author King Lemming, CovertJaguar (LiquidDictionary)
  *
  */
-public abstract class FluidRegistry
+public abstract class FluidRegistry implements java.io.Serializable
 {
     static int maxID = 0;
 
-    static BiMap<String, Fluid> fluids = HashBiMap.create();
-    static BiMap<Fluid, Integer> fluidIDs = HashBiMap.create();
-    static BiMap<Integer, String> fluidNames = HashBiMap.create(); //Caching this just makes some other calls faster
-    static BiMap<Block, Fluid> fluidBlocks;
+    static HashBiMap<String, Fluid> fluids = new HashBiMap();
+    static HashBiMap<Fluid, Integer> fluidIDs = new HashBiMap();
+    static HashBiMap<Integer, String> fluidNames = new HashBiMap(); //Caching this just makes some other calls faster
+    static Map<Block, Fluid> fluidBlocks;
 
     // the globally unique fluid map - only used to associate non-defaults during world/server loading
-    static BiMap<String,Fluid> masterFluidReference = HashBiMap.create();
-    static BiMap<String,String> defaultFluidName = HashBiMap.create();
-    static Map<Fluid,FluidDelegate> delegates = Maps.newHashMap();
+    static HashBiMap<String,Fluid> masterFluidReference = new HashBiMap();
+    static Map<String,String> defaultFluidName = new UnifiedMap();
+    static Map<Fluid,FluidDelegate> delegates = new UnifiedMap();
+    private static final long serialVersionUID = 5052658394524465555L;
 
     public static final Fluid WATER = new Fluid("water") {
         @Override
@@ -76,7 +81,7 @@ public abstract class FluidRegistry
      * Called by Forge to prepare the ID map for server -> client sync.
      * Modders, DO NOT call this.
      */
-    public static void initFluidIDs(BiMap<Fluid, Integer> newfluidIDs, Set<String> defaultNames)
+    public static void initFluidIDs(HashBiMap<Fluid, Integer> newfluidIDs, Set<String> defaultNames)
     {
         maxID = newfluidIDs.size();
         loadFluidDefaults(newfluidIDs, defaultNames);
@@ -87,13 +92,13 @@ public abstract class FluidRegistry
      * DO NOT call this and expect useful behaviour.
      * @param newfluidIDs
      */
-    private static void loadFluidDefaults(BiMap<Fluid, Integer> localFluidIDs, Set<String> defaultNames)
+    private static void loadFluidDefaults(HashBiMap<Fluid, Integer> localFluidIDs, Set<String> defaultNames)
     {
         // If there's an empty set of default names, use the defaults as defined locally
         if (defaultNames.isEmpty()) {
             defaultNames.addAll(defaultFluidName.values());
         }
-        BiMap<String, Fluid> localFluids = HashBiMap.create(fluids);
+        HashBiMap<String, Fluid> localFluids = new HashBiMap(fluids);
         for (String defaultName : defaultNames)
         {
             Fluid fluid = masterFluidReference.get(defaultName);
@@ -112,7 +117,7 @@ public abstract class FluidRegistry
             Integer id = localFluidIDs.remove(oldFluid);
             localFluidIDs.put(fluid, id);
         }
-        BiMap<Integer, String> localFluidNames = HashBiMap.create();
+        HashBiMap<Integer, String> localFluidNames = new HashBiMap();
         for (Entry<Fluid, Integer> e : localFluidIDs.entrySet()) {
             localFluidNames.put(e.getValue(), e.getKey().getName());
         }
@@ -259,7 +264,7 @@ public abstract class FluidRegistry
     {
         if (fluidBlocks == null)
         {
-            BiMap<Block, Fluid> tmp = HashBiMap.create();
+            Map<Block, Fluid> tmp = new UnifiedMap();
             for (Fluid fluid : fluids.values())
             {
                 if (fluid.canBePlacedInWorld() && fluid.getBlock() != null)
@@ -315,7 +320,7 @@ public abstract class FluidRegistry
         {
             FMLLog.getLogger().log(Level.DEBUG, "World is missing persistent fluid defaults - using local defaults");
         }
-        loadFluidDefaults(HashBiMap.create(fluidIDs), defaults);
+        loadFluidDefaults(new HashBiMap(fluidIDs), defaults);
     }
 
     public static void writeDefaultFluidList(NBTTagCompound forgeData)
@@ -360,10 +365,11 @@ public abstract class FluidRegistry
     }
 
 
-    private static class FluidDelegate implements RegistryDelegate<Fluid>
+    private static class FluidDelegate implements RegistryDelegate<Fluid>, java.io.Serializable
     {
         private String name;
         private Fluid fluid;
+        private static final long serialVersionUID = 5512658394524465555L;
 
         FluidDelegate(Fluid fluid, String name)
         {

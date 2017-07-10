@@ -7,7 +7,7 @@ import java.util.BitSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
+import java.util.Map;import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentMap;
 
@@ -35,14 +35,22 @@ import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraftforge.event.world.WorldEvent;
 
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.map.mutable.primitive.IntIntHashMap;
+import org.eclipse.collections.impl.map.mutable.primitive.IntBooleanHashMap;
+import org.eclipse.collections.impl.map.mutable.primitive.IntObjectHashMap;
+import org.eclipse.collections.api.*;
+import org.eclipse.collections.api.iterator.*;
+import org.eclipse.collections.api.set.primitive.*;
+
 public class DimensionManager
 {
-    private static Hashtable<Integer, Class<? extends WorldProvider>> providers = new Hashtable<Integer, Class<? extends WorldProvider>>();
-    private static Hashtable<Integer, Boolean> spawnSettings = new Hashtable<Integer, Boolean>();
-    private static Hashtable<Integer, WorldServer> worlds = new Hashtable<Integer, WorldServer>();
+    private static IntObjectHashMap<Class<? extends WorldProvider>> providers = new IntObjectHashMap<Class<? extends WorldProvider>>();
+    private static IntBooleanHashMap spawnSettings = new IntBooleanHashMap();
+    private static IntObjectHashMap<WorldServer> worlds = new IntObjectHashMap<WorldServer>();
     private static boolean hasInit = false;
-    private static Hashtable<Integer, Integer> dimensions = new Hashtable<Integer, Integer>();
-    private static ArrayList<Integer> unloadQueue = new ArrayList<Integer>();
+    private static IntIntHashMap dimensions = new IntIntHashMap();
+    private static IntArrayList unloadQueue = new IntArrayList();
     private static BitSet dimensionMap = new BitSet(Long.SIZE << 4);
     private static ConcurrentMap<World, World> weakWorldMap = new MapMaker().weakKeys().weakValues().<World,World>makeMap();
     private static Multiset<Integer> leakedWorlds = HashMultiset.create();
@@ -79,11 +87,13 @@ public class DimensionManager
 
         int[] ret = new int[dimensions.size()];
         int x = 0;
-        for (Map.Entry<Integer, Integer> ent : dimensions.entrySet())
+        MutableIntIterator iterator = dimensions.keySet().intIterator();
+        while(iterator.hasNext())
         {
-            if (ent.getValue() == id)
+            int ent = iterator.next();
+            if (dimensions.get(ent) == id)
             {
-                ret[x++] = ent.getKey();
+                ret[x++] = ent;
             }
         }
 
@@ -183,7 +193,10 @@ public class DimensionManager
     }
     public static Integer[] getIDs()
     {
-        return worlds.keySet().toArray(new Integer[worlds.size()]); //Only loaded dims, since usually used to cycle through loaded worlds
+        int[] ids0 = worlds.keySet().toArray();
+        Integer[] ids1 = new Integer[ids0.length];
+        for (int i=0;i<ids0.length;i++) ids1[i] = new Integer(ids0[i]);
+        return ids1; //Only loaded dims, since usually used to cycle through loaded worlds
     }
 
     public static void setWorld(int id, WorldServer world)
@@ -210,14 +223,15 @@ public class DimensionManager
         if (worlds.get( 1) != null)
             tmp.add(worlds.get( 1));
 
-        for (Entry<Integer, WorldServer> entry : worlds.entrySet())
+        MutableIntIterator iterator = worlds.keySet().intIterator();
+        while(iterator.hasNext())
         {
-            int dim = entry.getKey();
-            if (dim >= -1 && dim <= 1)
+            int entry = iterator.next();
+            if (entry >= -1 && entry <= 1)
             {
                 continue;
             }
-            tmp.add(entry.getValue());
+            tmp.add(worlds.get(entry));
         }
 
         MinecraftServer.getServer().worldServers = tmp.toArray(new WorldServer[tmp.size()]);
@@ -280,7 +294,10 @@ public class DimensionManager
      */
     public static Integer[] getStaticDimensionIDs()
     {
-        return dimensions.keySet().toArray(new Integer[dimensions.keySet().size()]);
+        int[] ids0 = dimensions.keySet().toArray();
+        Integer[] ids1 = new Integer[ids0.length];
+        for (int i=0;i<ids0.length;i++) ids1[i] = new Integer(ids0[i]);
+        return ids1;
     }
     public static WorldProvider createProviderFor(int dim)
     {
@@ -313,7 +330,9 @@ public class DimensionManager
     * To be called by the server at the appropriate time, do not call from mod code.
     */
     public static void unloadWorlds(Hashtable<Integer, long[]> worldTickTimes) {
-        for (int id : unloadQueue) {
+        MutableIntIterator iterator = unloadQueue.intIterator();
+        while(iterator.hasNext()) {
+            int id = iterator.next();
             WorldServer w = worlds.get(id);
             try {
                 if (w != null)
@@ -383,8 +402,10 @@ public class DimensionManager
         dimensionMap.clear();
         if (compoundTag == null)
         {
-            for (Integer id : dimensions.keySet())
+            MutableIntIterator iterator = dimensions.keySet().intIterator();
+            while(iterator.hasNext())
             {
+                int id = iterator.next();
                 if (id >= 0)
                 {
                     dimensionMap.set(id);

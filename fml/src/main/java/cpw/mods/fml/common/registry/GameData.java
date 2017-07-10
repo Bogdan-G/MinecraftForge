@@ -77,7 +77,7 @@ public class GameData {
     public static final FMLControlledNamespacedRegistry<Item> itemRegistry = getItemRegistry();
 
     private static Table<String, String, ItemStack> customItemStacks = HashBasedTable.create();
-    private static Map<UniqueIdentifier, ModContainer> customOwners = Maps.newHashMap();
+    private static Map<UniqueIdentifier, ModContainer> customOwners = new org.eclipse.collections.impl.map.mutable.UnifiedMap();
     private static GameData frozen;
 
     // public api
@@ -159,7 +159,7 @@ public class GameData {
         {
             return;
         }
-        if (Boolean.valueOf(System.getProperty("fml.dumpRegistry", "false"))/*.booleanValue()*/)
+        if (Boolean.parseBoolean(System.getProperty("fml.dumpRegistry", "false"))/*.booleanValue()*/)
         {
             ImmutableListMultimap.Builder<String, String> builder = ImmutableListMultimap.builder();
             for (String modId : customItemStacks.rowKeySet())
@@ -201,14 +201,14 @@ public class GameData {
             if (i != null)
             {
                 is = new ItemStack(i, 0 ,0);
-            }
-        }
-        if (is == null)
-        {
-            Block b = findBlock(modId, name);
-            if (b != null)
+            }//if i == null, -1 null-check for "is"
+            else
             {
-                is = new ItemStack(b, 0, Short.MAX_VALUE);
+                Block b = findBlock(modId, name);
+                if (b != null)
+                {
+                    is = new ItemStack(b, 0, Short.MAX_VALUE);
+                }
             }
         }
         return is;
@@ -272,7 +272,7 @@ public class GameData {
 
         Set<Integer> newBlockedIds = new HashSet<Integer>();
         Set<String> itemsToRemove = new HashSet<String>();
-        Map<String, Integer> itemsToRelocate = new HashMap<String, Integer>();
+        Map<String, Integer> itemsToRelocate = new org.eclipse.collections.impl.map.mutable.UnifiedMap<String, Integer>();
 
         // check all ids occupied by items
         for (Entry<String, Integer> entry : dataList.entrySet())
@@ -391,7 +391,7 @@ public class GameData {
         try
         {
             String skip = System.getProperty("fml.doNotBackup");
-            if (skip == null || !"true".equals(skip))
+            if (skip == null || !skip.equalsIgnoreCase("true"))
             {
                 ZipperUtil.backupWorld();
             }
@@ -684,7 +684,7 @@ public class GameData {
             try
             {
                 String skip = System.getProperty("fml.doNotBackup");
-                if (skip == null || !"true".equals(skip))
+                if (skip == null || !skip.equalsIgnoreCase("true"))
                 {
                     ZipperUtil.backupWorld();
                 }
@@ -854,7 +854,7 @@ public class GameData {
 
         int itemId = iItemRegistry.add(idHint, name, item, availabilityMap);
 
-        if (item instanceof ItemBlock) // verify //Revert: broken ? warning: , instanceof -> getClass().equals()
+        if (item instanceof ItemBlock) // verify
         {
             if (itemId != idHint) throw new IllegalStateException(String.format("ItemBlock at block id %d insertion failed, got id %d.", idHint, itemId));
             verifyItemBlockName((ItemBlock) item);
@@ -890,7 +890,7 @@ public class GameData {
 
         for (Item item : iItemRegistry.typeSafeIterable()) // find matching ItemBlock
         {
-            if (item instanceof ItemBlock && ((ItemBlock) item).field_150939_a == block) //Revert: broken ? warning: , instanceof -> getClass().equals()
+            if (item instanceof ItemBlock && ((ItemBlock) item).field_150939_a == block)
             {
                 itemBlock = (ItemBlock) item;
                 break;
@@ -951,7 +951,7 @@ public class GameData {
      */
     private void freeSlot(int id, Object obj)
     {
-        FMLControlledNamespacedRegistry<?> registry = (obj instanceof Block) ? iBlockRegistry : iItemRegistry;//Revert: broken ? warning: , instanceof -> getClass().equals()
+        FMLControlledNamespacedRegistry<?> registry = (obj instanceof Block) ? iBlockRegistry : iItemRegistry;
         Object thing = registry.getRaw(id);
 
         if (thing != null && thing != obj)

@@ -8,13 +8,15 @@ import org.apache.logging.log4j.Level;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+//import com.google.common.collect.BiMap;
+//import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Sets;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+
+import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
 
 public abstract class ForgeMessage {
     public static class DimensionRegisterMessage extends ForgeMessage {
@@ -46,7 +48,7 @@ public abstract class ForgeMessage {
     }
 
     public static class FluidIdMapMessage extends ForgeMessage {
-        BiMap<Fluid, Integer> fluidIds = HashBiMap.create();
+        HashBiMap<Fluid, Integer> fluidIds = new HashBiMap();
         Set<String> defaultFluids = Sets.newHashSet();
         @Override
         void toBytes(ByteBuf bytes)

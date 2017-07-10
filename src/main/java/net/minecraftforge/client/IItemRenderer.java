@@ -2,7 +2,7 @@ package net.minecraftforge.client;
 
 import net.minecraft.item.ItemStack;
 
-public interface IItemRenderer
+public interface IItemRenderer extends java.io.Serializable
 {
     public enum ItemRenderType
     {

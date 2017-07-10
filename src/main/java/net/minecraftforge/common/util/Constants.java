@@ -4,7 +4,7 @@ package net.minecraftforge.common.util;
  * A class containing constants for magic numbers used in the minecraft codebase.
  * Everything here should be checked each update, and have a comment relating to where to check it.
  */
-public class Constants
+public class Constants implements java.io.Serializable
 {
     /**
      * NBT Tag type IDS, used when storing the nbt to disc, Should align with NBTBase.getId, 
@@ -13,7 +13,7 @@ public class Constants
      * Main use is checking tag type in NBTTagCompound.func_150297_b(String, int)
      *
      */
-    public static class NBT
+    public static class NBT implements java.io.Serializable
     {
         public static final int TAG_END         = 0;
         public static final int TAG_BYTE        = 1;

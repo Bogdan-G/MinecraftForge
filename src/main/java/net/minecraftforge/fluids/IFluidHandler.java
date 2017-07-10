@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  * @author King Lemming
  * 
  */
-public interface IFluidHandler
+public interface IFluidHandler extends java.io.Serializable
 {
     /**
      * Fills fluid into internal tanks, distribution is left entirely to the IFluidHandler.

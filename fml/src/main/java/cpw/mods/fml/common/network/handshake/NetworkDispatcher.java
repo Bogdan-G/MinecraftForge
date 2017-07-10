@@ -157,12 +157,10 @@ public class NetworkDispatcher extends SimpleChannelInboundHandler<Packet> imple
         NBTTagCompound playerNBT = scm.getPlayerNBT(player);
         if (playerNBT!=null)
         {
-            return playerNBT.getInteger("Dimension");
+            int dimension = playerNBT.getInteger("Dimension");
+            if (net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimension)) return dimension;
         }
-        else
-        {
-            return 0;
-        }
+        return 0;
     }
 
     void clientListenForServerHandshake()

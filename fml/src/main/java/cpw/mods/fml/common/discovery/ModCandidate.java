@@ -33,7 +33,7 @@ public class ModCandidate
     private List<String> baseModTypes = Lists.newArrayList();
     private boolean isMinecraft;
     private List<ASMModParser> baseModCandidateTypes = Lists.newArrayListWithCapacity(1);
-    private Set<String> foundClasses = Sets.newHashSet();
+    private Set<String> foundClasses = new org.eclipse.collections.impl.set.mutable.UnifiedSet();//Sets.newHashSet();
     private List<ModContainer> mods;
     private List<String> packages = Lists.newArrayList();
     private ASMDataTable table;

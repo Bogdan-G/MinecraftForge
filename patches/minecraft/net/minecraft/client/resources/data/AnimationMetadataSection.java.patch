@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/resources/data/AnimationMetadataSection.java
++++ ../src-work/minecraft/net/minecraft/client/resources/data/AnimationMetadataSection.java
+@@ -9,7 +9,7 @@
+ import java.util.Set;
+ 
+ @SideOnly(Side.CLIENT)
+-public class AnimationMetadataSection implements IMetadataSection
++public class AnimationMetadataSection implements IMetadataSection, java.io.Serializable
+ {
+     private final List animationFrames;
+     private final int frameWidth;

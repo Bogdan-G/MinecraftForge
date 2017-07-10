@@ -16,7 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
  * @author King Lemming, SirSengir (LiquidStack)
  *
  */
-public class FluidStack
+public class FluidStack implements java.io.Serializable
 {
     /**
      * This field will be removed in 1.8. It may be incorrect after a world is loaded. Code should always
@@ -27,6 +27,7 @@ public class FluidStack
     public int amount;
     public NBTTagCompound tag;
     private RegistryDelegate<Fluid> fluidDelegate;
+    private static final long serialVersionUID = 552208394524465556L;
 
     public FluidStack(Fluid fluid, int amount)
     {

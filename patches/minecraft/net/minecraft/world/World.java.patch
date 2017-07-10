@@ -247,6 +247,75 @@
      public int func_72805_g(int p_72805_1_, int p_72805_2_, int p_72805_3_)
      {
          if (p_72805_1_ >= -30000000 && p_72805_3_ >= -30000000 && p_72805_1_ < 30000000 && p_72805_3_ < 30000000)
+@@ -603,7 +692,7 @@
+     {
+         if (!this.field_72995_K)
+         {
+-            Block block = this.func_147439_a(p_147460_1_, p_147460_2_, p_147460_3_);
++            Block block = this.getBlockIfExists(p_147460_1_, p_147460_2_, p_147460_3_);if(block == Blocks.air) return;
+ 
+             try
+             {
+@@ -736,13 +825,13 @@
+     {
+         if (p_72976_1_ >= -30000000 && p_72976_2_ >= -30000000 && p_72976_1_ < 30000000 && p_72976_2_ < 30000000)
+         {
+-            if (!this.func_72916_c(p_72976_1_ >> 4, p_72976_2_ >> 4))
++            Chunk chunk = this.func_72964_e(p_72976_1_ >> 4, p_72976_2_ >> 4);if (chunk == null)
+             {
+                 return 0;
+             }
+             else
+             {
+-                Chunk chunk = this.func_72964_e(p_72976_1_ >> 4, p_72976_2_ >> 4);
++                //
+                 return chunk.func_76611_b(p_72976_1_ & 15, p_72976_2_ & 15);
+             }
+         }
+@@ -756,13 +845,13 @@
+     {
+         if (p_82734_1_ >= -30000000 && p_82734_2_ >= -30000000 && p_82734_1_ < 30000000 && p_82734_2_ < 30000000)
+         {
+-            if (!this.func_72916_c(p_82734_1_ >> 4, p_82734_2_ >> 4))
++            Chunk chunk = this.func_72964_e(p_82734_1_ >> 4, p_82734_2_ >> 4);if (chunk == null)
+             {
+                 return 0;
+             }
+             else
+             {
+-                Chunk chunk = this.func_72964_e(p_82734_1_ >> 4, p_82734_2_ >> 4);
++                //
+                 return chunk.field_82912_p;
+             }
+         }
+@@ -859,13 +948,13 @@
+             int l = p_72972_2_ >> 4;
+             int i1 = p_72972_4_ >> 4;
+ 
+-            if (!this.func_72916_c(l, i1))
++            Chunk chunk = this.func_72964_e(l, i1);if (chunk == null)
+             {
+                 return p_72972_1_.field_77198_c;
+             }
+             else
+             {
+-                Chunk chunk = this.func_72964_e(l, i1);
++                //
+                 return chunk.func_76614_a(p_72972_1_, p_72972_2_ & 15, p_72972_3_, p_72972_4_ & 15);
+             }
+         }
+@@ -883,7 +972,7 @@
+             {
+                 if (p_72915_3_ < 256)
+                 {
+-                    if (this.func_72916_c(p_72915_2_ >> 4, p_72915_4_ >> 4))
++                    Chunk chunk = this.func_72964_e(p_72915_2_ >> 4, p_72915_4_ >> 4);if (chunk != null)
+                     {
+-                        Chunk chunk = this.func_72964_e(p_72915_2_ >> 4, p_72915_4_ >> 4);
++                        //
+                         chunk.func_76633_a(p_72915_1_, p_72915_2_ & 15, p_72915_3_, p_72915_4_ & 15, p_72915_5_);
+ 
+                         for (int i1 = 0; i1 < this.field_73021_x.size(); ++i1)
 @@ -927,7 +1016,7 @@
  
      public boolean func_72935_r()
@@ -936,7 +1005,7 @@
 +            int i1 = p_147453_1_ + dir.offsetX;
 +            int y  = p_147453_2_ + dir.offsetY;
 +            int j1 = p_147453_3_ + dir.offsetZ;
-+            Block block1 = this.func_147439_a(i1, y, j1);
++            Block block1 = this.getBlockIfExists(i1, y, j1);
  
 -            if (Blocks.field_150441_bU.func_149907_e(block1))
 +            block1.onNeighborChange(this, i1, y, j1, p_147453_1_, p_147453_2_, p_147453_3_);
@@ -952,7 +1021,7 @@
 +                i1 += dir.offsetX;
 +                y  += dir.offsetY;
 +                j1 += dir.offsetZ;
-+                Block block2 = this.func_147439_a(i1, y, j1);
++                Block block2 = this.getBlockIfExists(i1, y, j1);
  
 -                if (Blocks.field_150441_bU.func_149907_e(block2))
 +                if (block2.getWeakChanges(this, i1, y, j1))
@@ -962,7 +1031,7 @@
                  }
              }
          }
-@@ -3722,4 +3923,110 @@
+@@ -3722,4 +3923,116 @@
              iworldaccess.func_147584_b();
          }
      }
@@ -1071,5 +1140,11 @@
 +            }
 +        }
 +        return count;
++    }
++    //parse parts code UC
++    public Block getBlockIfExists(int x, int y, int z) {
++        try{Chunk chunk = func_72964_e(x >> 4, z >> 4);
++        if(chunk != null) return chunk.func_150810_a(x & 15, y, z & 15);}catch(Throwable e) {FMLLog.log(org.apache.logging.log4j.Level.WARN, e, "Found initialization crash by Exception getting block type if exists in world, stacktrace:");}
++        return Blocks.air;
 +    }
  }

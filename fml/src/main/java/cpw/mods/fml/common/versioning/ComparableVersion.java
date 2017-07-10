@@ -71,7 +71,7 @@ import java.util.Stack;
  * @author <a href="mailto:hboutemy@apache.org">Hervé Boutemy</a>
  */
 public class ComparableVersion
-    implements Comparable<ComparableVersion>
+    implements Comparable<ComparableVersion>, java.io.Serializable
 {
     private String value;
 
@@ -79,7 +79,7 @@ public class ComparableVersion
 
     private ListItem items;
 
-    private interface Item
+    private interface Item extends java.io.Serializable
     {
         final int INTEGER_ITEM = 0;
         final int STRING_ITEM = 1;

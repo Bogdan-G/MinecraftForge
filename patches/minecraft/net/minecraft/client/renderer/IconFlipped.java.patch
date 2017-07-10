@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/IconFlipped.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/IconFlipped.java
+@@ -5,7 +5,7 @@
+ import net.minecraft.util.IIcon;
+ 
+ @SideOnly(Side.CLIENT)
+-public class IconFlipped implements IIcon
++public class IconFlipped implements IIcon, java.io.Serializable
+ {
+     private final IIcon field_96454_a;
+     private final boolean field_96452_b;

@@ -3,12 +3,13 @@ package net.minecraftforge.client.model;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.*;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.ObjModelLoader;
 import net.minecraftforge.client.model.techne.TechneModelLoader;
 
-import com.google.common.collect.Maps;
+//import com.google.common.collect.Maps;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
@@ -24,7 +25,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class AdvancedModelLoader {
-    private static Map<String, IModelCustomLoader> instances = Maps.newHashMap();
+    private static Map<String, IModelCustomLoader> instances = new HashMap();
 
     /**
      * Register a new model handler

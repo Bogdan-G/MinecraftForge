@@ -18,6 +18,7 @@ import java.util.List;import java.util.Locale;
 import java.util.Set;
 
 import net.minecraft.command.ServerCommand;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
@@ -38,6 +39,10 @@ import cpw.mods.fml.common.functions.GenericIterableFactory;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
+
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import java.io.*;
+import java.util.*;
 
 /**
  * Handles primary communication from hooked code into the system
@@ -85,6 +90,44 @@ public class FMLServerHandler implements IFMLSidedHandler
     {
         server = minecraftServer;
         Loader.instance().loadMods();
+        if (Boolean.parseBoolean(System.getProperty("fml.SerializableObjects", "false")) && Boolean.parseBoolean(System.getProperty("fml.SerializableObjectsOreDictionary", "false"))) {
+        cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.INFO, "Parse OreDictionary S");
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.idToName.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        net.minecraftforge.oredict.OreDictionary.idToName = (List<String>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.nameToId.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        net.minecraftforge.oredict.OreDictionary.nameToId = (Map<String, Integer>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.stackToId.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        net.minecraftforge.oredict.OreDictionary.stackToId = (Map<Integer, List<Integer>>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.idToStack.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        net.minecraftforge.oredict.OreDictionary.idToStack = (List<ArrayList<ItemStack>>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.idToStackUn.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        net.minecraftforge.oredict.OreDictionary.idToStackUn = (List<ArrayList<ItemStack>>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+        }
         Loader.instance().preinitializeMods();
     }
 
@@ -95,6 +138,82 @@ public class FMLServerHandler implements IFMLSidedHandler
     public void finishServerLoading()
     {
         Loader.instance().initializeMods();
+        if (!FMLLaunchHandler.SerializableObjects) {
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"fml.embedded.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.INFO, "FML cpw.mods.fml.common.asm.transformers.ModAccessTransformer.embedded: %s", cpw.mods.fml.common.asm.transformers.ModAccessTransformer.embedded.toString());
+        objectOutputStream.writeObject(cpw.mods.fml.common.asm.transformers.ModAccessTransformer.embedded);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"fml.CoreModManager.loadedCoremods.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.INFO, "FML cpw.mods.fml.relauncher.CoreModManager.loadedCoremods: %s", cpw.mods.fml.relauncher.CoreModManager.loadedCoremods.toString());
+        objectOutputStream.writeObject(cpw.mods.fml.relauncher.CoreModManager.loadedCoremods);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"fml.CoreModManager.reparsedCoremods.ser");
+        cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.INFO, "FML cpw.mods.fml.relauncher.CoreModManager.reparsedCoremods: %s", cpw.mods.fml.relauncher.CoreModManager.reparsedCoremods.toString());
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        objectOutputStream.writeObject(cpw.mods.fml.relauncher.CoreModManager.reparsedCoremods);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"fml.CoreModManager.accessTransformers.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.INFO, "FML cpw.mods.fml.relauncher.CoreModManager.accessTransformers: %s", cpw.mods.fml.relauncher.CoreModManager.accessTransformers.toString());
+        objectOutputStream.writeObject(cpw.mods.fml.relauncher.CoreModManager.accessTransformers);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        if (Boolean.parseBoolean(System.getProperty("fml.SerializableObjectsOreDictionaryInDisk", "false"))) {
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.idToName.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.INFO, "FML net.minecraftforge.oredict.OreDictionary.idToName: %s", net.minecraftforge.oredict.OreDictionary.idToName.toString());
+        objectOutputStream.writeObject(net.minecraftforge.oredict.OreDictionary.idToName);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.nameToId.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.INFO, "FML net.minecraftforge.oredict.OreDictionary.nameToId: %s", net.minecraftforge.oredict.OreDictionary.nameToId.toString());
+        objectOutputStream.writeObject(net.minecraftforge.oredict.OreDictionary.nameToId);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.stackToId.ser");
+        cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.INFO, "FML net.minecraftforge.oredict.OreDictionary.stackToId: %s", net.minecraftforge.oredict.OreDictionary.stackToId.toString());
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        objectOutputStream.writeObject(net.minecraftforge.oredict.OreDictionary.stackToId);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.idToStack.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.INFO, "FML net.minecraftforge.oredict.OreDictionary.idToStack: %s", net.minecraftforge.oredict.OreDictionary.idToStack.toString());
+        objectOutputStream.writeObject(net.minecraftforge.oredict.OreDictionary.idToStack);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.idToStackUn.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.INFO, "FML net.minecraftforge.oredict.OreDictionary.idToStackUn: %s", net.minecraftforge.oredict.OreDictionary.idToStackUn.toString());
+        objectOutputStream.writeObject(net.minecraftforge.oredict.OreDictionary.idToStackUn);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        }
+        }
     }
 
     @Override

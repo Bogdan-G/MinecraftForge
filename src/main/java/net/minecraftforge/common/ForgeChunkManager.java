@@ -111,7 +111,7 @@ public class ForgeChunkManager
      * @author cpw
      *
      */
-    public interface LoadingCallback
+    public interface LoadingCallback extends java.io.Serializable
     {
         /**
          * Called back when tickets are loaded from the world to allow the
@@ -187,7 +187,7 @@ public class ForgeChunkManager
          */
         ENTITY
     }
-    public static class Ticket
+    public static class Ticket implements java.io.Serializable
     {
         private String modId;
         private Type ticketType;

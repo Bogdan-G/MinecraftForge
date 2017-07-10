@@ -19,7 +19,7 @@ import cpw.mods.fml.client.config.IConfigElement;
 /**
  * This class bridges the gap between the FML config GUI classes and the Forge Configuration classes.
  */
-public class ConfigElement<T> implements IConfigElement<T>
+public class ConfigElement<T> implements IConfigElement<T>, java.io.Serializable
 {
     private Property prop;
     private Property.Type type;

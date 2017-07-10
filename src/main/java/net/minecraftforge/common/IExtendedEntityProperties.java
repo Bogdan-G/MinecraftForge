@@ -10,7 +10,7 @@ import net.minecraft.world.World;
  * @author cpw, mithion
  *
  */
-public interface IExtendedEntityProperties {
+public interface IExtendedEntityProperties extends java.io.Serializable {
     /**
      * Called when the entity that this class is attached to is saved.
      * Any custom entity data  that needs saving should be saved here.

@@ -168,7 +168,7 @@ public class Loader
     private File forcedModFile;
     private ModDiscoverer discoverer;
     private ProgressBar progressBar;
-    private static final boolean DEBUG_L = Boolean.parseBoolean(System.getProperty("fml.loaderDebug", "false"));
+    private static final boolean DEBUG_L = Boolean.parseBoolean(System.getProperty("fml.debugLoader", "false"));
 
     public static Loader instance()
     {

@@ -10,11 +10,12 @@ import net.minecraft.tileentity.TileEntity;
  * @author King Lemming, cpw (LiquidTank)
  * 
  */
-public class FluidTank implements IFluidTank
+public class FluidTank implements IFluidTank, java.io.Serializable
 {
     protected FluidStack fluid;
     protected int capacity;
     protected TileEntity tile;
+    private static final long serialVersionUID = 552218394524465557L;
 
     public FluidTank(int capacity)
     {

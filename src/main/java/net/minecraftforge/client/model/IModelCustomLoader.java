@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
  * @author cpw
  *
  */
-public interface IModelCustomLoader {
+public interface IModelCustomLoader extends java.io.Serializable {
     /**
      * Get the main type name for this loader
      * @return the type name

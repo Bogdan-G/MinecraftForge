@@ -13,7 +13,7 @@ import net.minecraft.world.IBlockAccess;
  * to support mod-shears as well.
  *
  */
-public interface IShearable
+public interface IShearable extends java.io.Serializable
 {
     /**
      * Checks if the object is currently shearable

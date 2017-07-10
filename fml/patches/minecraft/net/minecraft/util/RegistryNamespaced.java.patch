@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/util/RegistryNamespaced.java
++++ ../src-work/minecraft/net/minecraft/util/RegistryNamespaced.java
+@@ -76,3 +76,8 @@
+     {
+         return this.func_82594_a((String)p_82594_1_);
+     }
++
++    public RegistryNamespaced getThis()
++    {
++        return this;
++    }

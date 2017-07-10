@@ -1,5 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/enchantment/Enchantment.java
 +++ ../src-work/minecraft/net/minecraft/enchantment/Enchantment.java
+@@ -8,7 +8,7 @@
+ import net.minecraft.util.DamageSource;
+ import net.minecraft.util.StatCollector;
+ 
+-public abstract class Enchantment
++public abstract class Enchantment implements java.io.Serializable
+ {
+     public static final Enchantment[] field_77331_b = new Enchantment[256];
+     public static final Enchantment[] field_92090_c;
 @@ -50,7 +50,7 @@
  
          if (field_77331_b[p_i1926_1_] != null)

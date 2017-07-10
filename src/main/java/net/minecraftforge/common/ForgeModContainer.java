@@ -71,6 +71,7 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
     public static int defaultSpawnFuzz = 20;
     public static boolean defaultHasSpawnFuzz = true;
     public static boolean infiniteWaterSource = true;
+    //public static boolean SerializableObjects = false;
 
     private static Configuration config;
 
@@ -148,6 +149,12 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
         prop.setLanguageKey("forge.configgui.infiniteWaterSource").setRequiresWorldRestart(true);
         infiniteWaterSource = prop.getBoolean(infiniteWaterSource);
         propOrder.add(prop.getName());
+        
+        /*prop = config.get(CATEGORY_GENERAL, "SerializableObjects", false);
+        prop.comment = "Use serializable objects from the disk, when false objects are cached to disk";
+        prop.setLanguageKey("forge.configgui.SerializableObjects");
+        SerializableObjects = prop.getBoolean(SerializableObjects);
+        propOrder.add(prop.getName());*/
 
         prop = config.get(Configuration.CATEGORY_GENERAL, "clumpingThreshold", 64,
                 "Controls the number threshold at which Packet51 is preferred over Packet52, default and minimum 64, maximum 1024", 64, 1024);

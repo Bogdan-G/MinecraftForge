@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/block/material/MapColor.java
++++ ../src-work/minecraft/net/minecraft/block/material/MapColor.java
+@@ -4,7 +4,7 @@
+ import cpw.mods.fml.relauncher.SideOnly;
+ import net.minecraft.block.BlockColored;
+ 
+-public class MapColor
++public class MapColor implements java.io.Serializable
+ {
+     public static final MapColor[] field_76281_a = new MapColor[64];
+     public static final MapColor field_151660_b = new MapColor(0, 0);

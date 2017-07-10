@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 
-public interface IModGuiFactory {
+public interface IModGuiFactory extends java.io.Serializable {
     /**
      * Called when instantiated to initialize with the active minecraft instance.
      *

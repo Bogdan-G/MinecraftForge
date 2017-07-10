@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraft/entity/DataWatcher.java
++++ ../src-work/minecraft/net/minecraft/entity/DataWatcher.java
+@@ -18,7 +18,7 @@
+ import net.minecraft.util.ReportedException;
+ import org.apache.commons.lang3.ObjectUtils;
+ 
+-public class DataWatcher
++public class DataWatcher implements java.io.Serializable
+ {
+     private final Entity field_151511_a;
+     private boolean field_92086_a = true;
+@@ -352,7 +352,7 @@
+         field_75697_a.put(ChunkCoordinates.class, Integer.valueOf(6));
+     }
+ 
+-    public static class WatchableObject
++    public static class WatchableObject implements java.io.Serializable
+         {
+             private final int field_75678_a;
+             private final int field_75676_b;

@@ -26,7 +26,7 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import static net.minecraftforge.oredict.RecipeSorter.Category.*;
 
 @SuppressWarnings("rawtypes")
-public class RecipeSorter implements Comparator<IRecipe>
+public class RecipeSorter implements Comparator<IRecipe>, java.io.Serializable
 {
     public enum Category
     {
@@ -35,7 +35,7 @@ public class RecipeSorter implements Comparator<IRecipe>
         SHAPED
     };
 
-    private static class SortEntry
+    private static class SortEntry implements java.io.Serializable
     {
         private String name;
         private Class<?> cls;

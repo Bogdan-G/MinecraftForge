@@ -42,7 +42,7 @@ public class ModAnnotation
     AnnotationType type;
     Type asmType;
     String member;
-    Map<String,Object> values = Maps.newHashMap();
+    Map<String,Object> values = new org.eclipse.collections.impl.map.mutable.UnifiedMap();
     private ArrayList<Object> arrayList;
     private String arrayName;
     public ModAnnotation(AnnotationType type, Type asmType, String member)

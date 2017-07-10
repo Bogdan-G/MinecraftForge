@@ -32,7 +32,7 @@ import net.minecraft.item.EnumRarity;
  * @author King Lemming
  *
  */
-public class Fluid
+public class Fluid implements java.io.Serializable
 {
     /** The unique identification name for this fluid. */
     protected final String fluidName;
@@ -43,6 +43,7 @@ public class Fluid
     /** The Icons for this fluid. */
     protected IIcon stillIcon;
     protected IIcon flowingIcon;
+    private static final long serialVersionUID = 5522658394524465555L;
 
     /**
      * The light level emitted by this fluid.

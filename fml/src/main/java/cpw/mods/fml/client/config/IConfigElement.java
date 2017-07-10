@@ -23,7 +23,7 @@ import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
  * 
  * @author bspkrs
  */
-public interface IConfigElement<T>
+public interface IConfigElement<T> extends java.io.Serializable
 {
     /**
      * [Property, Category] Is this object a property object?

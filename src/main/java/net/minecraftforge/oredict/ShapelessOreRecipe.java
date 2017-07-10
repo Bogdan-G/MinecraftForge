@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.world.World;
 
-public class ShapelessOreRecipe implements IRecipe
+public class ShapelessOreRecipe implements IRecipe, java.io.Serializable
 {
     public ItemStack output = null;
     public ArrayList<Object> input = new ArrayList<Object>();

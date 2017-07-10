@@ -2,6 +2,7 @@ package cpw.mods.fml.common;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.google.common.base.Joiner;
@@ -12,7 +13,7 @@ import com.google.common.base.Joiner;
 @Deprecated
 public class ProgressManager
 {
-    private static final List<ProgressBar> bars = new CopyOnWriteArrayList<ProgressBar>();
+    private static final List<ProgressBar> bars = new Vector<ProgressBar>();//CopyOnWriteArrayList slow -> Vector
 
     /**
      * @deprecated not a stable API, will break, don't use this yet

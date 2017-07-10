@@ -47,7 +47,7 @@ import static net.minecraftforge.common.util.ForgeDirection.*;
  * Refer to block.rotateBlock and block.getValidRotations instead.
  *
  */
-public class RotationHelper {
+public class RotationHelper implements java.io.Serializable {
     /**
      * Some blocks have the same rotation.
      * The first of these blocks (sorted by itemID) should be listed as a type.

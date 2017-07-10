@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/util/IIcon.java
++++ ../src-work/minecraft/net/minecraft/util/IIcon.java
+@@ -3,7 +3,7 @@
+ import cpw.mods.fml.relauncher.Side;
+ import cpw.mods.fml.relauncher.SideOnly;
+ 
+-public interface IIcon
++public interface IIcon extends java.io.Serializable
+ {
+     @SideOnly(Side.CLIENT)
+     int func_94211_a();

@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.world.World;
 
-public class ShapedOreRecipe implements IRecipe
+public class ShapedOreRecipe implements IRecipe, java.io.Serializable
 {
     //Added in for future ease of change, but hard coded for now.
     public static final int MAX_CRAFT_GRID_WIDTH = 3;

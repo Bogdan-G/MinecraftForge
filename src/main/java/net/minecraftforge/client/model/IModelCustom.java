@@ -3,7 +3,7 @@ package net.minecraftforge.client.model;
 import static cpw.mods.fml.relauncher.Side.CLIENT;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public interface IModelCustom
+public interface IModelCustom extends java.io.Serializable
 {
     String getType();
     @SideOnly(CLIENT)

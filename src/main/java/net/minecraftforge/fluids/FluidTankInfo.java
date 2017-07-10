@@ -6,7 +6,7 @@ package net.minecraftforge.fluids;
  * @author King Lemming
  * 
  */
-public final class FluidTankInfo
+public final class FluidTankInfo implements java.io.Serializable
 {
     public final FluidStack fluid;
     public final int capacity;

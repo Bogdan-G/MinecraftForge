@@ -14,20 +14,23 @@ import java.io.*;
 import java.util.*;
 //import net.minecraft.client.Minecraft;
 
-public class Gzip {
+public class Gzip implements java.io.Serializable {
 	
 	private static final int MAX_BLOCK_SIZE = 32 * 2;//old:32 * 1024 * 1024;
 	private static final LZ4Compressor compressor = LZ4Factory.nativeInstance().fastCompressor();
 	private static final LZ4FastDecompressor decompressor = LZ4Factory.nativeInstance().fastDecompressor();
 	private static final byte[] empty_byte_array = new byte[0];
-	private static final BitSet empty_bitset = new BitSet(0);
+	//private static final BitSet empty_bitset = new BitSet(0);
 	private static final String empty_string = "";
 	private static final String path_cGzip = /*Minecraft.getMinecraft().mcDataDir.getAbsolutePath()*/"."+File.separator+"cache"+File.separator;
 	private static byte[] GSNO;
-	private static BitSet GSNO_bs;
+	//private static BitSet GSNO_bs;
 	private static byte[] EMPTY;
-	private static int[] two_pow = new int[] {1, 2, 4, 8, 16, 32, 64, 128};
-	
+	//private static int[] two_pow = new int[] {1, 2, 4, 8, 16, 32, 64, 128};
+	private static volatile String idcc_la = "";
+	private static volatile Integer n00_la = 0;
+	private static volatile Short state_la = 0;
+	private static volatile String sb1_la = "";
 	static {
 	    	String data="GSNO";//GzipStringNullObject
     		try {
@@ -37,7 +40,7 @@ public class Gzip {
         		out.close();
         		GSNO = bos.toByteArray();
         		bos.close();
-        		byte[] data0 = data.getBytes("UTF-8");
+        		/*byte[] data0 = data.getBytes("UTF-8");
         		BitSet bitset_data = new BitSet(data0.length*8);
         		for (int i=0;i<data0.length;i++) {
         		int k = data0[i] + 128;
@@ -48,7 +51,7 @@ public class Gzip {
         		if (k1==1) bitset_data.set(i+j);
         		}
         		}
-        		GSNO_bs=bitset_data;
+        		GSNO_bs=bitset_data;*/
     		} catch (IOException e) {}
 	    	data="";
     		try {
@@ -61,9 +64,10 @@ public class Gzip {
     		} catch (IOException e) {}
     	}
 	
-	public static BitSet compress(String data) {
-		//if (/*data == null || */data.length() == 0) return empty_byte_array;
+	public static byte[] compress(String data) {
 		if (data == null) return null;
+		if (/*data == null || */data.length() == 0) return empty_byte_array;
+		//if (data == null) return null;
 		return LZ4compress(data);
 		/*ByteArrayOutputStream bos = null;
 		GZIPOutputStream gzip = null;
@@ -96,9 +100,10 @@ public class Gzip {
 		return LZ4compress(data, idcc, b00);
 	}
 	
-	public static String decompress(BitSet compressed) {
-		//if (/*compressed == null || */compressed.length == 0) return empty_string;
-		if (compressed==null) return null;//null support
+	public static String decompress(byte[] compressed) {
+		if (compressed==null) return null;
+		if (/*compressed == null || */compressed.length == 0) return empty_string;
+		//if (compressed==null) return null;//null support
 		return LZ4Uncompress(compressed);
 		/*ByteArrayInputStream bis = null;
 		GZIPInputStream gis = null;
@@ -131,25 +136,31 @@ public class Gzip {
 		return LZ4Uncompress(idcc, n00, (short)0);
 	}
 	public static String decompress(String idcc, int n00, short state) {
+		synchronized (sb1_la) {
+		synchronized (n00_la) {
+		synchronized (state_la) {
+		synchronized (idcc_la) {
+		if (n00==n00_la.intValue() && state==state_la.shortValue() && idcc.equals(idcc_la)) return sb1_la;
+		}}}}
 		return LZ4Uncompress(idcc, n00, state);
 	}
 	public static String decompress(String idcc, boolean b00) {
 		return LZ4Uncompress(idcc, b00);
 	}
 
-	public static BitSet LZ4compress(String data) {
+	public static byte[] LZ4compress(String data) {
     		//if (data.length()==0) return empty_byte_array;//EMPTY;
-    		//byte[] compressed = new byte[0];//empty_byte_array;
-    		if (data.length()==0) return empty_bitset;
-    		BitSet bitset = empty_bitset;
+    		byte[] compressed = new byte[0];//empty_byte_array;
+    		//if (data.length()==0) return empty_bitset;
+    		//BitSet bitset = empty_bitset;
     		try {
-        		/*ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length());
+        		ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length());
         		LZ4BlockOutputStream out = new LZ4BlockOutputStream( bos, MAX_BLOCK_SIZE, compressor );
         		out.write(data.getBytes("UTF-8"));
         		out.close();
         		compressed = bos.toByteArray();
-        		bos.close();*/
-        		byte[] data0 = data.getBytes("UTF-8");
+        		bos.close();
+        		/*byte[] data0 = data.getBytes("UTF-8");
         		bitset = new BitSet(data0.length*8);
         		for (int i=0;i<data0.length;i++) {
         		int k = data0[i] + 128;
@@ -159,10 +170,10 @@ public class Gzip {
         		k= k==1?0:k;
         		if (k1==1) bitset.set(i+j);
         		}
-        		}
+        		}*/
     		} catch (IOException e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Gzip stacktrace: %s", (Throwable)e);}
-    		//return compressed;
-    		return bitset;
+    		return compressed;
+    		//return bitset;
 	}
 
 	public static byte[] LZ4compress(String data, String idcc, int nline, int size) {
@@ -242,7 +253,7 @@ public class Gzip {
         		if (state > (short)0) { 
         		filename=filename+"-s"+state;
         		file = new File(filename);
-        		if (!file.exists()) file.createNewFile();
+        		//if (!file.exists()) file.createNewFile();//move in FMLLaunchHandler
         		/*} else if (state > (short)950 && state < (short)1000) { 
         		filename=filename+"-s"+state+"-id"+idcc;
         		file = new File(filename);
@@ -262,16 +273,25 @@ public class Gzip {
             			sb.add(line);
         		}
         		boolean flag0 = false;
+        		boolean no_write = false;
         		if (n00==1) {
         		for (int i=0;i<sb.size();i++) {
         			if (sb.get(i).equals(idcc)) {
         			int j=i+1;
         			if (sb.get(j).equals("[")) {
         				//ArrayList<String> parse = new ArrayList();
+        				String split_chk = "";
+        				boolean first0 = true;
         				int k=j+1;
-        				while (!sb.get(k).equals("]")) { /*parse.add(sb.get(k));*/k++; }
+        				while (!sb.get(k).equals("]")) { /*parse.add(sb.get(k));*/split_chk=first0?split_chk+sb.get(k):split_chk+"\n"+sb.get(k);k++;if (first0) first0=false; }
+        				String data_chk = data==null?"GSNO":data.equals("")?"E_S":data;
+        				if (split_chk.equals(data_chk)) {
+        				no_write = true;
+        				flag0=true;
+        				break;
+        				}
         				int k1=j+1;
-        				sb.set(k1, data==null?"GSNO":data.equals("")?"E_S":data);
+        				sb.set(k1, data_chk);
         				k1++;
         				sb.subList(k1, k).clear();
         				flag0=true;
@@ -281,7 +301,13 @@ public class Gzip {
         		for (int i=0;i<sb.size();) {
         			if (sb.get(i).equals(idcc)) {
         			int j=i+1;
-        			sb.set(j, data==null?"GSNO":data.equals("")?"E_S":data);
+        			String data_chk = data==null?"GSNO":data.equals("")?"E_S":data;
+        			if (sb.get(j).equals(data_chk)) {
+        			no_write = true;
+        			flag0=true;
+        			break;
+        			}
+        			sb.set(j, data_chk);
         			flag0=true;
         			break;
         			}
@@ -303,6 +329,7 @@ public class Gzip {
         		bufferWriter.flush();
         		}}
         		} else {
+        		if (!no_write) {
         		StringBuilder split = new StringBuilder(sb.size()*2);
         		for (int i=0;i<sb.size();i++) { /*if (sb.get(i)==null) { split.append("null").append("\n"); } else { */split.append(sb.get(i)).append("\n"); /*}*/ }
         		byte[] compressed1 = (String.valueOf(split)).getBytes("UTF-8");
@@ -313,6 +340,7 @@ public class Gzip {
         		//fos0.finalize();
         		//fos.close();
         		//fos0.close();
+        		}
         		}}}
         		//sb.clear();
         		//br.close();
@@ -322,13 +350,13 @@ public class Gzip {
     		return compressed;
 	}
 
-	public static String LZ4Uncompress(BitSet compressed) {
-    		//if (compressed==EMPTY || compressed==empty_byte_array || compressed.length==0) return empty_string;
-    		if (compressed.size()==0 || compressed.equals(empty_bitset)) return empty_string;
-    		//StringBuilder sb = null;
-    		byte[] conv = new byte[compressed.size()/8];
+	public static String LZ4Uncompress(byte[] compressed) {
+    		if (compressed==EMPTY || compressed==empty_byte_array || compressed.length==0) return empty_string;
+    		//if (compressed.size()==0 || compressed.equals(empty_bitset)) return empty_string;
+    		StringBuilder sb = null;
+    		//byte[] conv = new byte[compressed.size()/8];
     		try {
-        		/*ByteArrayInputStream bis = new ByteArrayInputStream(compressed);
+        		ByteArrayInputStream bis = new ByteArrayInputStream(compressed);
         		LZ4BlockInputStream in = new LZ4BlockInputStream( bis, decompressor );
         		BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
         		sb = new StringBuilder();
@@ -338,8 +366,8 @@ public class Gzip {
         		}
         		br.close();
         		in.close();
-        		bis.close();*/
-        		int l = 0;
+        		bis.close();
+        		/*int l = 0;
         		for (int i=0;i<compressed.size();i++) {
         		int number0 = 0;
         		for (int j=7;j>-1;j--) {
@@ -351,10 +379,11 @@ public class Gzip {
         		conv[l]=(byte)(number0-128);
         		l++;
         		}
-        		return new String(conv, "UTF-8");
+        		return new String(conv, "UTF-8");*/
         	} catch (Exception e) {
         	cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Gzip stacktrace: %s", (Throwable)e);
-        	return new String(conv);}
+        	/*return new String(conv);*/}
+        	return new String(sb);
 	}
 
 	public static String LZ4Uncompress(String idcc, int nline, int size) {
@@ -413,7 +442,7 @@ public class Gzip {
         		if (state > (short)0) { 
         		filename=filename+"-s"+state;
         		file = new File(filename);
-        		if (!file.exists()) file.createNewFile();
+        		//if (!file.exists()) file.createNewFile();
         		/*} else if (state > (short)950 && state < (short)1000) { 
         		filename=filename+"-s"+state+"-id"+idcc;
         		file = new File(filename);
@@ -457,6 +486,16 @@ public class Gzip {
         		//bis.close();
         		//fis.close();
    	 	} catch (IOException e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Gzip stacktrace: %s", (Throwable)e);}
-    		return sb1.equals("GSNO") ? null : sb1.equals("E_S") ? new String("") : new String(sb1);//null & empty support
+    		String finalstr = sb1.equals("GSNO") ? null : sb1.equals("E_S") ? new String("") : new String(sb1);//null & empty support
+    		synchronized (sb1_la) {
+		synchronized (n00_la) {
+		synchronized (state_la) {
+		synchronized (idcc_la) {
+    		if (!idcc.equals(idcc_la)) idcc_la = idcc;
+    		if (n00_la.intValue()!=n00) n00_la = n00;
+    		if (state_la.shortValue()!=state) state_la = state;
+    		if (!sb1_la.equals(finalstr)) sb1_la = finalstr;
+    		}}}}
+    		return finalstr;
 	}
 }

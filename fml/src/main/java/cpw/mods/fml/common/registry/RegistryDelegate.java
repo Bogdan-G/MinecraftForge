@@ -37,11 +37,12 @@ public interface RegistryDelegate<T> {
     /*
      * This is the internal implementation class of the delegate.
      */
-    final class Delegate<T> implements RegistryDelegate<T>
+    final class Delegate<T> implements RegistryDelegate<T>, java.io.Serializable
     {
         private T referant;
         private String name;
         private final Class<T> type;
+        private static final long serialVersionUID = 5002658394524465005L;
 
         public Delegate(T referant, Class<T> type) {
             this.referant = referant;

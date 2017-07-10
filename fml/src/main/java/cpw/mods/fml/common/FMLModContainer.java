@@ -85,7 +85,7 @@ public class FMLModContainer implements ModContainer
     private ListMultimap<Class<? extends FMLEvent>,Method> eventMethods;
     private Map<String, String> customModProperties;
     private ModCandidate candidate;
-    private static final boolean DEBUG_FMC = Boolean.parseBoolean(System.getProperty("fml.fmlmodcontainerDebug", "false"));
+    private static final boolean DEBUG_FMC = Boolean.parseBoolean(System.getProperty("fml.debugModContainer", "false"));
 
     public FMLModContainer(String className, ModCandidate container, Map<String,Object> modDescriptor)
     {

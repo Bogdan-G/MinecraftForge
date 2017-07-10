@@ -32,7 +32,7 @@
  import net.minecraft.init.Blocks;
  import net.minecraft.init.Items;
  import net.minecraft.potion.Potion;
-@@ -44,7 +51,10 @@
+@@ -44,14 +51,17 @@
  import net.minecraft.util.RegistryNamespaced;
  import net.minecraft.util.StatCollector;
  import net.minecraft.util.Vec3;
@@ -41,8 +41,18 @@
 +import net.minecraftforge.common.ChestGenHooks;
 +import net.minecraftforge.common.util.EnumHelper;
  
- public class Item
+-public class Item
++public class Item implements java.io.Serializable
  {
+     public static final RegistryNamespaced field_150901_e = GameData.getItemRegistry();
+-    protected static final UUID field_111210_e = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
++    protected static final UUID field_111210_e = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");private static final long serialVersionUID = 5050058394524465555L;
+     private CreativeTabs field_77701_a;
+-    protected static Random field_77697_d = new Random();
++    protected static Random field_77697_d = new org.bogdang.modifications.random.XSTR();
+     protected int field_77777_bU = 64;
+     private int field_77699_b;
+     protected boolean field_77789_bW;
 @@ -64,7 +74,7 @@
      protected String field_111218_cA;
      private static final String __OBFID = "CL_00000041";

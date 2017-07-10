@@ -56,19 +56,47 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.Name;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.SortingIndex;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import java.io.*;
+
 public class CoreModManager {
     private static final Attributes.Name COREMODCONTAINSFMLMOD = new Attributes.Name("FMLCorePluginContainsFMLMod");
     private static final Attributes.Name MODTYPE = new Attributes.Name("ModType");
     private static final Attributes.Name MODSIDE = new Attributes.Name("ModSide");
     private static String[] rootPlugins = { "cpw.mods.fml.relauncher.FMLCorePlugin", "net.minecraftforge.classloading.FMLForgePlugin" };
-    private static List<String> loadedCoremods = Lists.newArrayList();
+    public static List<String> loadedCoremods = FMLLaunchHandler.SerializableObjects ? null : new ArrayList();
     private static List<FMLPluginWrapper> loadPlugins;
     private static boolean deobfuscatedEnvironment;
     private static FMLTweaker tweaker;
     private static File mcDir;
-    private static List<String> reparsedCoremods = Lists.newArrayList();
-    private static List<String> accessTransformers = Lists.newArrayList();
+    public static List<String> reparsedCoremods = FMLLaunchHandler.SerializableObjects ? null : new ArrayList();
+    public static List<String> accessTransformers = FMLLaunchHandler.SerializableObjects ? null : new ArrayList();
     private static final boolean logDebugInfo = Boolean.parseBoolean(System.getProperty("fml.debugCoreModManager", "false"));
+    static {
+        if (FMLLaunchHandler.SerializableObjects) {
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"fml.CoreModManager.loadedCoremods.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        loadedCoremods = (List<String>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"fml.CoreModManager.reparsedCoremods.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        reparsedCoremods = (List<String>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"fml.CoreModManager.accessTransformers.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        accessTransformers = (List<String>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        }
+    }
 
     private static class FMLPluginWrapper implements ITweaker {
         public final String name;
@@ -278,7 +306,7 @@ public class CoreModManager {
             {
                 Class<?> crashreportclass = classLoader.loadClass("b");
                 Object crashreport = crashreportclass.getMethod("a", Throwable.class, String.class).invoke(null, re, "FML has discovered extracted jar files in the mods directory.\nThis breaks mod loading functionality completely.\nRemove the directories and replace with the jar files originally provided.");
-                File crashreportfile = new File(new File(coreMods.getParentFile(),"crash-reports"),String.format("fml-crash-%1$tY-%1$tm-%1$td_%1$tT.txt",Calendar.getInstance()));
+                File crashreportfile = new File(new File(coreMods.getParentFile(),"crash-reports"),String.format("fml-crash-%1$tY-%1$tm-%1$td_%1$tH.%1$tM.%1$tS.txt",Calendar.getInstance()));
                 crashreportclass.getMethod("a",File.class).invoke(crashreport, crashreportfile);
                 System.out.println("#@!@# FML has crashed the game deliberately. Crash report saved to: #@!@# " + crashreportfile.getAbsolutePath());
             } catch (Exception e)
@@ -344,7 +372,7 @@ public class CoreModManager {
                 Integer sortOrder = Ints.tryParse(Strings.nullToEmpty(mfAttributes.getValue("TweakOrder")));
                 sortOrder = (sortOrder == null ? Integer.valueOf(0) : sortOrder);
                 handleCascadingTweak(coreMod, jar, cascadedTweaker, classLoader, sortOrder);
-                loadedCoremods.add(coreMod.getName());
+                if (!FMLLaunchHandler.SerializableObjects) loadedCoremods.add(coreMod.getName());
                 continue;
             }
             List<String> modTypes = mfAttributes.containsKey(MODTYPE) ? Arrays.asList(mfAttributes.getValue(MODTYPE).split(",")) : ImmutableList.of("FML");
@@ -352,14 +380,14 @@ public class CoreModManager {
             if (!modTypes.contains("FML"))
             {
                 FMLRelaunchLog.fine("Adding %s to the list of things to skip. It is not an FML mod,  it has types %s", coreMod.getName(), modTypes);
-                loadedCoremods.add(coreMod.getName());
+                if (!FMLLaunchHandler.SerializableObjects) loadedCoremods.add(coreMod.getName());
                 continue;
             }
             String modSide = mfAttributes.containsKey(MODSIDE) ? mfAttributes.getValue(MODSIDE) : "BOTH";
             if (! ("BOTH".equals(modSide) || FMLLaunchHandler.side.name().equals(modSide)))
             {
                 if (logDebugInfo) FMLRelaunchLog.fine("Mod %s has ModSide meta-inf value %s, and we're %s. It will be ignored", coreMod.getName(), modSide, FMLLaunchHandler.side.name());
-                loadedCoremods.add(coreMod.getName());
+                if (!FMLLaunchHandler.SerializableObjects) loadedCoremods.add(coreMod.getName());
                 continue;
             }
             String fmlCorePlugin = mfAttributes.getValue("FMLCorePlugin");
@@ -376,13 +404,13 @@ public class CoreModManager {
                 if (!mfAttributes.containsKey(COREMODCONTAINSFMLMOD))
                 {
                     if (logDebugInfo) FMLRelaunchLog.finer("Adding %s to the list of known coremods, it will not be examined again", coreMod.getName());
-                    loadedCoremods.add(coreMod.getName());
+                    if (!FMLLaunchHandler.SerializableObjects) loadedCoremods.add(coreMod.getName());
                 }
                 else
                 {
                     if (logDebugInfo) FMLRelaunchLog.finer("Found FMLCorePluginContainsFMLMod marker in %s, it will be examined later for regular @Mod instances",
                             coreMod.getName());
-                    reparsedCoremods.add(coreMod.getName());
+                    if (!FMLLaunchHandler.SerializableObjects) reparsedCoremods.add(coreMod.getName());
                 }
             }
             catch (MalformedURLException e)
@@ -507,7 +535,7 @@ public class CoreModManager {
             if (accessTransformerClass != null)
             {
                 if (logDebugInfo) FMLRelaunchLog.log(Level.DEBUG, "Added access transformer class %s to enqueued access transformers", accessTransformerClass);
-                accessTransformers.add(accessTransformerClass);
+                if (!FMLLaunchHandler.SerializableObjects) accessTransformers.add(accessTransformerClass);
             }
             FMLPluginWrapper wrap = new FMLPluginWrapper(coreModName, plugin, location, sortIndex, dependencies);
             loadPlugins.add(wrap);

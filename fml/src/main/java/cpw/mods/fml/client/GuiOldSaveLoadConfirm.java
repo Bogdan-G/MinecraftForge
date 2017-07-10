@@ -67,7 +67,7 @@ public class GuiOldSaveLoadConfirm extends GuiYesNo implements GuiYesNoCallback 
             try
             {
                 String skip = System.getProperty("fml.doNotBackup");
-                if (skip == null || !"true".equals(skip))
+                if (skip == null || !skip.equalsIgnoreCase("true"))
                 {
                     ZipperUtil.zip(new File(FMLClientHandler.instance().getSavesDir(), dirName), zip);
                 }

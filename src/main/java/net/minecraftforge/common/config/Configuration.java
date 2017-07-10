@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PushbackInputStream;
 import java.io.Reader;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,12 +43,13 @@ import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.FMLInjectionData;
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
 /**
  * This class offers advanced configurations capabilities, allowing to provide
  * various categories for configuration variables.
  */
-public class Configuration
+public class Configuration implements java.io.Serializable
 {
     public static final String CATEGORY_GENERAL = "general";
     public static final String ALLOWED_CHARS = "._-";
@@ -56,8 +58,8 @@ public class Configuration
     public static final String NEW_LINE;
     public static final String COMMENT_SEPARATOR = "##########################################################################################################";
     private static final String CONFIG_VERSION_MARKER = "~CONFIG_VERSION";
-    private static final Pattern CONFIG_START = Pattern.compile("START: \"([^\\\"]+)\"");
-    private static final Pattern CONFIG_END = Pattern.compile("END: \"([^\\\"]+)\"");
+    private static Pattern CONFIG_START = FMLLaunchHandler.SerializableObjects ? null : Pattern.compile("START: \"([^\\\"]+)\"");
+    private static Pattern CONFIG_END = FMLLaunchHandler.SerializableObjects ? null : Pattern.compile("END: \"([^\\\"]+)\"");
     public static final CharMatcher allowedProperties = CharMatcher.JAVA_LETTER_OR_DIGIT.or(CharMatcher.anyOf(ALLOWED_CHARS));
     private static Configuration PARENT = null;
 
@@ -77,6 +79,37 @@ public class Configuration
     static
     {
         NEW_LINE = System.getProperty("line.separator");
+        if (FMLLaunchHandler.SerializableObjects) {
+        try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"Forge.CONFIG_START.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        CONFIG_START = (Pattern) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+        try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"Forge.CONFIG_END.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        CONFIG_END = (Pattern) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+        } else {
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"Forge.CONFIG_START.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        objectOutputStream.writeObject(CONFIG_START);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"Forge.CONFIG_END.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        objectOutputStream.writeObject(CONFIG_END);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+        }
     }
 
     public Configuration(){}

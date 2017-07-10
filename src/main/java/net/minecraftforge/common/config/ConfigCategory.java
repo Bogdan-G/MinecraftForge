@@ -28,7 +28,7 @@ import org.io.Gzip;
 
 import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 
-public class ConfigCategory implements Map<String, Property>
+public class ConfigCategory implements Map<String, Property>, java.io.Serializable
 {
     //private byte[] name;//1x idcc//move in cache disc
     //private byte[] comment;//2x idcc
@@ -45,6 +45,7 @@ public class ConfigCategory implements Map<String, Property>
     private List<String> propertyOrder = null;
     public final String idcc;
     public final short state_id2;
+    private static int number_state = 1;
 
     public ConfigCategory(String name)
     {
@@ -53,9 +54,20 @@ public class ConfigCategory implements Map<String, Property>
 
     public ConfigCategory(String name, ConfigCategory parent)
     {
-        long time = Math.abs(System.nanoTime()+(new org.bogdang.modifications.random.XSTR()).nextLong());
+        /*long time = Math.abs(System.nanoTime()+(new org.bogdang.modifications.random.XSTR()).nextLong());
         this.idcc = String.valueOf(time);
-        this.state_id2 = (short)(time % 5000);//time % 500 + 2000
+        this.state_id2 = (short)(time % 5000);//time % 500 + 2000*/
+        String split = "";
+        ConfigCategory valid = parent;
+        while (true) {
+        if (valid==null) {split=split+"O";break;}
+        split=split+"+"+valid.idcc+"+"+valid.state_id2;
+        valid = valid.parent;
+        }
+        this.idcc = name+"-"+split;
+        if (number_state>1200) number_state=1;
+        this.state_id2 = (short)number_state;//((this.idcc.length() ^ (this.idcc.length() ^ 2) + this.idcc.length() | 2)+(new org.bogdang.modifications.random.XSTR()).nextInt(900));
+        number_state++;
         /*this.name = */Gzip.compress(name, this.idcc+"-0", 0, this.state_id2);
         //Gzip.compress("", this.idcc+"-1", 1, this.state_id2);//for IO exception
         //Gzip.compress("", this.idcc+"-2", 2, this.state_id2);

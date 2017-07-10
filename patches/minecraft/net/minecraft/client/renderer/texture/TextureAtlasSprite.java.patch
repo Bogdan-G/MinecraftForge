@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/client/renderer/texture/TextureAtlasSprite.java
 +++ ../src-work/minecraft/net/minecraft/client/renderer/texture/TextureAtlasSprite.java
-@@ -8,12 +8,14 @@
+@@ -8,15 +8,17 @@
  import java.util.Iterator;
  import java.util.List;
  import java.util.concurrent.Callable;
@@ -14,7 +14,11 @@
 +import net.minecraft.util.ResourceLocation;
  
  @SideOnly(Side.CLIENT)
- public class TextureAtlasSprite implements IIcon
+-public class TextureAtlasSprite implements IIcon
++public class TextureAtlasSprite implements IIcon, java.io.Serializable
+ {
+     private final String field_110984_i;
+     protected List field_110976_a = Lists.newArrayList();
 @@ -427,4 +429,28 @@
      {
          return "TextureAtlasSprite{name=\'" + this.field_110984_i + '\'' + ", frameCount=" + this.field_110976_a.size() + ", rotated=" + this.field_130222_e + ", x=" + this.field_110975_c + ", y=" + this.field_110974_d + ", height=" + this.field_130224_d + ", width=" + this.field_130223_c + ", u0=" + this.field_110979_l + ", u1=" + this.field_110980_m + ", v0=" + this.field_110977_n + ", v1=" + this.field_110978_o + '}';

@@ -33,7 +33,7 @@ import cpw.mods.fml.relauncher.FMLInjectionData;
  * For convenience, {@link #getMap()} is provided to get an immutable copy of
  * the caches underlying map.
  */
-public final class UsernameCache {
+public final class UsernameCache implements java.io.Serializable {
 
     private static Map<UUID, String> map = Maps.newHashMap();
 

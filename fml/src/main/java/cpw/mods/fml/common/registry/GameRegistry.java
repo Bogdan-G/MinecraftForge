@@ -63,8 +63,8 @@ import cpw.mods.fml.common.ObfuscationReflectionHelper;import org.bogdang.modifi
 public class GameRegistry
 {
     private static Set<IWorldGenerator> worldGenerators = Sets.newHashSet();
-    private static Map<IWorldGenerator, Integer> worldGeneratorIndex = Maps.newHashMap();
-    private static List<IFuelHandler> fuelHandlers = Lists.newArrayList();
+    private static Map<IWorldGenerator, Integer> worldGeneratorIndex = new org.eclipse.collections.impl.map.mutable.UnifiedMap();
+    private static List<IFuelHandler> fuelHandlers = new ArrayList();
     private static List<IWorldGenerator> sortedGeneratorList;
 
     /**
@@ -115,7 +115,7 @@ public class GameRegistry
 
     private static void computeSortedGeneratorList()
     {
-        ArrayList<IWorldGenerator> list = Lists.newArrayList(worldGenerators);
+        ArrayList<IWorldGenerator> list = new ArrayList(worldGenerators);
         Collections.sort(list, new Comparator<IWorldGenerator>() {
             @Override
             public int compare(IWorldGenerator o1, IWorldGenerator o2)
@@ -215,7 +215,8 @@ public class GameRegistry
         }
         try
         {
-            assert block != null : "registerBlock: block cannot be null";
+            //assert only work if -ea/-enableassertions flag(s): http://docs.oracle.com/javase/7/docs/technotes/guides/language/assert.html#enable-disable
+            //assert block != null : "registerBlock: block cannot be null";
             ItemBlock i = null;
             if (itemclass != null)
             {

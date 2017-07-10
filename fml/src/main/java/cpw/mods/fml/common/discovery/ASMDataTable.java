@@ -12,6 +12,7 @@
 
 package cpw.mods.fml.common.discovery;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,9 +40,9 @@ public class ASMDataTable
         public ASMData(ModCandidate candidate, String annotationName, String className, String objectName, Map<String,Object> info)
         {
             this.candidate = candidate;
-            this.annotationName = annotationName;
-            this.className = className;
-            this.objectName = objectName;
+            this.annotationName = String.valueOf(annotationName);
+            this.className = String.valueOf(className);
+            this.objectName = String.valueOf(objectName);
             this.annotationInfo = info;
         }
         public ModCandidate getCandidate()
@@ -96,7 +97,7 @@ public class ASMDataTable
     private SetMultimap<String, ASMData> globalAnnotationData = HashMultimap.create();
     private Map<ModContainer, SetMultimap<String,ASMData>> containerAnnotationData;
 
-    private List<ModContainer> containers = Lists.newArrayList();
+    private List<ModContainer> containers = new ArrayList();
     private SetMultimap<String,ModCandidate> packageMap = HashMultimap.create();
 
     public SetMultimap<String,ASMData> getAnnotationsFor(ModContainer container)

@@ -26,7 +26,7 @@ public class ModAPIManager {
     private ModAPITransformer transformer;
     private ASMDataTable dataTable;
     private Map<String,APIContainer> apiContainers;
-    private static final boolean DEBUG_MAM = Boolean.parseBoolean(System.getProperty("fml.modapimanagerDebug", "false"));
+    private static final boolean DEBUG_MAM = Boolean.parseBoolean(System.getProperty("fml.debugModAPIManager", "false"));
 
     private static class APIContainer extends DummyModContainer {
         private List<ArtifactVersion> referredMods;

@@ -15,7 +15,7 @@ import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
 import org.io.Gzip;
 
-public class Property
+public class Property implements java.io.Serializable
 {
     public enum Type
     {
@@ -45,16 +45,16 @@ public class Property
         }
     }
 
-    private BitSet name;//1x idcc_p//move in cache disc//3
-    private BitSet value;//2x idcc_p//4
-    private BitSet defaultValue;//3x idcc_p//5
+    private byte[] name;//1x idcc_p//move in cache disc//3
+    private byte[] value;//2x idcc_p//4
+    private byte[] defaultValue;//3x idcc_p//5
     public String comment;
     private String[] values;
     private String[] defaultValues;
     private String[] validValues;
-    private BitSet langKey;//4x idcc_p//6
-    private BitSet minValue;//5x idcc_p//7
-    private BitSet maxValue;//6x idcc_p//8
+    private byte[] langKey;//4x idcc_p//6
+    private byte[] minValue;//5x idcc_p//7
+    private byte[] maxValue;//6x idcc_p//8
 
     private Class<? extends IConfigEntry> configEntryClass = null;
     private Class<? extends IArrayEntry> arrayEntryClass = null;
@@ -104,24 +104,29 @@ public class Property
 
     Property(String name, String value, Type type, boolean read, String[] validValues, String langKey)
     {
+        try {
         //long time = System.currentTimeMillis();
         //this.idcc_p = /*java.util.UUID.randomUUID().toString()*/String.valueOf(time);
         //this.state_id = (short)(time % 2000);
         setName(name);
-        this.value = value.length()==0 ? (new BitSet(0)) : Gzip.compress(value);
+        this.value = value == null ? null : value.length()==0 ? (new byte[0]) : value.getBytes("UTF-8");
         this.values = new String[0];
-        this.type  = type;
-        wasRead    = read;
-        isList     = false;
-        this.defaultValue = value.length()==0 ? (new BitSet(0)) : Gzip.compress(value);
+        //this.type  = type;
+        //wasRead    = read;
+        //isList     = false;
+        this.defaultValue = value == null ? null : value.length()==0 ? (new byte[0]) : value.getBytes("UTF-8");
         this.defaultValues = new String[0];
         this.validValues = validValues;
         this.isListLengthFixed = false;
         this.maxListLength = -1;
-        this.minValue = Gzip.compress(String.valueOf(Integer.MIN_VALUE));
-        this.maxValue = Gzip.compress(String.valueOf(Integer.MAX_VALUE));
-        this.langKey = Gzip.compress(langKey);
+        this.minValue = String.valueOf(Integer.MIN_VALUE).getBytes("UTF-8");
+        this.maxValue = String.valueOf(Integer.MAX_VALUE).getBytes("UTF-8");
+        this.langKey = langKey == null ? null : langKey.getBytes("UTF-8");
         this.comment = "";
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);}
+        wasRead    = read;
+        isList     = false;
+        this.type  = type;
     }
 
     public Property(String name, String[] values, Type type)
@@ -146,15 +151,16 @@ public class Property
 
     Property(String name, String[] values, Type type, boolean read, String[] validValues, String langKey)
     {
-        long time = System.currentTimeMillis();
+        try {
+        //long time = System.currentTimeMillis();
         //this.idcc_p = String.valueOf(time);
         //this.state_id = (short)(time % 2000);
         setName(name);
-        this.type   = type;
+        //this.type   = type;
         this.values = Arrays.copyOf(values, values.length);
-        wasRead     = read;
-        isList      = true;
-        this.value = new BitSet(0);
+        //wasRead     = read;
+        //isList      = true;
+        this.value = new byte[0];
         String temp = new String("");
         StringBuilder tempSB = new StringBuilder(temp);
         //this.defaultValue = "";
@@ -167,15 +173,19 @@ public class Property
         temp = String.valueOf(tempSB);
         //this.defaultValue = this.defaultValue.replaceFirst(", ", "");
         //temp = temp.replaceFirst(", ", "");
-        this.defaultValue = Gzip.compress(temp);
+        this.defaultValue = temp.getBytes("UTF-8");
         this.defaultValues = Arrays.copyOf(values, values.length);
         this.validValues = validValues;
         this.isListLengthFixed = false;
         this.maxListLength = -1;
-        this.minValue = Gzip.compress(String.valueOf(Integer.MIN_VALUE));
-        this.maxValue = Gzip.compress(String.valueOf(Integer.MAX_VALUE));
-        this.langKey = Gzip.compress(langKey);
+        this.minValue = String.valueOf(Integer.MIN_VALUE).getBytes("UTF-8");
+        this.maxValue = String.valueOf(Integer.MAX_VALUE).getBytes("UTF-8");
+        this.langKey = langKey == null ? null : langKey.getBytes("UTF-8");
         this.comment = "";
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);}
+        wasRead     = read;
+        isList      = true;
+        this.type   = type;
     }
 
     /**
@@ -241,17 +251,20 @@ public class Property
                 return false;
         }
 
+        try {
         if (this.type == Type.BOOLEAN && this.isBooleanValue())
-            return Boolean.parseBoolean(Gzip.decompress(value)) == Boolean.parseBoolean(Gzip.decompress(defaultValue));
+            return Boolean.parseBoolean(new String(value, "UTF-8")) == Boolean.parseBoolean(new String(defaultValue, "UTF-8"));
 
         if (this.type == Type.INTEGER && this.isIntValue())
-            return Integer.parseInt(Gzip.decompress(value)) == Integer.parseInt(Gzip.decompress(defaultValue));
+            return Integer.parseInt(new String(value, "UTF-8")) == Integer.parseInt(new String(defaultValue, "UTF-8"));
 
         if (this.type == Type.DOUBLE && this.isDoubleValue())
-            return Double.parseDouble(Gzip.decompress(value)) == Double.parseDouble(Gzip.decompress(defaultValue));
+            return Double.parseDouble(new String(value, "UTF-8")) == Double.parseDouble(new String(defaultValue, "UTF-8"));
 
-        //return /*value*/Gzip.decompress(value).equals(Gzip.decompress(defaultValue));
-        return (Gzip.decompress(value)).equals(Gzip.decompress(defaultValue));
+        //return /*value*/new String(value).equals(new String(defaultValue));
+        return (new String(value, "UTF-8")).equals(new String(defaultValue, "UTF-8"));
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+        return (new String(value)).equals(new String(defaultValue));}
     }
 
     /**
@@ -274,7 +287,10 @@ public class Property
      */
     public String getDefault()
     {
-        return Gzip.decompress(defaultValue);
+        try {
+        return new String(defaultValue, "UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+        return new String(defaultValue);}
     }
 
     /**
@@ -472,7 +488,9 @@ public class Property
      */
     public Property setLanguageKey(String langKey1)
     {
-        this.langKey = Gzip.compress(langKey1);
+        try {
+        this.langKey = langKey1.getBytes("UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);}
         return this;
     }
 
@@ -483,7 +501,10 @@ public class Property
      */
     public String getLanguageKey()
     {
-        return Gzip.decompress(this.langKey);
+        try {
+        return new String(this.langKey, "UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+        return new String(this.langKey);}
     }
 
     /**
@@ -493,7 +514,9 @@ public class Property
      */
     public Property setDefaultValue(String defaultValue1)
     {
-        this.defaultValue = Gzip.compress(defaultValue1);
+        try {
+        this.defaultValue = defaultValue1.getBytes("UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);}
         return this;
     }
 
@@ -504,6 +527,7 @@ public class Property
      */
     public Property setDefaultValues(String[] defaultValues1)
     {
+        try {
         //this.defaultValue = "";
         String temp = new String("");
         StringBuilder tempSB = new StringBuilder(temp);
@@ -516,8 +540,9 @@ public class Property
         temp = String.valueOf(tempSB);
         //temp = temp.replaceFirst(", ", "");
         //this.defaultValue = this.defaultValue.replaceFirst(", ", "");
-        this.defaultValue = Gzip.compress(temp);
+        this.defaultValue = temp.getBytes("UTF-8");
         this.defaultValues = Arrays.copyOf(defaultValues, defaultValues.length);
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);}
         return this;
     }
 
@@ -606,7 +631,9 @@ public class Property
      */
     public Property setMinValue(int minValue1)
     {
-        this.minValue = Gzip.compress(Integer.toString(minValue1));
+        try {
+        this.minValue = Integer.toString(minValue1).getBytes("UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);}
         return this;
     }
 
@@ -617,7 +644,9 @@ public class Property
      */
     public Property setMaxValue(int maxValue1)
     {
-        this.maxValue = Gzip.compress(Integer.toString(maxValue1));
+        try {
+        this.maxValue = Integer.toString(maxValue1).getBytes("UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);}
         return this;
     }
 
@@ -628,7 +657,9 @@ public class Property
      */
     public Property setMinValue(double minValue1)
     {
-        this.minValue = Gzip.compress(Double.toString(minValue1));
+        try {
+        this.minValue = Double.toString(minValue1).getBytes("UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);}
         return this;
     }
 
@@ -639,7 +670,9 @@ public class Property
      */
     public Property setMaxValue(double maxValue1)
     {
-        this.maxValue = Gzip.compress(Double.toString(maxValue1));
+        try {
+        this.maxValue = Double.toString(maxValue1).getBytes("UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);}
         return this;
     }
 
@@ -650,7 +683,10 @@ public class Property
      */
     public String getMinValue()
     {
-        return Gzip.decompress(this.minValue);
+        try {
+        return new String(this.minValue, "UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+        return new String(this.minValue);}
     }
 
     /**
@@ -660,7 +696,10 @@ public class Property
      */
     public String getMaxValue()
     {
-        return Gzip.decompress(this.maxValue);
+        try {
+        return new String(this.maxValue, "UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+        return new String(this.maxValue);}
     }
 
     /**
@@ -670,8 +709,11 @@ public class Property
      */
     public String getString()
     {
-        BitSet copy = this.value;
-        return Gzip.decompress(copy);
+        byte[] copy = this.value;
+        try {
+        return new String(copy, "UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+        return new String(copy);}
     }
 
     /**
@@ -706,11 +748,17 @@ public class Property
     {
         try
         {
-            return Integer.parseInt(Gzip.decompress(this.value));
+            try {
+            return Integer.parseInt(new String(this.value, "UTF-8"));
+            } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+            return Integer.parseInt(new String(this.value));}
         }
         catch (NumberFormatException e)
         {
-            return Integer.parseInt(Gzip.decompress(this.defaultValue));
+            try {
+            return Integer.parseInt(new String(this.defaultValue, "UTF-8"));
+            } catch (Exception ex) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)ex, "Encoding stacktrace: %s", (Throwable)ex);
+            return Integer.parseInt(new String(this.defaultValue));}
         }
     }
 
@@ -726,7 +774,10 @@ public class Property
     {
         try
         {
-            return Integer.parseInt(Gzip.decompress(this.value));
+            try {
+            return Integer.parseInt(new String(this.value, "UTF-8"));
+            } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+            return Integer.parseInt(new String(this.value));}
         }
         catch (NumberFormatException e)
         {
@@ -742,7 +793,10 @@ public class Property
     {
         try
         {
-            Integer.parseInt(Gzip.decompress(this.value));
+            try {
+            Integer.parseInt(new String(this.value, "UTF-8"));
+            } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+            Integer.parseInt(new String(this.value));}
             return true;
         }
         catch (NumberFormatException e)
@@ -763,7 +817,10 @@ public class Property
     {
         if (isBooleanValue())
         {
-            return Boolean.parseBoolean(Gzip.decompress(this.value));
+            try {
+            return Boolean.parseBoolean(new String(this.value, "UTF-8"));
+            } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+            return Boolean.parseBoolean(new String(this.value));}
         }
         else
         {
@@ -780,11 +837,17 @@ public class Property
     {
         if (isBooleanValue())
         {
-            return Boolean.parseBoolean(Gzip.decompress(this.value));
+            try {
+            return Boolean.parseBoolean(new String(this.value, "UTF-8"));
+            } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+            return Boolean.parseBoolean(new String(this.value));}
         }
         else
         {
-            return Boolean.parseBoolean(Gzip.decompress(this.defaultValue));
+            try {
+            return Boolean.parseBoolean(new String(this.defaultValue, "UTF-8"));
+            } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+            return Boolean.parseBoolean(new String(this.defaultValue));}
         }
     }
 
@@ -795,7 +858,10 @@ public class Property
      */
     public boolean isBooleanValue()
     {
-        return ("true".equals((Gzip.decompress(this.value)).toLowerCase(Locale.ENGLISH)) || "false".equals((Gzip.decompress(this.value)).toLowerCase(Locale.ENGLISH)));
+        try {
+        return ("true".equals((new String(this.value, "UTF-8")).toLowerCase(Locale.ENGLISH)) || "false".equals((new String(this.value, "UTF-8")).toLowerCase(Locale.ENGLISH)));
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+        return ("true".equals((new String(this.value)).toLowerCase(Locale.ENGLISH)) || "false".equals((new String(this.value)).toLowerCase(Locale.ENGLISH)));}
     }
 
     /**
@@ -806,7 +872,10 @@ public class Property
     {
         try
         {
-            Double.parseDouble(Gzip.decompress(this.value));
+            try {
+            Double.parseDouble(new String(this.value, "UTF-8"));
+            } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+            Double.parseDouble(new String(this.value));}
             return true;
         }
         catch (NumberFormatException e)
@@ -827,7 +896,10 @@ public class Property
     {
         try
         {
-            return Double.parseDouble(Gzip.decompress(this.value));
+            try {
+            return Double.parseDouble(new String(this.value, "UTF-8"));
+            } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+            return Double.parseDouble(new String(this.value));}
         }
         catch (NumberFormatException e)
         {
@@ -845,11 +917,17 @@ public class Property
     {
         try
         {
-            return Double.parseDouble(Gzip.decompress(this.value));
+            try {
+            return Double.parseDouble(new String(this.value, "UTF-8"));
+            } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+            return Double.parseDouble(new String(this.value));}
         }
         catch (NumberFormatException e)
         {
-            return Double.parseDouble(Gzip.decompress(this.defaultValue));
+            try {
+            return Double.parseDouble(new String(this.defaultValue, "UTF-8"));
+            } catch (Exception ex) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)ex, "Encoding stacktrace: %s", (Throwable)ex);
+            return Double.parseDouble(new String(this.defaultValue));}
         }
     }
 
@@ -1011,7 +1089,12 @@ public class Property
      */
     public String getName()
     {
-        return Gzip.decompress(this.name);
+        try {
+        byte[] copy = this.name;
+        return new String(copy, "UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);
+        byte[] copy = this.name;
+        return new String(copy);}
     }
 
     /**
@@ -1021,7 +1104,9 @@ public class Property
      */
     public void setName(String name1)
     {
-        this.name = Gzip.compress(name1);
+        try {
+        this.name = name1.getBytes("UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);}
     }
 
     /**
@@ -1069,7 +1154,9 @@ public class Property
      */
     public Property setValue(String value1)
     {
-        this.value = Gzip.compress(value1);
+        try {
+        this.value = value1.getBytes("UTF-8");
+        } catch (Exception e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Encoding stacktrace: %s", (Throwable)e);}
         changed = true;
         return this;
     }

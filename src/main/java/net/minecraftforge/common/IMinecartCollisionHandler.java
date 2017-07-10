@@ -10,7 +10,7 @@ import net.minecraft.entity.item.EntityMinecart;
  * If you use this, make it a configuration option.
  * @author CovertJaguar
  */
-public interface IMinecartCollisionHandler
+public interface IMinecartCollisionHandler extends java.io.Serializable
 {
 
     /**

@@ -35,15 +35,18 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.registry.GameData;
 
+import java.io.*;
+
 public class OreDictionary
 {
     private static boolean hasInit = false;
-    private static List<String>          idToName = new org.eclipse.collections.impl.list.mutable.FastList();//new ArrayList<String>();
-    private static Map<String, Integer>  nameToId = new org.eclipse.collections.impl.map.mutable.UnifiedMap(128, 0.90F);//HashMap<String, Integer>(128);
-    private static List<ArrayList<ItemStack>> idToStack = new org.eclipse.collections.impl.list.mutable.FastList();//Lists.newArrayList(); //ToDo: Unqualify to List when possible {1.8}
-    private static List<ArrayList<ItemStack>> idToStackUn = new org.eclipse.collections.impl.list.mutable.FastList();//Lists.newArrayList(); //ToDo: Unqualify to List when possible {1.8}
-    private static Map<Integer, List<Integer>> stackToId = new org.eclipse.collections.impl.map.mutable.UnifiedMap(128, 0.90F);//Maps.newHashMapWithExpectedSize(96); // Calculated from 128 * 0.75
+    public static List<String>          idToName = new org.eclipse.collections.impl.list.mutable.FastList();//new ArrayList<String>();
+    public static Map<String, Integer>  nameToId = new org.eclipse.collections.impl.map.mutable.UnifiedMap(128, 0.90F);//HashMap<String, Integer>(128);
+    public static List<ArrayList<ItemStack>> idToStack = new org.eclipse.collections.impl.list.mutable.FastList();//Lists.newArrayList(); //ToDo: Unqualify to List when possible {1.8}
+    public static List<ArrayList<ItemStack>> idToStackUn = new org.eclipse.collections.impl.list.mutable.FastList();//Lists.newArrayList(); //ToDo: Unqualify to List when possible {1.8}
+    public static Map<Integer, List<Integer>> stackToId = new org.eclipse.collections.impl.map.mutable.UnifiedMap(128, 0.90F);//Maps.newHashMapWithExpectedSize(96); // Calculated from 128 * 0.75
     public static final ArrayList<ItemStack> EMPTY_LIST = Lists.newArrayList(); //ToDo: Unqualify to List when possible {1.8}
+    //public static final boolean SerializableObjects = Boolean.parseBoolean(System.getProperty("fml.SerializableObjects", "false")) && Boolean.parseBoolean(System.getProperty("fml.SerializableObjectsOreDictionary", "false"));
 
     /**
      * Minecraft changed from -1 to Short.MAX_VALUE in 1.5 release for the "block wildcard". Use this in case it
@@ -523,7 +526,7 @@ public class OreDictionary
      */
     private static void registerOreImpl(String name, ItemStack ore)
     {
-        if (name == null || name.isEmpty() || "Unknown".equals(name)) return; //prevent bad IDs.
+        if (name == null || name.length()==0 || "Unknown".equals(name)) return; //prevent bad IDs.
         if (ore == null || ore.getItem() == null)
         {
             FMLLog.bigWarning("Invalid registration attempt for an Ore Dictionary item with name %s has occurred. The registration has been denied to prevent crashes. The mod responsible for the registration needs to correct this.", name);

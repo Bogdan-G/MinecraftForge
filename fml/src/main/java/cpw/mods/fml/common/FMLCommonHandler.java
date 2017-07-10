@@ -270,6 +270,8 @@ public class FMLCommonHandler
 
     public boolean handleServerAboutToStart(MinecraftServer server)
     {
+        cpw.mods.fml.common.asm.transformers.ModAccessTransformer.embedded=null;
+        cpw.mods.fml.client.FMLClientHandler.instance().cleanMapsByLogMissingTextureErrors();
         return Loader.instance().serverAboutToStart(server);
     }
 

@@ -51,6 +51,7 @@ import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -113,6 +114,9 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.toposort.ModSortingException;
 import cpw.mods.fml.relauncher.Side;
 
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import java.io.*;
+import java.util.*;
 
 /**
  * Handles primary communication from hooked code into the system
@@ -192,7 +196,10 @@ public class FMLClientHandler implements IFMLSidedHandler
     public void beginMinecraftLoading(Minecraft minecraft, @SuppressWarnings("rawtypes") List resourcePackList, IReloadableResourceManager resourceManager)
     {
         detectOptifine();
-        SplashProgress.start();
+        //SplashProgress.start();
+        StringBuilder systemDetailsBuilder = new StringBuilder();
+        CrashReport.makeCrashReport(new Throwable(), "Loading screen debug info").getCategory().appendToStringBuilder(systemDetailsBuilder);
+        FMLLog.info(systemDetailsBuilder.toString());
         client = minecraft;
         this.resourcePackList = resourcePackList;
         this.resourceManager = resourceManager;
@@ -240,6 +247,44 @@ public class FMLClientHandler implements IFMLSidedHandler
             client.refreshResources();
         }
 
+        if (Boolean.parseBoolean(System.getProperty("fml.SerializableObjects", "false")) && Boolean.parseBoolean(System.getProperty("fml.SerializableObjectsOreDictionary", "false"))) {
+         FMLLog.log(Level.INFO, "Parse OreDictionary C");
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.idToName.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        net.minecraftforge.oredict.OreDictionary.idToName = (List<String>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.nameToId.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        net.minecraftforge.oredict.OreDictionary.nameToId = (Map<String, Integer>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.stackToId.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        net.minecraftforge.oredict.OreDictionary.stackToId = (Map<Integer, List<Integer>>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.idToStack.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        net.minecraftforge.oredict.OreDictionary.idToStack = (List<ArrayList<ItemStack>>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+         try {
+        FileInputStream inputStream = new FileInputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.idToStackUn.ser");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        net.minecraftforge.oredict.OreDictionary.idToStackUn = (List<ArrayList<ItemStack>>) objectInputStream.readObject();
+        objectInputStream.close();
+        inputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "Forge stacktrace: %s", (Throwable)e);}
+        }
         try
         {
             Loader.instance().preinitializeMods();
@@ -291,7 +336,7 @@ public class FMLClientHandler implements IFMLSidedHandler
     @Override
     public void haltGame(String message, Throwable t)
     {
-        SplashProgress.finish();
+        //SplashProgress.finish();
         client.displayCrashReport(new CrashReport(message, t));
         throw Throwables.propagate(t);
     }
@@ -305,7 +350,7 @@ public class FMLClientHandler implements IFMLSidedHandler
     {
         if (modsMissing != null || wrongMC != null || customError!=null || dupesFound!=null || modSorting!=null)
         {
-            SplashProgress.finish();
+            //SplashProgress.finish();
             return;
         }
         try
@@ -316,7 +361,7 @@ public class FMLClientHandler implements IFMLSidedHandler
         {
             FMLLog.log(Level.ERROR, custom, "A custom exception was thrown by a mod, the game will now halt");
             customError = custom;
-            SplashProgress.finish();
+            //SplashProgress.finish();
             return;
         }
         catch (LoaderException le)
@@ -350,6 +395,82 @@ public class FMLClientHandler implements IFMLSidedHandler
         }
         loading = false;
         client.gameSettings.loadOptions(); //Reload options to load any mod added keybindings.
+        if (!FMLLaunchHandler.SerializableObjects) {
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"fml.embedded.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        FMLLog.log(Level.INFO, "FML cpw.mods.fml.common.asm.transformers.ModAccessTransformer.embedded: %s", cpw.mods.fml.common.asm.transformers.ModAccessTransformer.embedded.toString());
+        objectOutputStream.writeObject(cpw.mods.fml.common.asm.transformers.ModAccessTransformer.embedded);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"fml.CoreModManager.loadedCoremods.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        FMLLog.log(Level.INFO, "FML cpw.mods.fml.relauncher.CoreModManager.loadedCoremods: %s", cpw.mods.fml.relauncher.CoreModManager.loadedCoremods.toString());
+        objectOutputStream.writeObject(cpw.mods.fml.relauncher.CoreModManager.loadedCoremods);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"fml.CoreModManager.reparsedCoremods.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        FMLLog.log(Level.INFO, "FML cpw.mods.fml.relauncher.CoreModManager.reparsedCoremods: %s", cpw.mods.fml.relauncher.CoreModManager.reparsedCoremods.toString());
+        objectOutputStream.writeObject(cpw.mods.fml.relauncher.CoreModManager.reparsedCoremods);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"fml.CoreModManager.accessTransformers.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        FMLLog.log(Level.INFO, "FML cpw.mods.fml.relauncher.CoreModManager.accessTransformers: %s", cpw.mods.fml.relauncher.CoreModManager.accessTransformers.toString());
+        objectOutputStream.writeObject(cpw.mods.fml.relauncher.CoreModManager.accessTransformers);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        if (Boolean.parseBoolean(System.getProperty("fml.SerializableObjectsOreDictionaryInDisk", "false"))) {
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.idToName.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        FMLLog.log(Level.INFO, "FML net.minecraftforge.oredict.OreDictionary.idToName: %s", net.minecraftforge.oredict.OreDictionary.idToName.toString());
+        objectOutputStream.writeObject(net.minecraftforge.oredict.OreDictionary.idToName);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.nameToId.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        FMLLog.log(Level.INFO, "FML net.minecraftforge.oredict.OreDictionary.nameToId: %s", net.minecraftforge.oredict.OreDictionary.nameToId.toString());
+        objectOutputStream.writeObject(net.minecraftforge.oredict.OreDictionary.nameToId);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.stackToId.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        FMLLog.log(Level.INFO, "FML net.minecraftforge.oredict.OreDictionary.stackToId: %s", net.minecraftforge.oredict.OreDictionary.stackToId.toString());
+        objectOutputStream.writeObject(net.minecraftforge.oredict.OreDictionary.stackToId);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.idToStack.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        FMLLog.log(Level.INFO, "FML net.minecraftforge.oredict.OreDictionary.idToStack: %s", net.minecraftforge.oredict.OreDictionary.idToStack.toString());
+        objectOutputStream.writeObject(net.minecraftforge.oredict.OreDictionary.idToStack);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        try {
+        FileOutputStream outputStream = new FileOutputStream("."+File.separator+"cache2"+File.separator+"forge.OreDictionary.idToStackUn.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        FMLLog.log(Level.INFO, "FML net.minecraftforge.oredict.OreDictionary.idToStackUn: %s", net.minecraftforge.oredict.OreDictionary.idToStackUn.toString());
+        objectOutputStream.writeObject(net.minecraftforge.oredict.OreDictionary.idToStackUn);
+        objectOutputStream.flush();
+        outputStream.close();
+        } catch (Exception e) {FMLLog.log(Level.WARN, (Throwable)e, "FML stacktrace: %s", (Throwable)e);}
+        }
+        }
     }
 
     @SuppressWarnings("unused")
@@ -404,7 +525,7 @@ public class FMLClientHandler implements IFMLSidedHandler
         else
         {
             Loader.instance().loadingComplete();
-            SplashProgress.finish();
+            //SplashProgress.finish();
         }
         logMissingTextureErrors();
     }
@@ -1003,6 +1124,14 @@ public class FMLClientHandler implements IFMLSidedHandler
         logger.error(Strings.repeat("+=", 25));
     }
 
+    public void cleanMapsByLogMissingTextureErrors()
+    {
+        //no need save memory?
+        missingTextures.clear();
+        badTextureDomains.clear();
+        brokenTextures.clear();
+    }
+
     @Override
     public void processWindowMessages()
     {
@@ -1010,16 +1139,19 @@ public class FMLClientHandler implements IFMLSidedHandler
         if (LWJGLUtil.getPlatform() != LWJGLUtil.PLATFORM_WINDOWS) return;
         // If we can't grab the mutex, the update call is blocked, probably in native code, just skip it and carry on
         // We'll get another go next time
-        if (!SplashProgress.mutex.tryAcquire()) return;
+        //if (!SplashProgress.mutex.tryAcquire()) return;
         Display.processMessages();
-        SplashProgress.mutex.release();
+        //SplashProgress.mutex.release();
     }
     // From FontRenderer.renderCharAtPos
     private static final String ALLOWED_CHARS = "\u00c0\u00c1\u00c2\u00c8\u00ca\u00cb\u00cd\u00d3\u00d4\u00d5\u00da\u00df\u00e3\u00f5\u011f\u0130\u0131\u0152\u0153\u015e\u015f\u0174\u0175\u017e\u0207\u0000\u0000\u0000\u0000\u0000\u0000\u0000 !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u0000\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb\u00e8\u00ef\u00ee\u00ec\u00c4\u00c5\u00c9\u00e6\u00c6\u00f4\u00f6\u00f2\u00fb\u00f9\u00ff\u00d6\u00dc\u00f8\u00a3\u00d8\u00d7\u0192\u00e1\u00ed\u00f3\u00fa\u00f1\u00d1\u00aa\u00ba\u00bf\u00ae\u00ac\u00bd\u00bc\u00a1\u00ab\u00bb\u2591\u2592\u2593\u2502\u2524\u2561\u2562\u2556\u2555\u2563\u2551\u2557\u255d\u255c\u255b\u2510\u2514\u2534\u252c\u251c\u2500\u253c\u255e\u255f\u255a\u2554\u2569\u2566\u2560\u2550\u256c\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256b\u256a\u2518\u250c\u2588\u2584\u258c\u2590\u2580\u03b1\u03b2\u0393\u03c0\u03a3\u03c3\u03bc\u03c4\u03a6\u0398\u03a9\u03b4\u221e\u2205\u2208\u2229\u2261\u00b1\u2265\u2264\u2320\u2321\u00f7\u2248\u00b0\u2219\u00b7\u221a\u207f\u00b2\u25a0\u0000";
+    private static final CharMatcher DISALLOWED_CHAR_MATCHER = CharMatcher.anyOf(ALLOWED_CHARS).negate();
+    
     @Override
     public String stripSpecialChars(String message)
     {
         // We can't handle many unicode points in the splash renderer
-        return CharMatcher.anyOf(ALLOWED_CHARS).retainFrom(StringUtils.stripControlCodes(message));
+        //return CharMatcher.anyOf(ALLOWED_CHARS).retainFrom(StringUtils.stripControlCodes(message));
+        return DISALLOWED_CHAR_MATCHER.removeFrom(StringUtils.stripControlCodes(message));
     }
 }

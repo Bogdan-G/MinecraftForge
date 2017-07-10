@@ -702,7 +702,7 @@ public class GuiIngameForge extends GuiIngame
             {
                 String msg = left.get(x);
                 if (msg == null) continue;
-                fontrenderer.drawStringWithShadow(msg, 2, 2 + x * 10, WHITE);
+                fontrenderer.drawString(msg, 2, 2 + x * 10, WHITE);//drawStringWithShadow -> drawString
             }
 
             for (int x = 0; x < right.size(); x++)
@@ -710,7 +710,7 @@ public class GuiIngameForge extends GuiIngame
                 String msg = right.get(x);
                 if (msg == null) continue;
                 int w = fontrenderer.getStringWidth(msg);
-                fontrenderer.drawStringWithShadow(msg, width - w - 10, 2 + x * 10, WHITE);
+                fontrenderer.drawString(msg, width - w - 10, 2 + x * 10, WHITE);//drawStringWithShadow -> drawString
             }
         }
 

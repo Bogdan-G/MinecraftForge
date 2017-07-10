@@ -26,6 +26,9 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.functions.GenericIterableFactory;
 import cpw.mods.fml.common.registry.RegistryDelegate.Delegate;
 
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.api.iterator.*;
+
 public class FMLControlledNamespacedRegistry<I> extends RegistryNamespaced {
     public static final boolean DEBUG = Boolean.parseBoolean(System.getProperty("fml.debugRegistryEntries", "false"));
     private final Class<I> superType;
@@ -147,7 +150,7 @@ public class FMLControlledNamespacedRegistry<I> extends RegistryNamespaced {
     public void putObject(Object objName, Object obj)
     {
         String name = (String) objName;
-        I thing = cast(obj);
+        I thing = superType.cast(obj);//test for memory use search commit
 
         if (name == null) throw new NullPointerException("Can't use a null-name for the registry.");
         if (name.isEmpty()) throw new IllegalArgumentException("Can't use an empty name for the registry.");
@@ -243,7 +246,7 @@ public class FMLControlledNamespacedRegistry<I> extends RegistryNamespaced {
      */
     public I getRaw(int id)
     {
-        return cast(super.getObjectById(id));
+        return superType.cast(super.getObjectById(id));
     }
 
     /**
@@ -264,7 +267,7 @@ public class FMLControlledNamespacedRegistry<I> extends RegistryNamespaced {
      */
     public I getRaw(String name)
     {
-        I ret = cast(super.getObject(name));
+        I ret = superType.cast(super.getObject(name));
 
         if (ret == null) // no match, try aliases recursively
         {
@@ -333,7 +336,9 @@ public class FMLControlledNamespacedRegistry<I> extends RegistryNamespaced {
      */
     public Iterable<I> typeSafeIterable()
     {
-        return GenericIterableFactory.newCastingIterable(super.iterator(), superType);
+        //return GenericIterableFactory.newCastingIterable(super.iterator(), superType);
+        Iterable<?> parent = super.getThis();
+        return GenericIterableFactory.newCastingIterable(parent, superType);
     }
 
     // internal
@@ -445,7 +450,7 @@ public class FMLControlledNamespacedRegistry<I> extends RegistryNamespaced {
         if (!DEBUG)
             return;
 
-        List<Integer> ids = new ArrayList<Integer>();
+        IntArrayList ids = new IntArrayList();
 
         for (I thing : this.typeSafeIterable())
         {
@@ -453,10 +458,12 @@ public class FMLControlledNamespacedRegistry<I> extends RegistryNamespaced {
         }
 
         // sort by id
-        Collections.sort(ids);
+        //Collections.sort(ids);
+        ids.sortThis();
 
-        for (int id : ids)
+        for (MutableIntIterator ids0 = ids.intIterator();ids0.hasNext();)
         {
+            int id=ids0.next();
             I thing = getRaw(id);
             FMLLog.finer("Registry: %d %s %s", id, getNameForObject(thing), thing);
         }
@@ -511,7 +518,7 @@ public class FMLControlledNamespacedRegistry<I> extends RegistryNamespaced {
             FMLLog.severe("The substitution of %s has already occured. You cannot duplicate substitutions", nameToReplace);
             throw new ExistingSubstitutionException(nameToReplace, toReplace);
         }
-        I replacement = cast(toReplace);
+        I replacement = superType.cast(toReplace);
         I original = getRaw(nameToReplace);
         if (original == null)
         {
@@ -554,7 +561,8 @@ public class FMLControlledNamespacedRegistry<I> extends RegistryNamespaced {
     @Override
     public Iterator<I> iterator()
     {
-        return Iterators.concat(super.iterator(),getPersistentSubstitutions().values().iterator());
+        //return Iterators.concat(super.iterator(),getPersistentSubstitutions().values().iterator());
+        return new IteratorConcat(super.iterator(),getPersistentSubstitutions().values().iterator());
     }
 
     // ONLY CALLED ON ITEM registry
@@ -563,6 +571,33 @@ public class FMLControlledNamespacedRegistry<I> extends RegistryNamespaced {
         for (I item: typeSafeIterable()) {
             Delegate<Item> delegate = (Delegate<Item>)((Item)item).delegate;
             delegate.changeReference((Item)item);
+        }
+    }
+
+    public static class IteratorConcat<I> implements Iterator<I> {
+        private final Iterator<I> is[];
+        private int current;
+
+        public IteratorConcat(Iterator<I>... iterators)
+        {
+            is = iterators;
+            current = 0;
+        }
+
+        public boolean hasNext() {
+            while (current < is.length && !is[current].hasNext()) current++;
+            //check for last hasNext() (end iteration), avoid unused ref-objects (Not 100% guaranteed that this will be and that it should be done. For safety. Need testing)
+            //if (is.length == current) {is=null;return false;}
+            return current < is.length;
+        }
+
+        public I next() {
+            while (current < is.length && !is[current].hasNext()) current++;
+            return is[current].next();
+        }
+
+        public void remove() {
+            is[current].remove();
         }
     }
 }

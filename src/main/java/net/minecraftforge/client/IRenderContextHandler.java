@@ -4,7 +4,7 @@
  */
 package net.minecraftforge.client;
 
-public interface IRenderContextHandler
+public interface IRenderContextHandler extends java.io.Serializable
 {
     /** Run before the specified rendering context.
      */
