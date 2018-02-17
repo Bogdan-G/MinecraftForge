@@ -72,15 +72,22 @@
      public int func_145782_y()
      {
          return this.field_145783_c;
-@@ -143,7 +156,7 @@
-        this.field_70130_N = 0.6F;
-        this.field_70131_O = 1.8F;
-        this.field_70150_b = 1;
+@@ -137,13 +150,13 @@
+     public Entity(World p_i1582_1_)
+     {
+         this.field_145783_c = field_70152_a++;
+-        this.field_70155_l = 1.0D;
++        this.field_70155_l = 4.0D;
+         this.field_70121_D = AxisAlignedBB.func_72330_a(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+         this.field_70135_K = true;
+         this.field_70130_N = 0.6F;
+         this.field_70131_O = 1.8F;
+         this.field_70150_b = 1;
 -        this.field_70146_Z = new Random();
 +        this.field_70146_Z = new org.bogdang.modifications.random.XSTR();
-        this.field_70174_ab = 1;
-        this.field_70148_d = true;
-        this.field_96093_i = UUID.randomUUID();
+         this.field_70174_ab = 1;
+         this.field_70148_d = true;
+         this.field_96093_i = UUID.randomUUID();
 @@ -153,6 +173,15 @@
          this.field_70180_af.func_75682_a(0, Byte.valueOf((byte)0));
          this.field_70180_af.func_75682_a(1, Short.valueOf((short)300));

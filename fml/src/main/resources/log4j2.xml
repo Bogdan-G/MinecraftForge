@@ -10,17 +10,16 @@
         <Queue name="ServerGuiConsole" ignoreExceptions="true">
             <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level] [%logger]: %msg%n" />
         </Queue>
-        <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd-HH.mm.ss}-%i.log.gz">
+        <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd-HH.mm.ss}-%i.log.bz2" bufferSize="1048576">
             <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: %msg%n" />
             <Policies>
-                <TimeBasedTriggeringPolicy />
                 <OnStartupTriggeringPolicy />
             </Policies>
         </RollingRandomAccessFile>
         <Routing name="FmlFile">
             <Routes pattern="$${ctx:side}">
                 <Route>
-                    <RollingRandomAccessFile name="FmlFile" fileName="logs/fml-${ctx:side}-latest.log" filePattern="logs/fml-${ctx:side}-%d{yyyy-MM-dd-HH.mm.ss}-%i.log.gz">
+                    <RollingRandomAccessFile name="FmlFile" fileName="logs/fml-${ctx:side}-latest.log" filePattern="logs/fml-${ctx:side}-%d{yyyy-MM-dd-HH.mm.ss}-%i.log.bz2" bufferSize="1048576">
                         <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level] [%logger/%X{mod}]: %msg%n" />
                         <Policies>
                             <OnStartupTriggeringPolicy />

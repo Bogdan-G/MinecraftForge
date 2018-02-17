@@ -453,6 +453,7 @@ public class Gzip implements java.io.Serializable {
         		byte[] compressed0 = new byte[(int)file.length()];
         		try (InputStream fis  = new BufferedInputStream(new FileInputStream(file))) {
         		fis.read(compressed0);}
+        		boolean string_found = false;
         		try (ByteArrayInputStream bis = new ByteArrayInputStream(compressed0)) {
         		try (BufferedReader br = new BufferedReader(new InputStreamReader(bis, "UTF-8"))) {
         		ArrayList<String> sb = new ArrayList();
@@ -464,6 +465,7 @@ public class Gzip implements java.io.Serializable {
         		StringBuilder parse = new StringBuilder(32);
         		for (int i=0;i<sb.size();i++) {
         			if (sb.get(i).equals(idcc)) {
+        			if (!string_found) string_found = true;
         			int j=i+1;int j1=i+3;
         			if (sb.get(j).equals("[") && !sb.get(j1).equals("]")) {
         				int k=j+1;
@@ -476,6 +478,7 @@ public class Gzip implements java.io.Serializable {
         		} else {
         		for (int i=0;i<sb.size();) {
         			if (sb.get(i).equals(idcc)) {
+        			if (!string_found) string_found = true;
         			int j=i+1;
         			sb1=sb.get(j);
         			break;
@@ -485,6 +488,7 @@ public class Gzip implements java.io.Serializable {
         		//br.close();
         		//bis.close();
         		//fis.close();
+        		if (!string_found) return null;
    	 	} catch (IOException e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Gzip stacktrace: %s", (Throwable)e);}
     		String finalstr = sb1.equals("GSNO") ? null : sb1.equals("E_S") ? new String("") : new String(sb1);//null & empty support
     		synchronized (sb1_la) {
@@ -494,7 +498,8 @@ public class Gzip implements java.io.Serializable {
     		if (!idcc.equals(idcc_la)) idcc_la = idcc;
     		if (n00_la.intValue()!=n00) n00_la = n00;
     		if (state_la.shortValue()!=state) state_la = state;
-    		if (!sb1_la.equals(finalstr)) sb1_la = finalstr;
+    		boolean sb1_la_null=sb1_la==null, finalstr_null=finalstr==null;
+    		if ((sb1_la_null && !finalstr_null || !sb1_la_null && finalstr_null) || (!sb1_la_null && !sb1_la.equals(finalstr))) sb1_la = finalstr;
     		}}}}
     		return finalstr;
 	}

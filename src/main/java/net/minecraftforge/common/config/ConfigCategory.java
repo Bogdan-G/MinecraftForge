@@ -154,8 +154,9 @@ public class ConfigCategory implements Map<String, Property>, java.io.Serializab
 
     public String getLanguagekey()
     {
-        if (/*this.languagekey != null*/new File("."+File.separator+"configcache"+File.separator+"config.data"+2).exists())
-            return Gzip.decompress(/*this.languagekey*/this.idcc+"-2", 2, this.state_id2);
+        String languagekey = Gzip.decompress(/*this.languagekey*/this.idcc+"-2", 2, this.state_id2);
+        if (languagekey != null/*new File("."+File.separator+"configcache"+File.separator+"config.data"+2).exists()*/)
+            return languagekey;
         else
             return getQualifiedName();
     }

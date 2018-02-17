@@ -1031,7 +1031,7 @@
                  }
              }
          }
-@@ -3722,4 +3923,116 @@
+@@ -3722,4 +3923,117 @@
              iworldaccess.func_147584_b();
          }
      }
@@ -1144,7 +1144,8 @@
 +    //parse parts code UC
 +    public Block getBlockIfExists(int x, int y, int z) {
 +        try{Chunk chunk = func_72964_e(x >> 4, z >> 4);
-+        if(chunk != null) return chunk.func_150810_a(x & 15, y, z & 15);}catch(Throwable e) {FMLLog.log(org.apache.logging.log4j.Level.WARN, e, "Found initialization crash by Exception getting block type if exists in world, stacktrace:");}
++        if(chunk != null) return chunk.func_150810_a(x & 15, y, z & 15);}catch(Throwable e) {long time = System.nanoTime();if (time - gBIE_time > 50000000) {gBIE_time=time;FMLLog.log(org.apache.logging.log4j.Level.WARN, e, "Found initialization crash by Exception getting block type if exists in world, stacktrace:");}}
 +        return Blocks.air;
 +    }
++    long gBIE_time = 0;
  }

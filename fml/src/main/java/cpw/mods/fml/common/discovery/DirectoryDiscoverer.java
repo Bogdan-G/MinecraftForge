@@ -51,7 +51,13 @@ public class DirectoryDiscoverer implements ITypeDiscoverer
     {
         this.table = table;
         List<ModContainer> found = Lists.newArrayList();
-        if (DEBUG_DD) FMLLog.fine("Examining directory %s for potential mods", candidate.getModContainer().getName());
+        String candidate_name = candidate.getModContainer().getName();
+        //skip search in folders
+        if (candidate_name.equalsIgnoreCase("VoxelMods") || candidate_name.equalsIgnoreCase("carpentersblocks") || candidate_name.equalsIgnoreCase("matmos") || candidate_name.equalsIgnoreCase("railcraft") || candidate_name.equalsIgnoreCase("moarperipherals") || candidate_name.equalsIgnoreCase("gammabright") || candidate_name.equalsIgnoreCase("LOTR_UpdatedLangFiles") || candidate_name.equalsIgnoreCase("Reika") || candidate_name.equalsIgnoreCase("tabula") || candidate_name.equalsIgnoreCase("ThebombzenAPI") || candidate_name.equalsIgnoreCase("TerrainControl") || candidate_name.equalsIgnoreCase("presencefootsteps")) {
+            if (DEBUG_DD) FMLLog.fine("Skip examining directory %s for potential mods", candidate_name);
+            return found;
+        }
+        if (DEBUG_DD) FMLLog.fine("Examining directory %s for potential mods", candidate_name);
         exploreFileSystem("", candidate.getModContainer(), found, candidate, null);
         for (ModContainer mc : found)
         {
@@ -86,14 +92,14 @@ public class DirectoryDiscoverer implements ITypeDiscoverer
         Arrays.sort(content);
         for (File file : content)
         {
+            String file_name = file.getName();
             if (file.isDirectory())
             {
-                if (file.getName().equalsIgnoreCase("voxelMap")) { if (DEBUG_DD) {FMLLog.finer("Skip cache VoxelMap directory: %s", path + file.getName());}continue; }//skip search in cache VoxelMap mod
-                if (DEBUG_DD) FMLLog.finer("Recursing into package %s", path + file.getName());
-                exploreFileSystem(path + file.getName() + ".", file, harvestedMods, candidate, mc);
+                if (DEBUG_DD) FMLLog.finer("Recursing into package %s", path + file_name);
+                exploreFileSystem(path + file_name + ".", file, harvestedMods, candidate, mc);
                 continue;
             }
-            Matcher match = classFile.matcher(file.getName());
+            Matcher match = classFile.matcher(file_name);
 
             if (match.matches())
             {
@@ -104,7 +110,7 @@ public class DirectoryDiscoverer implements ITypeDiscoverer
                     try (BufferedInputStream bis  = new BufferedInputStream(fis)) {
                     modParser = new ASMModParser(bis);
                     }}//fis.close();
-                    candidate.addClassEntry(path+file.getName());
+                    candidate.addClassEntry(path+file_name);
                 }
                 catch (LoaderException e)
                 {
