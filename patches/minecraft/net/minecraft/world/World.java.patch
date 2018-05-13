@@ -156,7 +156,7 @@
                  crashreportcategory.func_71507_a("Found chunk", Boolean.valueOf(chunk == null));
                  crashreportcategory.func_71507_a("Location", CrashReportCategory.func_85071_a(p_147439_1_, p_147439_2_, p_147439_3_));
 -                throw new ReportedException(crashreport);
-+                FMLLog.log(org.apache.logging.log4j.Level.WARN, throwable, "Found initialization crash by Exception getting block type in world, stacktrace:");return Blocks.field_150350_a;//throw new ReportedException(crashreport); //parse FFoKC
++                if (warningFIC) FMLLog.log(org.apache.logging.log4j.Level.WARN, throwable, "Found initialization crash by Exception getting block type in world, stacktrace:");return Blocks.field_150350_a;//throw new ReportedException(crashreport); //parse FFoKC
              }
          }
          else
@@ -503,7 +503,7 @@
                  }
  
 -                throw new ReportedException(crashreport);
-+                FMLLog.log(org.apache.logging.log4j.Level.WARN, throwable2, "Found initialization crash, stacktrace: %s", throwable2);/*if (ForgeModContainer.removeErroringEntities)
++                if (warningFIC) FMLLog.log(org.apache.logging.log4j.Level.WARN, throwable2, "Found initialization crash, stacktrace: %s", throwable2);/*if (ForgeModContainer.removeErroringEntities)
 +                {
 +                    FMLLog.getLogger().log(org.apache.logging.log4j.Level.ERROR, crashreport.func_71502_e());
 +                    func_72900_e(entity);
@@ -521,7 +521,7 @@
                      entity.func_85029_a(crashreportcategory);
 -                    throw new ReportedException(crashreport);
 +
-+                    FMLLog.log(org.apache.logging.log4j.Level.WARN, throwable1, "Found initialization crash, stacktrace: %s", throwable1);/*if (ForgeModContainer.removeErroringEntities)
++                    if (warningFIC) FMLLog.log(org.apache.logging.log4j.Level.WARN, throwable1, "Found initialization crash, stacktrace: %s", throwable1);/*if (ForgeModContainer.removeErroringEntities)
 +                    {
 +                        FMLLog.getLogger().log(org.apache.logging.log4j.Level.ERROR, crashreport.func_71502_e());
 +                        func_72900_e(entity);
@@ -538,7 +538,7 @@
                      crashreportcategory = crashreport.func_85058_a("Block entity being ticked");
                      tileentity.func_145828_a(crashreportcategory);
 -                    throw new ReportedException(crashreport);
-+                    FMLLog.log(org.apache.logging.log4j.Level.WARN, throwable, "Found initialization crash, stacktrace: %s", throwable);/*if (ForgeModContainer.removeErroringTileEntities)
++                    if (warningFIC) FMLLog.log(org.apache.logging.log4j.Level.WARN, throwable, "Found initialization crash, stacktrace: %s", throwable);/*if (ForgeModContainer.removeErroringTileEntities)
 +                    {
 +                        FMLLog.getLogger().log(org.apache.logging.log4j.Level.ERROR, crashreport.func_71502_e());
 +                        tileentity.func_145843_s();
@@ -1144,8 +1144,8 @@
 +    //parse parts code UC
 +    public Block getBlockIfExists(int x, int y, int z) {
 +        try{Chunk chunk = func_72964_e(x >> 4, z >> 4);
-+        if(chunk != null) return chunk.func_150810_a(x & 15, y, z & 15);}catch(Throwable e) {long time = System.nanoTime();if (time - gBIE_time > 50000000) {gBIE_time=time;FMLLog.log(org.apache.logging.log4j.Level.WARN, e, "Found initialization crash by Exception getting block type if exists in world, stacktrace:");}}
++        if(chunk != null) return chunk.func_150810_a(x & 15, y, z & 15);}catch(Throwable e) {if (warningFIC) {FMLLog.log(org.apache.logging.log4j.Level.WARN, e, "Found initialization crash by Exception getting block type if exists in world, stacktrace:");}}
 +        return Blocks.air;
 +    }
-+    long gBIE_time = 0;
++    public static final boolean warningFIC = Boolean.parseBoolean(System.getProperty("mc.warningFIC", "false"));
  }

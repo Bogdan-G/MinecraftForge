@@ -87,7 +87,7 @@ public class FMLDeobfuscatingRemapper extends Remapper {
             for (String line : srgList)
             {
                 String[] parts = Iterables.toArray(splitter.split(line),String.class);
-                String typ = parts[0];
+                String typ = String.valueOf(parts[0]);
                 if ("CL".equals(typ))
                 {
                     parseClass(builder, parts);
@@ -127,7 +127,7 @@ public class FMLDeobfuscatingRemapper extends Remapper {
             for (String line : srgList)
             {
                 String[] parts = Iterables.toArray(splitter.split(line),String.class);
-                String typ = parts[0];
+                String typ = String.valueOf(parts[0]);
                 if ("CL".equals(typ))
                 {
                     parseClass(builder, parts);

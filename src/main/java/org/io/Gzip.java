@@ -346,7 +346,8 @@ public class Gzip implements java.io.Serializable {
         		//br.close();
         		//bis.close();
         		//fis.close();
-    		} catch (IOException e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Gzip stacktrace: %s", (Throwable)e);}
+    		} catch (IOException e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Gzip stacktrace: %s", (Throwable)e);
+    		} catch (IndexOutOfBoundsException e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Gzip stacktrace when write: %s", filename);}
     		return compressed;
 	}
 
@@ -489,7 +490,8 @@ public class Gzip implements java.io.Serializable {
         		//bis.close();
         		//fis.close();
         		if (!string_found) return null;
-   	 	} catch (IOException e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Gzip stacktrace: %s", (Throwable)e);}
+   	 	} catch (IOException e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Gzip stacktrace: %s", (Throwable)e);
+   	 	} catch (IndexOutOfBoundsException e) {cpw.mods.fml.common.FMLLog.log(org.apache.logging.log4j.Level.WARN, (Throwable)e, "Gzip stacktrace when read: %s", filename);}
     		String finalstr = sb1.equals("GSNO") ? null : sb1.equals("E_S") ? new String("") : new String(sb1);//null & empty support
     		synchronized (sb1_la) {
 		synchronized (n00_la) {

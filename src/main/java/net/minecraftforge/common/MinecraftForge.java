@@ -142,7 +142,7 @@ public class MinecraftForge
            handlers = ObjectArrays.concat(handlers, server, String.class);
 
        //FMLLog.info("Preloading CrashReport classes", ForgeVersion.getVersion());
-       /*for (String s : handlers)//cycle for log, but log off, wat?
+       for (String s : handlers)//cycle for log, but log off, wat?
        {
            //FMLLog.info("\t" + s);
            try
@@ -154,7 +154,7 @@ public class MinecraftForge
                }
            }
            catch (Exception e){}
-       }*/
+       }
 
        UsernameCache.load();
        // Load before all the mods, so MC owns the MC fluids

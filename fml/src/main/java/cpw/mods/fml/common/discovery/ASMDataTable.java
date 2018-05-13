@@ -40,9 +40,9 @@ public class ASMDataTable
         public ASMData(ModCandidate candidate, String annotationName, String className, String objectName, Map<String,Object> info)
         {
             this.candidate = candidate;
-            this.annotationName = String.valueOf(annotationName);
-            this.className = String.valueOf(className);
-            this.objectName = String.valueOf(objectName);
+            this.annotationName = annotationName != null ? String.valueOf(annotationName) : annotationName;
+            this.className = className != null ? String.valueOf(className) : className;
+            this.objectName = objectName != null ? String.valueOf(objectName) : objectName;
             this.annotationInfo = info;
         }
         public ModCandidate getCandidate()

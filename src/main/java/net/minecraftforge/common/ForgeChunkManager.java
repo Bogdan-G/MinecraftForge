@@ -826,9 +826,9 @@ public class ForgeChunkManager
         }
         WorldServer worldServer = (WorldServer) world;
         File chunkDir = worldServer.getChunkSaveLocation();
-        File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
+        final File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
 
-        NBTTagCompound forcedChunkData = new NBTTagCompound();
+        final NBTTagCompound forcedChunkData = new NBTTagCompound();
         NBTTagList ticketList = new NBTTagList();
         forcedChunkData.setTag("TicketList", ticketList);
 
@@ -871,6 +871,7 @@ public class ForgeChunkManager
                 }
             }
         }
+        net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.queueIO(new net.minecraft.world.storage.IThreadedFileIO() {@Override public boolean writeNextIO() {
         try
         {
             CompressedStreamTools.write(forcedChunkData, chunkLoaderData);
@@ -878,8 +879,9 @@ public class ForgeChunkManager
         catch (IOException e)
         {
             FMLLog.log(Level.WARN, e, "Unable to write forced chunk data to %s - chunkloading won't work", chunkLoaderData.getAbsolutePath());
-            return;
+            //return;
         }
+        return false;}});
     }
 
     static void loadEntity(Entity entity)
