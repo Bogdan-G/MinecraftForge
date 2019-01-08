@@ -317,7 +317,7 @@ public class ForgeHooksClient
     static int stencilBits = 0;
     public static void createDisplay() throws LWJGLException
     {
-        ImageIO.setUseCache(false); //Disable on-disc stream cache should speed up texture pack reloading.
+        ImageIO.setUseCache(true); //Disable on-disc stream cache should speed up texture pack reloading. //false
         PixelFormat format = new PixelFormat().withDepthBits(24);
         if (!Boolean.parseBoolean(System.getProperty("forge.forceDisplayStencil", "false")))
         {

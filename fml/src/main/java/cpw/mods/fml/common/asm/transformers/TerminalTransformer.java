@@ -16,16 +16,18 @@ public class TerminalTransformer implements IClassTransformer
         ClassReader reader = new ClassReader(basicClass);
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
-        ClassVisitor visitor = writer;
-        visitor = new ExitVisitor(visitor);
+        ExitVisitor visitor = new ExitVisitor(writer);
 
         reader.accept(visitor, 0);
+
+        if (!visitor.dirty) return basicClass;
         return writer.toByteArray();
     }
 
     public static class ExitVisitor extends ClassVisitor
     {
         private String clsName = null;
+        private boolean dirty;
         private static final String callbackOwner = org.objectweb.asm.Type.getInternalName(ExitVisitor.class);
 
         private ExitVisitor(ClassVisitor cv)
@@ -67,6 +69,7 @@ public class TerminalTransformer implements IClassTransformer
                         }
                         owner = ExitVisitor.callbackOwner;
                         name = "systemExitCalled";
+                        dirty = true;
                     }
                     else if (opcode == Opcodes.INVOKEVIRTUAL && owner.equals("java/lang/Runtime") && name.equals("exit") && desc.equals("(I)V"))
                     {
@@ -82,6 +85,7 @@ public class TerminalTransformer implements IClassTransformer
                         owner = ExitVisitor.callbackOwner;
                         name = "runtimeExitCalled";
                         desc = "(Ljava/lang/Runtime;I)V";
+                        dirty = true;
                     }
                     else if (opcode == Opcodes.INVOKEVIRTUAL && owner.equals("java/lang/Runtime") && name.equals("halt") && desc.equals("(I)V"))
                     {
@@ -97,6 +101,7 @@ public class TerminalTransformer implements IClassTransformer
                         owner = ExitVisitor.callbackOwner;
                         name = "runtimeHaltCalled";
                         desc = "(Ljava/lang/Runtime;I)V";
+                        dirty = true;
                     }
 
                     super.visitMethodInsn(opcode, owner, name, desc, isIntf);
