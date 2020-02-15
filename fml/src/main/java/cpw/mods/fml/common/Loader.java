@@ -1089,4 +1089,13 @@ public class Loader
     {
         return modController != null ? modController.getState() : LoaderState.NOINIT;
     }
+
+    public void clearValues()
+    {
+        try { discoverer.dataTable.clearValues(); } catch (Throwable e) {}
+        try { discoverer.clearValues(); } catch (Throwable e) {}
+        try { discoverer=null; } catch (Throwable e) {}
+        try { cpw.mods.fml.common.ModAPIManager.INSTANCE.dataTable.clearValues(); } catch (Throwable e) {}
+        try { cpw.mods.fml.common.ModAPIManager.INSTANCE.transformer.optionals.clear(); } catch (Throwable e) {}
+    }
 }

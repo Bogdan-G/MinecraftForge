@@ -104,6 +104,15 @@
      }
  
      protected abstract void func_70088_a();
+@@ -834,7 +863,7 @@
+                 {
+                     for (int i2 = k; i2 <= j1; ++i2)
+                     {
+-                        Block block = this.field_70170_p.func_147439_a(k1, l1, i2);
++                        Block block = this.field_70170_p.func_147439_a(k1, l1, i2);if (Integer.parseInt(System.getProperty("mc.reduceCollision", "-1")) != -1 && k1*l1*i2>=Integer.parseInt(System.getProperty("mc.reduceCollision", "-1"))) {cpw.mods.fml.common.FMLLog.warning("Entity func_145775_I %s %s %s %s", block, k1, l1, i2);k1=l;l1=i1;i2=j1;break;}
+ 
+                         try
+                         {
 @@ -991,9 +1020,22 @@
  
          if (block.func_149688_o() == p_70055_1_)

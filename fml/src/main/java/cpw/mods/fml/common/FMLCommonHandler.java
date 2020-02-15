@@ -14,9 +14,11 @@ package cpw.mods.fml.common;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -52,6 +54,7 @@ import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.server.FMLServerHandler;
 
@@ -272,6 +275,13 @@ public class FMLCommonHandler
     {
         cpw.mods.fml.common.asm.transformers.ModAccessTransformer.embedded=null;
         cpw.mods.fml.client.FMLClientHandler.instance().cleanMapsByLogMissingTextureErrors();
+        trimToSizeListsMaps();
+        cpw.mods.fml.client.FMLClientHandler.instance().trimToSizeListsMaps();
+        try { Field mf = FMLLaunchHandler.INSTANCE.classLoader.getClass().getDeclaredField("transformers");
+        mf.setAccessible(true);
+        ArrayList transformers = (ArrayList)(List)mf.get(FMLLaunchHandler.INSTANCE.classLoader);
+        transformers.trimToSize(); } catch (Throwable t) {}
+        try { Loader.instance().clearValues(); } catch (Throwable t) {}
         return Loader.instance().serverAboutToStart(server);
     }
 
@@ -638,5 +648,12 @@ public class FMLCommonHandler
     public String stripSpecialChars(String message)
     {
         return sidedDelegate != null ? sidedDelegate.stripSpecialChars(message) : message;
+    }
+
+    public void trimToSizeListsMaps()
+    {
+            try { ((ArrayList)brandings).trimToSize(); } catch (Throwable t) {}
+            try { ((ArrayList)brandingsNoMC).trimToSize(); } catch (Throwable t) {}
+            try { ((ArrayList)crashCallables).trimToSize(); } catch (Throwable t) {}
     }
 }

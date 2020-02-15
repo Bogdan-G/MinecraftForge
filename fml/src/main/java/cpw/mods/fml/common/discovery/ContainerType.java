@@ -41,4 +41,9 @@ public enum ContainerType
     {
         return discoverer.discover(candidate, table);
     }
+
+    public void clearValues()
+    {
+        discoverer=null;
+    }
 }

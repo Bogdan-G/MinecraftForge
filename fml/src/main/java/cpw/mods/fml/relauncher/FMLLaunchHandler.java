@@ -23,9 +23,9 @@ import cpw.mods.fml.common.launcher.FMLTweaker;
 
 public class FMLLaunchHandler
 {
-    private static FMLLaunchHandler INSTANCE;
+    public static FMLLaunchHandler INSTANCE;
     static Side side;
-    private LaunchClassLoader classLoader;
+    public LaunchClassLoader classLoader;
     private FMLTweaker tweaker;
     private File minecraftHome;
     private boolean cache_create = false;

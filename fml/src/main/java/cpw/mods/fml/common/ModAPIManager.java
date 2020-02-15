@@ -23,8 +23,8 @@ import cpw.mods.fml.common.versioning.VersionParser;
 public class ModAPIManager {
     public static final ModAPIManager INSTANCE = new ModAPIManager();
     @SuppressWarnings("unused")
-    private ModAPITransformer transformer;
-    private ASMDataTable dataTable;
+    public ModAPITransformer transformer;
+    public ASMDataTable dataTable;
     private Map<String,APIContainer> apiContainers;
     private static final boolean DEBUG_MAM = Boolean.parseBoolean(System.getProperty("fml.debugModAPIManager", "false"));
 

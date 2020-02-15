@@ -1132,6 +1132,16 @@ public class FMLClientHandler implements IFMLSidedHandler
         brokenTextures.clear();
     }
 
+    public void trimToSizeListsMaps()
+    {
+            try { ((ArrayList)resourcePackList).trimToSize(); } catch (Throwable t) {}
+            try { 
+            Map temp = Maps.newHashMapWithExpectedSize(resourcePackMap.size());
+            temp.putAll(resourcePackMap);
+            resourcePackMap=temp;
+            } catch (Throwable t) {}
+    }
+
     @Override
     public void processWindowMessages()
     {

@@ -266,7 +266,7 @@ public class Channel {
 				break;
 			case 0x19:
 				/* Panning Slide.*/
-				/*set_volume_slide_param( effect_param );
+				set_volume_slide_param( effect_param );
 				break;
 			case 0x1B:
 				/* Retrig + Volume Slide.*/

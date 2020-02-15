@@ -26,7 +26,7 @@ import cpw.mods.fml.relauncher.FMLRelaunchLog;
 public class ModAPITransformer implements IClassTransformer {
 
     private static final boolean logDebugInfo = Boolean.parseBoolean(System.getProperty("fml.debugAPITransformer", "false"));
-    private ListMultimap<String, ASMData> optionals;
+    public ListMultimap<String, ASMData> optionals;
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass)

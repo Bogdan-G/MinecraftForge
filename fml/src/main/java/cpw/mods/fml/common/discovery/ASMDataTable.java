@@ -79,6 +79,15 @@ public class ASMDataTable
                 throw new RuntimeException("Unpossible", e);
             }
         }
+
+        public void clearValues()
+        {
+        candidate=null;
+        annotationName=null;
+        className=null;
+        objectName=null;
+        annotationInfo=null;
+        }
     }
 
     private static class ModContainerPredicate implements Predicate<ASMData>
@@ -104,12 +113,18 @@ public class ASMDataTable
     {
         if (containerAnnotationData == null)
         {
-            ImmutableMap.Builder<ModContainer, SetMultimap<String, ASMData>> mapBuilder = ImmutableMap.<ModContainer, SetMultimap<String,ASMData>>builder();
+            final ImmutableMap.Builder<ModContainer, SetMultimap<String, ASMData>> mapBuilder = ImmutableMap.<ModContainer, SetMultimap<String,ASMData>>builder();
+            Thread thread = new Thread() {
+            @Override public void run() {
             for (ModContainer cont : containers)
             {
                 Multimap<String, ASMData> values = Multimaps.filterValues(globalAnnotationData, new ModContainerPredicate(cont));
                 mapBuilder.put(cont, ImmutableSetMultimap.copyOf(values));
-            }
+            }}};
+            thread.setDaemon(true);
+            thread.setName("ASMDataTable thread");
+            thread.start();
+            try { thread.join(); } catch (InterruptedException e) { e.printStackTrace(); }
             containerAnnotationData = mapBuilder.build();
         }
         return containerAnnotationData.get(container);
@@ -138,5 +153,12 @@ public class ASMDataTable
     public Set<ModCandidate> getCandidatesFor(String pkg)
     {
         return this.packageMap.get(pkg);
+    }
+
+    public void clearValues()
+    {
+        //containers=null;
+        globalAnnotationData.clear();containers.clear();globalAnnotationData.clear();packageMap.clear();
+        //ASMData.clearValues();
     }
 }

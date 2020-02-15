@@ -629,4 +629,9 @@ public class FMLModContainer implements ModContainer
     {
         return candidate.getContainedPackages();
     }
+
+    public void clearValues()
+    {
+        candidate.clearValues();
+    }
 }

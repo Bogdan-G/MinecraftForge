@@ -123,4 +123,9 @@ public class ModCandidate
     {
         return packages;
     }
+    public void clearValues()
+    {
+        sourceType.clearValues();
+        table=null;
+    }
 }

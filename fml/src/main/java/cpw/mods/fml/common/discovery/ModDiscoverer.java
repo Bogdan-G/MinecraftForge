@@ -36,7 +36,7 @@ public class ModDiscoverer
 
     private List<ModCandidate> candidates = Lists.newArrayList();
 
-    private ASMDataTable dataTable = new ASMDataTable();
+    public ASMDataTable dataTable = new ASMDataTable();
 
     private List<File> nonModLibs = Lists.newArrayList();
 
@@ -159,5 +159,12 @@ public class ModDiscoverer
     public List<File> getNonModLibs()
     {
         return nonModLibs;
+    }
+
+    public void clearValues()
+    {
+        candidates=null;
+        dataTable.clearValues();
+        dataTable=null;
     }
 }

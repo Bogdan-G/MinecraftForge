@@ -136,4 +136,9 @@ public class DirectoryDiscoverer implements ITypeDiscoverer
         }
     }
 
+    public void clearValues()
+    {
+        table=null;
+    }
+
 }
